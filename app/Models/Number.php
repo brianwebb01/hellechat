@@ -15,8 +15,6 @@ class Number extends Model
      * @var array
      */
     protected $fillable = [
-        'user_id',
-        'service_account_id',
         'phone_number',
         'friendly_label',
         'disabled',

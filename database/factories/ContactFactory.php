@@ -28,7 +28,11 @@ class ContactFactory extends Factory
             'first_name' => $this->faker->firstName,
             'last_name' => $this->faker->lastName,
             'company' => $this->faker->company,
-            'phone_numbers' => '{}',
+            'phone_numbers' => collect(['mobile', 'home', 'office', 'work', 'main'])
+                ->random(rand(0, 3))
+                ->map(fn ($i) => [$i => $this->faker->e164PhoneNumber])
+                ->flatMap(fn ($i) => $i)
+                ->toArray(),
         ];
     }
 }

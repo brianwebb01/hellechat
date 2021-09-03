@@ -40,7 +40,7 @@ class MessageFactory extends Factory
             'direction' => $this->faker->regexify('[A-Za-z0-9]{15}'),
             'status' => $this->faker->regexify('[A-Za-z0-9]{15}'),
             'num_media' => $this->faker->randomNumber(1),
-            'media' => $this->faker->text,
+            'media' => collect(rand(0,2))->map(fn($i) => $this->faker->imageUrl())->toJson(),
             'external_identity' => $this->faker->word,
             'external_date_created' => $this->faker->dateTime(),
             'external_date_updated' => $this->faker->dateTime(),

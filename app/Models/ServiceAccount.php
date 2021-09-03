@@ -15,7 +15,6 @@ class ServiceAccount extends Model
      * @var array
      */
     protected $fillable = [
-        'user_id',
         'provider',
         'api_key',
         'api_secret',

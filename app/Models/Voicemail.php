@@ -15,9 +15,6 @@ class Voicemail extends Model
      * @var array
      */
     protected $fillable = [
-        'user_id',
-        'number_id',
-        'contact_id',
         'media_url',
         'length',
         'transcription',

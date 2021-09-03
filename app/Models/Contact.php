@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Casts\AsCollection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -15,7 +16,6 @@ class Contact extends Model
      * @var array
      */
     protected $fillable = [
-        'user_id',
         'first_name',
         'last_name',
         'company',
@@ -30,7 +30,7 @@ class Contact extends Model
     protected $casts = [
         'id' => 'integer',
         'user_id' => 'integer',
-        'phone_numbers' => 'array',
+        'phone_numbers' => AsCollection::class,
     ];
 
 

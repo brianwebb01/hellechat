@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Casts\AsCollection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -15,10 +16,6 @@ class Message extends Model
      * @var array
      */
     protected $fillable = [
-        'user_id',
-        'number_id',
-        'service_account_id',
-        'contact_id',
         'from',
         'to',
         'body',
@@ -47,6 +44,7 @@ class Message extends Model
         'contact_id' => 'integer',
         'is_archived' => 'boolean',
         'num_media' => 'integer',
+        'media' => AsCollection::class,
         'external_date_created' => 'datetime',
         'external_date_updated' => 'datetime',
     ];
