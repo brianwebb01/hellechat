@@ -24,7 +24,6 @@ class CreateMessagesTable extends Migration
             $table->string('from', 15);
             $table->string('to', 15);
             $table->text('body');
-            $table->boolean('is_archived')->default(false);
             $table->string('error_code', 20)->nullable();
             $table->text('error_message')->nullable();
             $table->string('direction', 15);

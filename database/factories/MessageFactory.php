@@ -34,7 +34,6 @@ class MessageFactory extends Factory
             'from' => $this->faker->e164PhoneNumber,
             'to' => $this->faker->e164PhoneNumber,
             'body' => $this->faker->text,
-            'is_archived' => $this->faker->boolean,
             'error_code' => $this->faker->regexify('[A-Za-z0-9]{20}'),
             'error_message' => $this->faker->text,
             'direction' => $this->faker->regexify('[A-Za-z0-9]{15}'),

@@ -17,7 +17,6 @@ models:
   #   from: string:15
   #   to: string:15
   #   body: text
-  #   is_archived: boolean default:false
   #   error_code: string:20 nullable
   #   error_message: text nullable
   #   direction: string:15
@@ -34,7 +33,6 @@ models:
   #   service_account_id: id foreign
   #   phone_number: string:15
   #   friendly_label: string:50
-  #   disabled: boolean default:false
   #   external_identity: string nullable
   #   relationships:
   #     hasMany: Message, Voicemail
@@ -67,20 +65,40 @@ controllers:
 
   Api\Message:
     resource: api.index, api.destroy
+    index:
+      resource: paginate:messages
 
   Api\MessageIngestion:
+    resource: api.store
     store:
-      respond: post
+      dispatch: IngestProviderMessageJob
 
   Api\Number:
-    resource: api.index, api.show, api.store, api.update, api.import
+    resource: api.index, api.show, api.update, api.destroy
+    index:
+      resource: paginate:numbers
+
+  Api\NumberImport:
+    resource: api.store
+    store:
+      dispatch: ImportNumbersJob
 
   Api\Contact:
-    resource: api, api.index
+    resource: api
+    index:
+      resource: paginate:contacts
 
   Api\ContactImport:
+    resource: api.store
     store:
-      respond: post
+      dispatch: ImportContactsJob
 
   Api\Voicemail:
-    resource: api.index, api.show, api.update, api.destroy
+    resource: api.index, api.show, api.destroy
+    index:
+      resource: paginate:voicemails
+
+  Api\VoicemailImport:
+    resource: api.store
+    store:
+      dispatch: ImportVoicemailJob

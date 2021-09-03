@@ -17,7 +17,6 @@ class Number extends Model
     protected $fillable = [
         'phone_number',
         'friendly_label',
-        'disabled',
         'external_identity',
     ];
 
@@ -30,7 +29,6 @@ class Number extends Model
         'id' => 'integer',
         'user_id' => 'integer',
         'service_account_id' => 'integer',
-        'disabled' => 'boolean',
     ];
 
 

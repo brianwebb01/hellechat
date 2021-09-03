@@ -21,7 +21,6 @@ class CreateNumbersTable extends Migration
             $table->foreignId('service_account_id')->constrained();
             $table->string('phone_number', 15);
             $table->string('friendly_label', 50);
-            $table->boolean('disabled')->default(false);
             $table->string('external_identity')->nullable();
             $table->timestamps();
         });

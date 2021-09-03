@@ -29,7 +29,6 @@ class NumberFactory extends Factory
             'service_account_id' => ServiceAccount::factory(),
             'phone_number' => $this->faker->e164PhoneNumber,
             'friendly_label' => $this->faker->regexify('[A-Za-z0-9]{50}'),
-            'disabled' => $this->faker->boolean,
             'external_identity' => $this->faker->word,
         ];
     }
