@@ -1,0 +1,64 @@
+models:
+  ServiceAccount:
+    id: id
+    user_id: id foreign
+    provider: string:15
+    api_key: string
+    api_secret: string
+    relationships:
+      hasMany: Number
+
+  Message:
+    id: id
+    user_id: id foreign
+    number_id: id foreign
+    service_account_id: id foreign
+    contact_id: id nullable onDelete:null
+    from: string:15
+    to: string:15
+    body: text
+    is_archived: boolean default:false
+    error_code: string:20 nullable
+    error_message: text nullable
+    direction: string:15
+    status: string:15
+    num_media: unsignedSmallInteger default:0
+    media: text nullable
+    external_identity: string nullable
+    external_date_created: dateTime nullable
+    external_date_updated: dateTime nullable
+
+  Number:
+    id: id
+    user_id: id foreign
+    service_account_id: id foreign
+    phone_number: string:15
+    friendly_label: string:50
+    disabled: boolean default:false
+    external_identity: string nullable
+    relationships:
+      hasMany: Message, Voicemail
+
+  Contact:
+    id: id
+    user_id: id foreign
+    first_name: string:50 nullable
+    last_name: string:50 nullable
+    company: string:75 nullable
+    phone_numbers: json
+    relationships:
+      hasMany: Message, Voicemail
+
+  Voicemail:
+    id: id
+    user_id: id foreign
+    number_id: id foreign
+    contact_id: id nullable onDelete:null
+    media_url: string
+    length: unsignedSmallInteger default:0
+    transcription: text nullable
+
+seeders:
+  ServiceAccount, Message, Number, Contact, Voicemail, User
+
+controllers:
