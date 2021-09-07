@@ -25,6 +25,7 @@ class ServiceAccountFactory extends Factory
     {
         return [
             'user_id' => User::factory(),
+            'name' => $this->faker->regexify('[A-Za-z0-9]{50}'),
             'provider' => $this->faker->regexify('[A-Za-z0-9]{15}'),
             'api_key' => $this->faker->word,
             'api_secret' => $this->faker->word,

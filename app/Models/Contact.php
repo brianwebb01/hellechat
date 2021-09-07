@@ -30,7 +30,7 @@ class Contact extends Model
     protected $casts = [
         'id' => 'integer',
         'user_id' => 'integer',
-        'phone_numbers' => AsCollection::class,
+        'phone_numbers' => 'array',
     ];
 
 

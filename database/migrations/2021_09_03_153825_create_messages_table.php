@@ -21,8 +21,8 @@ class CreateMessagesTable extends Migration
             $table->foreignId('number_id')->constrained();
             $table->foreignId('service_account_id')->constrained();
             $table->unsignedBigInteger('contact_id')->nullable()->onDelete('null');
-            $table->string('from', 15);
-            $table->string('to', 15);
+            $table->string('from', 15)->index();
+            $table->string('to', 15)->index();
             $table->text('body');
             $table->string('error_code', 20)->nullable();
             $table->text('error_message')->nullable();

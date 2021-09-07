@@ -19,7 +19,7 @@ class CreateNumbersTable extends Migration
             $table->id();
             $table->foreignId('user_id')->constrained();
             $table->foreignId('service_account_id')->constrained();
-            $table->string('phone_number', 15);
+            $table->string('phone_number', 15)->index();
             $table->string('friendly_label', 50);
             $table->string('external_identity')->nullable();
             $table->timestamps();

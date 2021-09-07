@@ -1,6 +1,7 @@
 models:
   # ServiceAccount:
   #   id: id
+  #   name: string: 50
   #   user_id: id foreign
   #   provider: string:15
   #   api_key: string
@@ -14,8 +15,8 @@ models:
   #   number_id: id foreign
   #   service_account_id: id foreign
   #   contact_id: id nullable onDelete:null
-  #   from: string:15
-  #   to: string:15
+  #   from: string:15 index
+  #   to: string:15 index
   #   body: text
   #   error_code: string:20 nullable
   #   error_message: text nullable
@@ -31,7 +32,7 @@ models:
   #   id: id
   #   user_id: id foreign
   #   service_account_id: id foreign
-  #   phone_number: string:15
+  #   phone_number: string:15 index
   #   friendly_label: string:50
   #   external_identity: string nullable
   #   relationships:
@@ -60,45 +61,40 @@ seeders:
   # ServiceAccount, Message, Number, Contact, Voicemail, User
 
 controllers:
-  Api\ServiceAccount:
-    resource: api
+  # Api\ServiceAccount:
+  #   resource: api
 
-  Api\Message:
-    resource: api.index, api.destroy
-    index:
-      resource: paginate:messages
+  # Api\Thread:
+  #   resource: api.index, api.destroy
+  #   index:
+  #     resource: paginate:messages
 
-  Api\MessageIngestion:
-    resource: api.store
-    store:
-      dispatch: IngestProviderMessageJob
+  # Api\MessageIngestion:
+  #   resource: api.store
+  #   store:
+  #     dispatch: IngestProviderMessageJob
 
-  Api\Number:
-    resource: api.index, api.show, api.update, api.destroy
-    index:
-      resource: paginate:numbers
+  # Api\Number:
+  #   resource: api
+  #   index:
+  #     resource: paginate:numbers
 
-  Api\NumberImport:
-    resource: api.store
-    store:
-      dispatch: ImportNumbersJob
+  # Api\Contact:
+  #   resource: api
+  #   index:
+  #     resource: paginate:contacts
 
-  Api\Contact:
-    resource: api
-    index:
-      resource: paginate:contacts
+  # Api\ContactImport:
+  #   resource: api.store
+  #   store:
+  #     dispatch: ImportContactsJob
 
-  Api\ContactImport:
-    resource: api.store
-    store:
-      dispatch: ImportContactsJob
+  # Api\Voicemail:
+  #   resource: api.index, api.show, api.destroy
+  #   index:
+  #     resource: paginate:voicemails
 
-  Api\Voicemail:
-    resource: api.index, api.show, api.destroy
-    index:
-      resource: paginate:voicemails
-
-  Api\VoicemailImport:
-    resource: api.store
-    store:
-      dispatch: ImportVoicemailJob
+  # Api\VoicemailIngestion:
+  #   resource: api.store
+  #   store:
+  #     dispatch: IngestProviderVoicemailJob

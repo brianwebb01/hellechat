@@ -18,6 +18,7 @@ class CreateServiceAccountsTable extends Migration
         Schema::create('service_accounts', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained();
+            $table->string('name', 50);
             $table->string('provider', 15);
             $table->string('api_key');
             $table->string('api_secret');
