@@ -3,6 +3,7 @@
 namespace Tests\Feature\Http\Controllers\Api;
 
 use App\Models\ServiceAccount;
+use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use JMac\Testing\Traits\AdditionalAssertions;
@@ -15,19 +16,33 @@ class ServiceAccountControllerTest extends TestCase
 {
     use AdditionalAssertions, RefreshDatabase, WithFaker;
 
+    protected $user;
+
+    protected function setUp() : void
+    {
+        parent::setUp();
+        $this->user = User::factory()->create();
+    }
+
     /**
      * @test
      */
     public function index_behaves_as_expected()
     {
-        $serviceAccounts = ServiceAccount::factory()->count(3)->create();
+        $serviceAccounts = ServiceAccount::factory()->count(3)->create([
+            'user_id' => $this->user->id
+        ]);
+        ServiceAccount::factory()->count(3)->create();
 
-        $response = $this->get(route('service-account.index'));
+        $response = $this->actingAs($this->user)->getJson(route('service-account.index'));
 
         $response->assertOk();
+        $userIds = collect($response->json("data"))->pluck('user_id')->unique();
+        $this->assertEquals(3, count($response->json("data")));
+        $this->assertCount(1, $userIds);
+        $this->assertEquals($this->user->id, $userIds->first());
         $response->assertJsonStructure([]);
     }
-
 
     /**
      * @test
@@ -46,29 +61,25 @@ class ServiceAccountControllerTest extends TestCase
      */
     public function store_saves()
     {
-        $user_id = $this->faker->numberBetween(-100000, 100000);
         $name = $this->faker->name;
-        $provider = $this->faker->word;
+        $provider = ['twilio', 'telnyx'][rand(0,1)];
         $api_key = $this->faker->word;
         $api_secret = $this->faker->word;
 
-        $response = $this->post(route('service-account.store'), [
-            'user_id' => $user_id,
+        $response = $this->actingAs($this->user)->postJson(route('service-account.store'), [
             'name' => $name,
             'provider' => $provider,
             'api_key' => $api_key,
             'api_secret' => $api_secret,
         ]);
 
-        $serviceAccounts = ServiceAccount::query()
-            ->where('user_id', $user_id)
+        $serviceAccounts = $this->user->service_accounts()
             ->where('name', $name)
             ->where('provider', $provider)
             ->where('api_key', $api_key)
             ->where('api_secret', $api_secret)
             ->get();
         $this->assertCount(1, $serviceAccounts);
-        $serviceAccount = $serviceAccounts->first();
 
         $response->assertCreated();
         $response->assertJsonStructure([]);
@@ -80,11 +91,26 @@ class ServiceAccountControllerTest extends TestCase
      */
     public function show_behaves_as_expected()
     {
-        $serviceAccount = ServiceAccount::factory()->create();
+        $serviceAccount = ServiceAccount::factory()->create([
+            'user_id' => $this->user->id
+        ]);
 
-        $response = $this->get(route('service-account.show', $serviceAccount));
+        $response = $this->actingAs($this->user)->getJson(route('service-account.show', $serviceAccount));
 
         $response->assertOk();
+        $response->assertJsonStructure([]);
+    }
+
+    /**
+     * @test
+     */
+    public function show_respects_auth_policy()
+    {
+        $serviceAccount = ServiceAccount::factory()->create();
+
+        $response = $this->actingAs($this->user)->getJson(route('service-account.show', $serviceAccount));
+
+        $response->assertForbidden();
         $response->assertJsonStructure([]);
     }
 
@@ -106,19 +132,15 @@ class ServiceAccountControllerTest extends TestCase
      */
     public function update_behaves_as_expected()
     {
-        $serviceAccount = ServiceAccount::factory()->create();
-        $user_id = $this->faker->numberBetween(-100000, 100000);
+        $serviceAccount = ServiceAccount::factory()->create([
+            'user_id' => $this->user->id
+        ]);
         $name = $this->faker->name;
-        $provider = $this->faker->word;
         $api_key = $this->faker->word;
-        $api_secret = $this->faker->word;
 
-        $response = $this->put(route('service-account.update', $serviceAccount), [
-            'user_id' => $user_id,
+        $response = $this->actingAs($this->user)->putJson(route('service-account.update', $serviceAccount), [
             'name' => $name,
-            'provider' => $provider,
             'api_key' => $api_key,
-            'api_secret' => $api_secret,
         ]);
 
         $serviceAccount->refresh();
@@ -126,11 +148,23 @@ class ServiceAccountControllerTest extends TestCase
         $response->assertOk();
         $response->assertJsonStructure([]);
 
-        $this->assertEquals($user_id, $serviceAccount->user_id);
+        $this->assertEquals($this->user->id, $serviceAccount->user_id);
         $this->assertEquals($name, $serviceAccount->name);
-        $this->assertEquals($provider, $serviceAccount->provider);
         $this->assertEquals($api_key, $serviceAccount->api_key);
-        $this->assertEquals($api_secret, $serviceAccount->api_secret);
+    }
+
+    /**
+     * @test
+     */
+    public function update_respects_auth_policy()
+    {
+        $serviceAccount = ServiceAccount::factory()->create();
+
+        $response = $this->actingAs($this->user)->putJson(route('service-account.update', $serviceAccount), [
+            'name' => 'foo'
+        ]);
+        $response->assertForbidden();
+        $response->assertJsonStructure([]);
     }
 
 
@@ -139,12 +173,27 @@ class ServiceAccountControllerTest extends TestCase
      */
     public function destroy_deletes_and_responds_with()
     {
-        $serviceAccount = ServiceAccount::factory()->create();
+        $serviceAccount = ServiceAccount::factory()->create([
+            'user_id' => $this->user->id
+        ]);
 
-        $response = $this->delete(route('service-account.destroy', $serviceAccount));
+        $response = $this->actingAs($this->user)->deleteJson(route('service-account.destroy', $serviceAccount));
 
         $response->assertNoContent();
 
         $this->assertDeleted($serviceAccount);
+    }
+
+    /**
+     * @test
+     */
+    public function destroy_respects_auth_policy()
+    {
+        $serviceAccount = ServiceAccount::factory()->create();
+
+        $response = $this->actingAs($this->user)->deleteJson(route('service-account.show', $serviceAccount));
+
+        $response->assertForbidden();
+        $response->assertJsonStructure([]);
     }
 }

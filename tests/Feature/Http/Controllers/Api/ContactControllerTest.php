@@ -2,7 +2,6 @@
 
 namespace Tests\Feature\Http\Controllers\Api;
 
-use App\Http\Resources\Api\ContactResource;
 use App\Models\Contact;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -18,15 +17,42 @@ class ContactControllerTest extends TestCase
 {
     use AdditionalAssertions, RefreshDatabase, WithFaker;
 
+    protected $user;
+
+    protected function setUp() : void
+    {
+        parent::setUp();
+        $this->user = User::factory()->create();
+    }
+
     /**
      * @test
      */
     public function index_behaves_as_expected()
     {
-        $response = $this->get(route('contact.index'));
+        Contact::factory()->count(5)->create(['user_id' => $this->user->id]);
+        $response = $this->actingAs($this->user)->getJson(route('contact.index'));
 
         $response->assertOk();
         $response->assertJsonStructure([]);
+    }
+
+    /**
+     * @test
+     */
+    public function index_respects_authorization()
+    {
+        Contact::factory()->count(5)->create(['user_id' => $this->user->id]);
+        Contact::factory()->count(5)->create();
+
+        $response = $this->actingAs($this->user)->getJson(route('contact.index'));
+
+        $response->assertOk();
+        $response->assertJsonStructure([]);
+
+        $userIds = collect($response->json("data"))->pluck('user_id')->unique();
+        $this->assertCount(1, $userIds);
+        $this->assertEquals($this->user->id, $userIds->first());
     }
 
 
@@ -47,7 +73,6 @@ class ContactControllerTest extends TestCase
      */
     public function store_saves()
     {
-        $user = User::factory()->create();
         $fName = $this->faker->firstName;
         $lName = $this->faker->lastName;
         $phone_numbers = collect(['mobile', 'home', 'office', 'work', 'main'])
@@ -56,15 +81,16 @@ class ContactControllerTest extends TestCase
             ->flatMap(fn ($i) => $i)
             ->toArray();
 
-        $response = $this->actingAs($user)->post(route('contact.store'), [
+        $response = $this->actingAs($this->user)->postJson(route('contact.store'), [
             'first_name' => $fName,
             'last_name' => $lName,
             'phone_numbers' => json_encode($phone_numbers),
         ]);
 
         $response->assertCreated();
+        $response->assertJsonStructure([]);
 
-        $contacts = $user->contacts()
+        $contacts = $this->user->contacts()
             ->where('first_name', $fName)
             ->where('last_name', $lName)
             ->get();
@@ -75,7 +101,7 @@ class ContactControllerTest extends TestCase
         $response->assertJson(fn(AssertableJson $json) =>
             $json->where('data.first_name', $fName)
                  ->where('data.last_name', $lName)
-                 ->where('data.user_id', $user->id)
+                 ->where('data.user_id', $this->user->id)
                  ->etc()
         );
     }
@@ -86,11 +112,24 @@ class ContactControllerTest extends TestCase
      */
     public function show_behaves_as_expected()
     {
-        $contact = Contact::factory()->create();
+        $contact = Contact::factory()->create(['user_id' => $this->user->id]);
 
-        $response = $this->get(route('contact.show', $contact));
+        $response = $this->actingAs($this->user)->getJson(route('contact.show', $contact));
 
         $response->assertOk();
+        $response->assertJsonStructure([]);
+    }
+
+    /**
+     * @test
+     */
+    public function show_respects_auth_policy()
+    {
+        $contact = Contact::factory()->create();
+
+        $response = $this->actingAs($this->user)->getJson(route('contact.show', $contact));
+
+        $response->assertForbidden();
         $response->assertJsonStructure([]);
     }
 
@@ -112,8 +151,7 @@ class ContactControllerTest extends TestCase
      */
     public function update_behaves_as_expected()
     {
-        $user = User::factory()->create();
-        $contact = Contact::factory()->create(['user_id' => $user->id]);
+        $contact = Contact::factory()->create(['user_id' => $this->user->id]);
         $fName = $this->faker->firstName;
         $lName = $this->faker->lastName;
         $phone_numbers = collect(['mobile', 'home', 'office', 'work', 'main'])
@@ -122,13 +160,14 @@ class ContactControllerTest extends TestCase
             ->flatMap(fn ($i) => $i)
             ->toArray();
 
-        $response = $this->actingAs($user)->put(route('contact.update', $contact), [
+        $response = $this->actingAs($this->user)->putJson(route('contact.update', $contact), [
             'first_name' => $fName,
             'last_name' => $lName,
             'phone_numbers' => json_encode($phone_numbers),
         ]);
 
         $response->assertOk();
+        $response->assertJsonStructure([]);
 
         $contact->refresh();
 
@@ -139,10 +178,24 @@ class ContactControllerTest extends TestCase
             fn (AssertableJson $json) =>
             $json->where('data.first_name', $fName)
                 ->where('data.last_name', $lName)
-                ->where('data.user_id', $user->id)
+                ->where('data.user_id', $this->user->id)
                 ->etc()
         );
+    }
 
+    /**
+     * @test
+     */
+    public function update_respects_auth_policy()
+    {
+        $contact = Contact::factory()->create();
+
+        $response = $this->actingAs($this->user)->putJson(route('contact.update', $contact), [
+            'first_name' => 'foo',
+        ]);
+
+        $response->assertForbidden();
+        $response->assertJsonStructure([]);
     }
 
 
@@ -151,12 +204,26 @@ class ContactControllerTest extends TestCase
      */
     public function destroy_deletes_and_responds_with()
     {
-        $contact = Contact::factory()->create();
+        $contact = Contact::factory()->create(['user_id' => $this->user->id]);
 
-        $response = $this->delete(route('contact.destroy', $contact));
+        $response = $this->actingAs($this->user)->deleteJson(route('contact.destroy', $contact));
 
         $response->assertNoContent();
 
         $this->assertDeleted($contact);
+    }
+
+
+    /**
+     * @test
+     */
+    public function destroy_respects_auth_policy()
+    {
+        $contact = Contact::factory()->create();
+
+        $response = $this->actingAs($this->user)->deleteJson(route('contact.show', $contact));
+
+        $response->assertForbidden();
+        $response->assertJsonStructure([]);
     }
 }

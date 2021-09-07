@@ -10,13 +10,18 @@ use Illuminate\Http\Request;
 
 class VoicemailController extends Controller
 {
+    public function __construct()
+    {
+        $this->authorizeResource(Voicemail::class, 'voicemail');
+    }
+
     /**
      * @param \Illuminate\Http\Request $request
      * @return \App\Http\Resources\Api\VoicemailCollection
      */
     public function index(Request $request)
     {
-        $voicemails = Voicemail::paginate();
+        $voicemails = $request->user()->voicemails()->paginate();
 
         return new VoicemailCollection($voicemails);
     }

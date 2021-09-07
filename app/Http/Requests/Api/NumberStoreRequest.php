@@ -4,17 +4,8 @@ namespace App\Http\Requests\Api;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class NumberStoreRequest extends FormRequest
+class NumberStoreRequest extends NumberUpdateRequest
 {
-    /**
-     * Determine if the user is authorized to make this request.
-     *
-     * @return bool
-     */
-    public function authorize()
-    {
-        return true;
-    }
 
     /**
      * Get the validation rules that apply to the request.
@@ -23,11 +14,12 @@ class NumberStoreRequest extends FormRequest
      */
     public function rules()
     {
-        return [
-            'service_account_id' => ['required', 'integer'],
-            'phone_number' => ['required', 'string', 'max:15'],
-            'friendly_label' => ['required', 'string', 'max:50'],
-            'external_identity' => ['string'],
-        ];
+        $rules = parent::rules();
+
+        $rules['service_account_id'][] = 'required';
+        $rules['phone_number'][] = 'required';
+        $rules['friendly_label'][] = 'required';
+
+        return $rules;
     }
 }

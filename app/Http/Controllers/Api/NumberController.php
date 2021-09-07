@@ -12,13 +12,18 @@ use Illuminate\Http\Request;
 
 class NumberController extends Controller
 {
+    public function __construct()
+    {
+        $this->authorizeResource(Number::class, 'number');
+    }
+
     /**
      * @param \Illuminate\Http\Request $request
      * @return \App\Http\Resources\Api\NumberCollection
      */
     public function index(Request $request)
     {
-        $numbers = Number::paginate();
+        $numbers = $request->user()->numbers()->paginate();
 
         return new NumberCollection($numbers);
     }
@@ -29,7 +34,7 @@ class NumberController extends Controller
      */
     public function store(NumberStoreRequest $request)
     {
-        $number = Number::create($request->validated());
+        $number = $request->user()->numbers()->create($request->validated());
 
         return new NumberResource($number);
     }

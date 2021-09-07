@@ -4,17 +4,8 @@ namespace App\Http\Requests\Api;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class ContactStoreRequest extends FormRequest
+class ContactStoreRequest extends ContactUpdateRequest
 {
-    /**
-     * Determine if the user is authorized to make this request.
-     *
-     * @return bool
-     */
-    public function authorize()
-    {
-        return true;
-    }
 
     /**
      * Get the validation rules that apply to the request.
@@ -23,11 +14,13 @@ class ContactStoreRequest extends FormRequest
      */
     public function rules()
     {
-        return [
-            'first_name' => ['string', 'max:50', 'required_without:company'],
-            'last_name' => ['string', 'max:50', 'required_without:company'],
-            'company' => ['string', 'max:75', 'required_without:first_name,last_name'],
-            'phone_numbers' => ['required', 'json'],
-        ];
+        $rules = parent::rules();
+
+        $rules['first_name'][] = 'required_without:company';
+        $rules['last_name'][] = 'required_without:company';
+        $rules['company'][] = 'required_without:first_name,last_name';
+        $rules['phone_numbers'][] = 'required';
+
+        return $rules;
     }
 }

@@ -12,13 +12,19 @@ use Illuminate\Http\Request;
 
 class ServiceAccountController extends Controller
 {
+    public function __construct()
+    {
+        $this->authorizeResource(ServiceAccount::class, 'service_account');
+    }
+
     /**
      * @param \Illuminate\Http\Request $request
      * @return \App\Http\Resources\Api\ServiceAccountCollection
      */
     public function index(Request $request)
     {
-        $serviceAccounts = ServiceAccount::all();
+        $serviceAccounts = $request->user()
+            ->service_accounts()->paginate();
 
         return new ServiceAccountCollection($serviceAccounts);
     }
@@ -29,7 +35,8 @@ class ServiceAccountController extends Controller
      */
     public function store(ServiceAccountStoreRequest $request)
     {
-        $serviceAccount = ServiceAccount::create($request->validated());
+        $serviceAccount = $request->user()
+            ->service_accounts()->create($request->validated());
 
         return new ServiceAccountResource($serviceAccount);
     }

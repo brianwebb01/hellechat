@@ -12,13 +12,18 @@ use Illuminate\Http\Request;
 
 class ContactController extends Controller
 {
+    public function __construct()
+    {
+        $this->authorizeResource(Contact::class, 'contact');
+    }
+
     /**
      * @param \Illuminate\Http\Request $request
      * @return \App\Http\Resources\Api\ContactCollection
      */
     public function index(Request $request)
     {
-        $contacts = Contact::paginate();
+        $contacts = $request->user()->contacts()->paginate();
 
         return new ContactCollection($contacts);
     }
@@ -29,7 +34,7 @@ class ContactController extends Controller
      */
     public function store(ContactStoreRequest $request)
     {
-        $contact = \auth()->user()->contacts()->create($request->validated());
+        $contact = $request->user()->contacts()->create($request->validated());
 
         return new ContactResource($contact);
     }

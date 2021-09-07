@@ -3,6 +3,8 @@
 namespace Tests\Feature\Http\Controllers\Api;
 
 use App\Models\Number;
+use App\Models\ServiceAccount;
+use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use JMac\Testing\Traits\AdditionalAssertions;
@@ -15,12 +17,24 @@ class NumberControllerTest extends TestCase
 {
     use AdditionalAssertions, RefreshDatabase, WithFaker;
 
+    protected $user;
+    protected $serviceAccount;
+
+    protected function setUp() : void
+    {
+        parent::setUp();
+        $this->user = User::factory()->create();
+        $this->serviceAccount = ServiceAccount::factory()->create([
+            'user_id' => $this->user->id
+        ]);
+    }
+
     /**
      * @test
      */
     public function index_behaves_as_expected()
     {
-        $response = $this->get(route('number.index'));
+        $response = $this->actingAs($this->user)->getJson(route('number.index'));
 
         $response->assertOk();
         $response->assertJsonStructure([]);
@@ -44,28 +58,24 @@ class NumberControllerTest extends TestCase
      */
     public function store_saves()
     {
-        $user_id = $this->faker->numberBetween(-100000, 100000);
-        $service_account_id = $this->faker->numberBetween(-100000, 100000);
-        $phone_number = $this->faker->phoneNumber;
+        $phone_number = $this->faker->e164PhoneNumber;
         $friendly_label = $this->faker->word;
 
-        $response = $this->post(route('number.store'), [
-            'user_id' => $user_id,
-            'service_account_id' => $service_account_id,
+        $response = $this->actingAs($this->user)->postJson(route('number.store'), [
+            'service_account_id' => $this->serviceAccount->id,
             'phone_number' => $phone_number,
             'friendly_label' => $friendly_label,
         ]);
 
-        $numbers = Number::query()
-            ->where('user_id', $user_id)
-            ->where('service_account_id', $service_account_id)
+        $response->assertCreated();
+
+        $numbers = $this->user->numbers()
+            ->where('service_account_id', $this->serviceAccount->id)
             ->where('phone_number', $phone_number)
             ->where('friendly_label', $friendly_label)
             ->get();
         $this->assertCount(1, $numbers);
-        $number = $numbers->first();
 
-        $response->assertCreated();
         $response->assertJsonStructure([]);
     }
 
@@ -75,11 +85,24 @@ class NumberControllerTest extends TestCase
      */
     public function show_behaves_as_expected()
     {
-        $number = Number::factory()->create();
+        $number = Number::factory()->create(['user_id' => $this->user->id]);
 
-        $response = $this->get(route('number.show', $number));
+        $response = $this->actingAs($this->user)->getJson(route('number.show', $number));
 
         $response->assertOk();
+        $response->assertJsonStructure([]);
+    }
+
+    /**
+     * @test
+     */
+    public function show_respects_auth_policy()
+    {
+        $number = Number::factory()->create();
+
+        $response = $this->actingAs($this->user)->getJson(route('number.show', $number));
+
+        $response->assertForbidden();
         $response->assertJsonStructure([]);
     }
 
@@ -101,15 +124,12 @@ class NumberControllerTest extends TestCase
      */
     public function update_behaves_as_expected()
     {
-        $number = Number::factory()->create();
-        $user_id = $this->faker->numberBetween(-100000, 100000);
-        $service_account_id = $this->faker->numberBetween(-100000, 100000);
-        $phone_number = $this->faker->phoneNumber;
+        $number = Number::factory()->create(['user_id' => $this->user->id]);
+        $phone_number = $this->faker->e164PhoneNumber;
         $friendly_label = $this->faker->word;
 
-        $response = $this->put(route('number.update', $number), [
-            'user_id' => $user_id,
-            'service_account_id' => $service_account_id,
+        $response = $this->actingAs($this->user)->putJson(route('number.update', $number), [
+            'service_account_id' => $this->serviceAccount->id,
             'phone_number' => $phone_number,
             'friendly_label' => $friendly_label,
         ]);
@@ -119,10 +139,46 @@ class NumberControllerTest extends TestCase
         $response->assertOk();
         $response->assertJsonStructure([]);
 
-        $this->assertEquals($user_id, $number->user_id);
-        $this->assertEquals($service_account_id, $number->service_account_id);
+        $this->assertEquals($this->user->id, $number->user_id);
+        $this->assertEquals($this->serviceAccount->id, $number->service_account_id);
         $this->assertEquals($phone_number, $number->phone_number);
         $this->assertEquals($friendly_label, $number->friendly_label);
+    }
+
+    /**
+     * @test
+     */
+    public function update_respects_auth_policy()
+    {
+        $number = Number::factory()->create();
+
+        $response = $this->actingAs($this->user)->putJson(route('number.update', $number), [
+            'service_account_id' => 0,
+        ]);
+        $response->assertForbidden();
+        $response->assertJsonStructure([]);
+    }
+
+    /**
+     * @test
+     */
+    public function validation_respects_foreign_object_ownership()
+    {
+        $number = Number::factory()->create([
+            'user_id' => $this->user->id,
+            'service_account_id' => $this->serviceAccount->id
+        ]);
+        $sa = ServiceAccount::factory()->create();
+
+        $response = $this->actingAs($this->user)->putJson(route('number.update', $number), [
+            'service_account_id' => $sa->id,
+        ]);
+
+        $response->assertUnprocessable();
+        $response->assertJsonStructure([]);
+
+        $number->refresh();
+        $this->assertEquals($this->serviceAccount->id, $number->service_account_id);
     }
 
 
@@ -131,12 +187,25 @@ class NumberControllerTest extends TestCase
      */
     public function destroy_deletes_and_responds_with()
     {
-        $number = Number::factory()->create();
+        $number = Number::factory()->create(['user_id' => $this->user->id]);
 
-        $response = $this->delete(route('number.destroy', $number));
+        $response = $this->actingAs($this->user)->deleteJson(route('number.destroy', $number));
 
         $response->assertNoContent();
 
         $this->assertDeleted($number);
+    }
+
+    /**
+     * @test
+     */
+    public function destroy_respects_auth_policy()
+    {
+        $number = Number::factory()->create();
+
+        $response = $this->actingAs($this->user)->deleteJson(route('number.show', $number));
+
+        $response->assertForbidden();
+        $response->assertJsonStructure([]);
     }
 }
