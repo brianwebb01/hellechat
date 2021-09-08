@@ -20,7 +20,8 @@ class DatabaseSeeder extends Seeder
             MessageSeeder::class,
             NumberSeeder::class,
             ServiceAccountSeeder::class,
-            VoicemailSeeder::class
+            VoicemailSeeder::class,
+            ThreadSeeder::class
         ]);
     }
 }
