@@ -85,6 +85,32 @@ class ServiceAccountControllerTest extends TestCase
         $response->assertJsonStructure([]);
     }
 
+    /**
+     * @test
+     */
+    public function save_validates_unique_provider_per_user()
+    {
+        $this->user->service_accounts()->delete();
+        $existing = ServiceAccount::factory()->create([
+            'user_id' => $this->user->id,
+            'provider' => 'twilio'
+        ]);
+
+        $name = $this->faker->name;
+        $provider = 'twilio';
+        $api_key = $this->faker->word;
+        $api_secret = $this->faker->word;
+
+        $response = $this->actingAs($this->user)->postJson(route('service-account.store'), [
+            'name' => $name,
+            'provider' => $provider,
+            'api_key' => $api_key,
+            'api_secret' => $api_secret,
+        ]);
+
+        $response->assertUnprocessable();
+        $response->assertJsonStructure([]);
+    }
 
     /**
      * @test

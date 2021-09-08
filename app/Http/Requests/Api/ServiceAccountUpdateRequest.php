@@ -29,7 +29,10 @@ class ServiceAccountUpdateRequest extends FormRequest
             'provider' => [
                 'string',
                 'max:15',
-                Rule::in(['twilio', 'telnyx'])
+                Rule::in(['twilio', 'telnyx']),
+                Rule::unique('service_accounts')->where(function($query){
+                    return $query->where('user_id', \auth()->user()->id);
+                })
             ],
             'api_key' => ['string'],
             'api_secret' => [
