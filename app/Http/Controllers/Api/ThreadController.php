@@ -15,7 +15,7 @@ class ThreadController extends Controller
      */
     public function index(Request $request)
     {
-        $messages = Message::paginate();
+        $messages = $request->user()->messages()->paginate();
 
         return new MessageCollection($messages);
     }
@@ -24,11 +24,11 @@ class ThreadController extends Controller
      * @param \Illuminate\Http\Request $request
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Request $request)
+    public function destroy(Request $request, $phoneNumber)
     {
-        Message::query()
-            ->where('from', $request->get('phoneNumber'))
-            ->orWhere('to', $request->get('phoneNumber'))
+        $request->user()->messages()
+            ->where('from', $phoneNumber)
+            ->orWhere('to', $phoneNumber)
             ->delete();
 
         return response()->noContent();

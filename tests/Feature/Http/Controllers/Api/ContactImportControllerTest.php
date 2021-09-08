@@ -3,6 +3,7 @@
 namespace Tests\Feature\Http\Controllers\Api;
 
 use App\Jobs\ImportContactsJob;
+use App\Models\User;
 use Illuminate\Support\Facades\Queue;
 use Tests\TestCase;
 
@@ -18,7 +19,9 @@ class ContactImportControllerTest extends TestCase
     {
         Queue::fake();
 
-        $response = $this->post(route('contact-import.store'));
+        $user = User::factory()->create();
+
+        $response = $this->actingAs($user)->postJson(route('contact-import.store'));
 
         Queue::assertPushed(ImportContactsJob::class);
     }

@@ -61,6 +61,11 @@ seeders:
   # ServiceAccount, Message, Number, Contact, Voicemail, User
 
 controllers:
+  # Api\MessageIngestion:
+  #   resource: api.store
+  #   store:
+  #     dispatch: IngestProviderMessageJob
+
   # Api\ServiceAccount:
   #   resource: api
 
@@ -68,11 +73,6 @@ controllers:
   #   resource: api.index, api.destroy
   #   index:
   #     resource: paginate:messages
-
-  # Api\MessageIngestion:
-  #   resource: api.store
-  #   store:
-  #     dispatch: IngestProviderMessageJob
 
   # Api\Number:
   #   resource: api
@@ -93,8 +93,3 @@ controllers:
   #   resource: api.index, api.show, api.destroy
   #   index:
   #     resource: paginate:voicemails
-
-  # Api\VoicemailIngestion:
-  #   resource: api.store
-  #   store:
-  #     dispatch: IngestProviderVoicemailJob
