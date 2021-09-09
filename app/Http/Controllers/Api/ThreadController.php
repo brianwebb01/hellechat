@@ -15,25 +15,25 @@ class ThreadController extends Controller
 {
     /**
      * @param \Illuminate\Http\Request $request
-     * @return \App\Http\Resources\Api\MessageCollection
+     * @return array
      */
     public function index(Request $request)
     {
         $threads = Thread::threadsSummaryForUser($request->user());
 
-        return new ThreadCollection($threads);
+        return ['data' => $threads];
     }
 
     /**
      * @param \Illuminate\Http\Request $request
      * @param string $phoneNumber
-     * @return \App\Http\Resources\Api\ThreadResource
+     * @return array
      */
     public function show(Request $request, $phoneNumber)
     {
         $thread = Thread::getThread($request->user(), $phoneNumber);
 
-        return new ThreadResource($thread);
+        return ['data' => $thread];
     }
 
     /**

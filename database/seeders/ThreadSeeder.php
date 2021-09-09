@@ -15,6 +15,11 @@ class ThreadSeeder extends Seeder
 {
     use WithFaker;
 
+    public function __construct()
+    {
+        $this->setUpFaker();
+    }
+
     /**
      * Run the database seeds.
      *
@@ -22,8 +27,6 @@ class ThreadSeeder extends Seeder
      */
     public function run()
     {
-        $this->setUpFaker();
-
         $user = User::factory()->create(['email' => 'user@threads.com']);
         $serviceAccount = ServiceAccount::factory()->create(['user_id' => $user->id]);
         $number = Number::factory()->create([
@@ -32,7 +35,6 @@ class ThreadSeeder extends Seeder
             'friendly_label' => 'Thread Number'
         ]);
         $myNumber = $number->phone_number;
-        $randomNumber = $this->faker->e164PhoneNumber;
 
         //outbound message w/ no response
         Message::factory()->create([
@@ -59,61 +61,69 @@ class ThreadSeeder extends Seeder
         ]);
 
         //create a message thread that has no contact
-        foreach(range(0,9) as $key){
+        $this->seedThread($user, false, 10, 7);
+
+        //create 5 contacts, each with 10 messages
+        foreach (range(0, 4) as $c) {
+            $this->seedThread($user, true, 10);
+        }
+
+    }//end run()
+
+
+    /**
+     * Function to seed a message thread creating all the associated
+     * relationship objects.
+     *
+     * @param User $user
+     * @param boolean $withContact - create contact or not
+     * @param integer $messageCount - messages to create
+     * @param integer $subDays - stand off created_at for messages
+     * @return string - phone number interacted with
+     */
+    public function seedThread(User $user, $withContact=false, $messageCount=2, $subDays=10)
+    {
+        $serviceAccount = ServiceAccount::factory()->create(['user_id' => $user->id]);
+        $number = Number::factory()->create([
+            'user_id' => $user->id,
+            'service_account_id' => $serviceAccount->id,
+        ]);
+        $myNumber = $number->phone_number;
+        $toNumber = $this->faker->e164PhoneNumber;
+        $contactId = null;
+
+        if($withContact){
+            $contact = Contact::factory()->create([
+                'user_id' => $user->id,
+                'phone_numbers' => ['mobile' => $this->faker->e164PhoneNumber]
+            ]);
+            $contactId = $contact->id;
+        }
+
+        foreach (range(0, ($messageCount-1)) as $key) {
             if ($key % 2 == 0) {
                 $direction = 'inbound';
-                $from = $randomNumber;
+                $from = $toNumber;
                 $to = $myNumber;
             } else {
                 $direction = 'outbound';
                 $from = $myNumber;
-                $to = $randomNumber;
+                $to = $toNumber;
             }
 
             Message::factory()->create([
-                'contact_id' => null,
+                'contact_id' => $contactId,
                 'number_id' => $number->id,
                 'user_id' => $user->id,
                 'from' => $from,
                 'to' => $to,
-                'body' => str_split('abcdefghijklmnop')[$key],
+                'body' => str_split('abcdefghijklmnopqrstuvwxyz')[$key],
                 'direction' => $direction,
-                'created_at' => now()->subDays(7)->addHours($key)->addSeconds(rand(0,59)),
+                'created_at' => now()->subDays($subDays)->addMinutes($key)->addSeconds(rand(0, 59)),
             ]);
         }
 
-        //create 5 contacts, each having a 10 message thread
-        $contacts = collect([]);
-        foreach(range(0,4) as $c){
-            $contacts[] = Contact::factory()->create([
-                'user_id' => $user->id,
-                'phone_numbers' => ['mobile' => $this->faker->e164PhoneNumber]
-            ]);
-        }
-
-        $contacts->each(function($contact) use($myNumber, $user, $number){
-            foreach(range(0,9) as $key){
-                if ($key % 2 == 0) {
-                    $direction = 'inbound';
-                    $from = $contact->phone_numbers['mobile'];
-                    $to = $myNumber;
-                } else {
-                    $direction = 'outbound';
-                    $from = $myNumber;
-                    $to = $contact->phone_numbers['mobile'];
-                }
-
-                $contact->messages()->save(
-                    Message::factory()->make([
-                        'user_id' => $user->id,
-                        'number_id' => $number->id,
-                        'from' => $from,
-                        'to' => $to,
-                        'body' => str_split('ABCDEFGHIJKLMNOP')[$key],
-                        'direction' => $direction,
-                        'created_at' => now()->subDays(10)->addMinutes($key)->addSeconds(rand(0,59)),                        ])
-                );
-            }//end each 10
-        });//end each contact
+        return $toNumber;
     }
+
 }

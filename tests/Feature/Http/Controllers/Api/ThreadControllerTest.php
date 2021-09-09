@@ -8,6 +8,7 @@ use App\Models\Message;
 use App\Models\Number;
 use App\Models\Thread;
 use App\Models\User;
+use Database\Seeders\ThreadSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Queue;
 use Illuminate\Foundation\Testing\WithFaker;
@@ -34,6 +35,13 @@ class ThreadControllerTest extends TestCase
      */
     public function index_behaves_as_expected()
     {
+        //create a 10 message thread that has no contact
+        with(new ThreadSeeder)->seedThread($this->user, false, 10, 7);
+
+        //create 5 contacts, each with 10 message thread
+        foreach (range(0, 4) as $c)
+            with(new ThreadSeeder)->seedThread($this->user, true, 10);
+
         $response = $this->actingAs($this->user)->getJson(route('thread.index'));
 
         $response->assertOk();
@@ -46,37 +54,8 @@ class ThreadControllerTest extends TestCase
      */
     public function show_behaves_as_expected()
     {
-        $number = Number::factory()->create([
-            'user_id' => $this->user->id
-        ]);
-        $myNumber = $number->phone_number;
-        $contactNumber = $this->faker->e164PhoneNumber;
-        $contact = Contact::factory()->create([
-            'user_id' => $this->user->id,
-            'phone_numbers' => ['mobile' => $contactNumber]
-        ]);
-        $date = now()->subDays(7);
-
-        foreach(range(0,9) as $i){
-
-            if($i % 2 == 0){
-                $from = $contactNumber;
-                $to = $myNumber;
-            } else {
-                $from = $myNumber;
-                $to = $contactNumber;
-            }
-
-            Message::factory()->create([
-                'user_id' => $this->user->id,
-                'number_id' => $number->id,
-                'contact_id' => $contact->id,
-                'from' => $from,
-                'to' => $to,
-                'created_at' => $date->addMinutes($i),
-                'updated_at' => $date->addMinutes($i)
-            ]);
-        }
+        $contactNumber = with(new ThreadSeeder)
+            ->seedThread($this->user, true, 3);
 
         $response = $this->actingAs($this->user)
             ->getJson(route('thread.show', ['phoneNumber' => $contactNumber]));
@@ -91,31 +70,17 @@ class ThreadControllerTest extends TestCase
      */
     public function destroy_deletes_and_responds_with()
     {
-        $myNumber = $this->faker->e164PhoneNumber;
-        $contactNumber = $this->faker->e164PhoneNumber;
-        $contact = Contact::factory()->create([
-            'user_id' => $this->user->id,
-            'phone_numbers' => ['mobile' => $contactNumber]
-        ]);
-        $a = Message::factory()->create([
-            'user_id' => $this->user->id,
-            'contact_id' => $contact->id,
-            'from' => $contactNumber,
-            'to' => $myNumber
-        ]);
-        $b = Message::factory()->create([
-            'user_id' => $this->user->id,
-            'contact_id' => $contact->id,
-            'from' => $myNumber,
-            'to' => $contactNumber
-        ]);
+        $contactNumber = with(new ThreadSeeder)
+            ->seedThread($this->user, true, 2);
+        $messages = $this->user->messages()->where('from', $contactNumber)
+            ->orWhere('to', $contactNumber)->get();
 
         $response = $this->actingAs($this->user)
             ->deleteJson(route('thread.destroy', ['phoneNumber' => $contactNumber]));
 
         $response->assertNoContent();
 
-        $this->assertDeleted($a);
-        $this->assertDeleted($b);
+        $this->assertDeleted($messages->first());
+        $this->assertDeleted($messages->last());
     }
 }
