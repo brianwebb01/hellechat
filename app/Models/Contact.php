@@ -34,34 +34,6 @@ class Contact extends Model
         'phone_numbers' => 'array',
     ];
 
-    /**
-     * Scope a query to only include contacts with messages
-     * composing a thread
-     *
-     * @param  \Illuminate\Database\Eloquent\Builder  $query
-     * @param \App\Models\User $user
-     * @return \Illuminate\Database\Eloquent\Builder
-     */
-    public function scopeThreadsForUser($query, User $user)
-    {
-        // return $query->where('user_id', $user->id)
-        //     ->has('messages')
-        //     ->with('messages', function($mQuery){
-        //         $mQuery->orderBy('created_at', 'ASC');
-        //     });
-
-        return $query->select(
-                'contacts.*',
-                DB::raw('messages.body as recent_message_body'),
-                DB::raw('messages.created_at as recent_message_created_at')
-            )
-            ->join('messages', 'contacts.id', '=', 'messages.contact_id')
-            ->where('contacts.user_id', $user->id)
-            ->orderBy('messages.created_at', 'DESC')
-            ->groupBy('contacts.id', 'messages.created_at', 'messages.body');
-    }
-
-
     public function messages()
     {
         return $this->hasMany(\App\Models\Message::class);

@@ -23,7 +23,7 @@ class CreateMessagesTable extends Migration
             $table->unsignedBigInteger('contact_id')->nullable()->onDelete('null');
             $table->string('from', 15)->index();
             $table->string('to', 15)->index();
-            $table->text('body');
+            $table->text('body')->nullable();
             $table->string('error_code', 20)->nullable();
             $table->text('error_message')->nullable();
             $table->string('direction', 15);

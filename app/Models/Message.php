@@ -42,7 +42,7 @@ class Message extends Model
         'service_account_id' => 'integer',
         'contact_id' => 'integer',
         'num_media' => 'integer',
-        'media' => AsCollection::class,
+        'media' => 'array',
         'external_date_created' => 'datetime',
         'external_date_updated' => 'datetime',
     ];

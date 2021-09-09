@@ -29,7 +29,7 @@ Route::group(['middleware' => ['auth:sanctum']], function(){
 
     Route::apiResource('thread', App\Http\Controllers\Api\ThreadController::class)->only('index');
 
-    Route::delete('thread/{phoneNumber}', [App\Http\Controllers\Api\ThreadController::class, 'show'])
+    Route::get('thread/{phoneNumber}', [App\Http\Controllers\Api\ThreadController::class, 'show'])
         ->name('thread.show')
         ->where('phoneNumber', '\+[1-9]\d{1,14}');
 
