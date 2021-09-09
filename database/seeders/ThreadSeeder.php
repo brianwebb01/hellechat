@@ -95,7 +95,7 @@ class ThreadSeeder extends Seeder
         if($withContact){
             $contact = Contact::factory()->create([
                 'user_id' => $user->id,
-                'phone_numbers' => ['mobile' => $this->faker->e164PhoneNumber]
+                'phone_numbers' => ['mobile' => $toNumber]
             ]);
             $contactId = $contact->id;
         }

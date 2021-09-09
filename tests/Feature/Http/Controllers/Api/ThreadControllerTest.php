@@ -12,6 +12,8 @@ use Database\Seeders\ThreadSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Queue;
 use Illuminate\Foundation\Testing\WithFaker;
+use Illuminate\Support\Facades\Schema;
+use Illuminate\Testing\Fluent\AssertableJson;
 use JMac\Testing\Traits\AdditionalAssertions;
 use Tests\TestCase;
 
@@ -45,7 +47,14 @@ class ThreadControllerTest extends TestCase
         $response = $this->actingAs($this->user)->getJson(route('thread.index'));
 
         $response->assertOk();
-        $response->assertJsonStructure([]);
+        $response->assertJson(fn (AssertableJson $json) =>
+            $json->has('data',6)
+                ->has('data.0.phoneNumber')
+                ->has('data.0.messages')
+                ->has('data.0.lastUpdatedAt')
+                ->has('data.0.previewBody')
+                ->has('data.0.contact')
+        );
     }
 
 
@@ -61,7 +70,20 @@ class ThreadControllerTest extends TestCase
             ->getJson(route('thread.show', ['phoneNumber' => $contactNumber]));
 
         $response->assertOk();
-        $response->assertJsonStructure([]);
+        $response->assertJson(function(AssertableJson $json){
+            $json->has('data')
+                ->has('data.phoneNumber')
+                ->has('data.messages', 3)
+                ->has('data.lastUpdatedAt')
+                ->has('data.previewBody')
+                ->has('data.contact');
+            collect(Schema::getColumnListing('messages'))
+                ->map(fn ($c) => "data.messages.0.{$c}")
+                ->each(fn ($e) => $json->has($e));
+            collect(Schema::getColumnListing('contacts'))
+                ->map(fn ($c) => "data.contact.{$c}")
+                ->each(fn ($e) => $json->has($e));
+        });
     }
 
 
