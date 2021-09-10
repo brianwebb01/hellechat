@@ -5,6 +5,7 @@ namespace App\Models;
 use Hashids\Hashids;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Fortify\TwoFactorAuthenticatable;
@@ -87,8 +88,20 @@ class User extends Authenticatable
 
     public function getHashId()
     {
-        $hashids = new Hashids($this->created_at, 6);
+        $hashids = new Hashids(config('app.key'), 6);
         $hid = $hashids->encode($this->id);
         return $hid;
+    }
+
+    public static function findByHashId($hashId)
+    {
+        $hashids = new Hashids(config('app.key'), 6);
+        $decoded = $hashids->decode($hashId);
+
+        if(empty($decoded)){
+            throw new ModelNotFoundException();
+        }
+
+        return static::find($decoded[0]);
     }
 }

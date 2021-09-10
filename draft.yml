@@ -64,7 +64,7 @@ controllers:
   Services\Twilio\Messaging:
     store:
       find: user.id
-      dispatch: ProcessInboundTwilioMessage with:request
+      dispatch: ProcessInboundTwilioMessage
 
   # Api\MessageIngestion:
   #   resource: api.store

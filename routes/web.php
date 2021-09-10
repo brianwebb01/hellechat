@@ -20,3 +20,9 @@ Route::get('/', function () {
 Route::middleware(['auth:sanctum', 'verified'])->get('/dashboard', function () {
     return view('dashboard');
 })->name('dashboard');
+
+
+Route::group(['middleware' => ['TwilioRequestValidator']], function () {
+    Route::post('webhooks/twilio/messaging/{userHashId}', [App\Http\Controllers\Services\Twilio\MessagingController::class, 'store'])
+        ->name('webhooks.twilio.messaging');
+});
