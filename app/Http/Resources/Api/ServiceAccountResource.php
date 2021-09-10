@@ -17,9 +17,8 @@ class ServiceAccountResource extends JsonResource
         return [
             'id' => $this->id,
             'user_id' => $this->user_id,
+            'name' => $this->name,
             'provider' => $this->provider,
-            'api_key' => $this->api_key,
-            'api_secret' => $this->api_secret,
         ];
     }
 }

@@ -6,6 +6,7 @@ use App\Models\ServiceAccount;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
+use Illuminate\Testing\Fluent\AssertableJson;
 use JMac\Testing\Traits\AdditionalAssertions;
 use Tests\TestCase;
 
@@ -41,7 +42,27 @@ class ServiceAccountControllerTest extends TestCase
         $this->assertEquals(3, count($response->json("data")));
         $this->assertCount(1, $userIds);
         $this->assertEquals($this->user->id, $userIds->first());
-        $response->assertJsonStructure([]);
+        $response->assertJson(fn (AssertableJson $json) =>
+            $json->has('data', 3)
+            ->has('data.0.id')
+            ->has('data.0.user_id')
+            ->has('data.0.name')
+            ->has('data.0.provider')
+            ->has('links')
+                ->has('links.first')
+                ->has('links.last')
+                ->has('links.prev')
+                ->has('links.next')
+                ->has('meta')
+                ->has('meta.current_page')
+                ->has('meta.from')
+                ->has('meta.last_page')
+                ->has('meta.links')
+                ->has('meta.path')
+                ->has('meta.per_page')
+                ->has('meta.to')
+                ->has('meta.total')
+        );
     }
 
     /**
@@ -82,7 +103,13 @@ class ServiceAccountControllerTest extends TestCase
         $this->assertCount(1, $serviceAccounts);
 
         $response->assertCreated();
-        $response->assertJsonStructure([]);
+        $response->assertJson(fn (AssertableJson $json) =>
+            $json->has('data')
+            ->has('data.id')
+            ->has('data.user_id')
+            ->has('data.name')
+            ->has('data.provider')
+        );
     }
 
     /**
@@ -109,7 +136,11 @@ class ServiceAccountControllerTest extends TestCase
         ]);
 
         $response->assertUnprocessable();
-        $response->assertJsonStructure([]);
+        $response->assertJson(fn (AssertableJson $json) =>
+            $json->has('message')
+                ->has('errors')
+                ->has('errors.provider', 1)
+        );
     }
 
     /**
@@ -124,7 +155,13 @@ class ServiceAccountControllerTest extends TestCase
         $response = $this->actingAs($this->user)->getJson(route('service-account.show', $serviceAccount));
 
         $response->assertOk();
-        $response->assertJsonStructure([]);
+        $response->assertJson(fn (AssertableJson $json) =>
+            $json->has('data')
+                ->has('data.id')
+                ->has('data.user_id')
+                ->has('data.name')
+                ->has('data.provider')
+        );
     }
 
     /**
@@ -137,7 +174,6 @@ class ServiceAccountControllerTest extends TestCase
         $response = $this->actingAs($this->user)->getJson(route('service-account.show', $serviceAccount));
 
         $response->assertForbidden();
-        $response->assertJsonStructure([]);
     }
 
 
@@ -172,7 +208,13 @@ class ServiceAccountControllerTest extends TestCase
         $serviceAccount->refresh();
 
         $response->assertOk();
-        $response->assertJsonStructure([]);
+        $response->assertJson(fn (AssertableJson $json) =>
+            $json->has('data')
+                ->has('data.id')
+                ->has('data.user_id')
+                ->has('data.name')
+                ->has('data.provider')
+        );
 
         $this->assertEquals($this->user->id, $serviceAccount->user_id);
         $this->assertEquals($name, $serviceAccount->name);
@@ -190,7 +232,6 @@ class ServiceAccountControllerTest extends TestCase
             'name' => 'foo'
         ]);
         $response->assertForbidden();
-        $response->assertJsonStructure([]);
     }
 
 
@@ -220,6 +261,5 @@ class ServiceAccountControllerTest extends TestCase
         $response = $this->actingAs($this->user)->deleteJson(route('service-account.show', $serviceAccount));
 
         $response->assertForbidden();
-        $response->assertJsonStructure([]);
     }
 }

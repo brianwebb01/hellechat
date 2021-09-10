@@ -6,6 +6,7 @@ use App\Models\Contact;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
+use Illuminate\Support\Facades\Schema;
 use Illuminate\Testing\Fluent\AssertableJson;
 use JMac\Testing\Traits\AdditionalAssertions;
 use Tests\TestCase;
@@ -34,7 +35,29 @@ class ContactControllerTest extends TestCase
         $response = $this->actingAs($this->user)->getJson(route('contact.index'));
 
         $response->assertOk();
-        $response->assertJsonStructure([]);
+        $response->assertJson(fn (AssertableJson $json) =>
+            $json->has('data',5)
+                ->has('data.0.id')
+                ->has('data.0.user_id')
+                ->has('data.0.first_name')
+                ->has('data.0.last_name')
+                ->has('data.0.company')
+                ->has('data.0.phone_numbers')
+                ->has('links')
+                ->has('links.first')
+                ->has('links.last')
+                ->has('links.prev')
+                ->has('links.next')
+                ->has('meta')
+                ->has('meta.current_page')
+                ->has('meta.from')
+                ->has('meta.last_page')
+                ->has('meta.links')
+                ->has('meta.path')
+                ->has('meta.per_page')
+                ->has('meta.to')
+                ->has('meta.total')
+        );
     }
 
     /**
@@ -48,7 +71,6 @@ class ContactControllerTest extends TestCase
         $response = $this->actingAs($this->user)->getJson(route('contact.index'));
 
         $response->assertOk();
-        $response->assertJsonStructure([]);
 
         $userIds = collect($response->json("data"))->pluck('user_id')->unique();
         $this->assertCount(1, $userIds);
@@ -88,7 +110,6 @@ class ContactControllerTest extends TestCase
         ]);
 
         $response->assertCreated();
-        $response->assertJsonStructure([]);
 
         $contacts = $this->user->contacts()
             ->where('first_name', $fName)
@@ -102,7 +123,13 @@ class ContactControllerTest extends TestCase
             $json->where('data.first_name', $fName)
                  ->where('data.last_name', $lName)
                  ->where('data.user_id', $this->user->id)
-                 ->etc()
+                 ->has('data')
+                 ->has('data.id')
+                 ->has('data.user_id')
+                 ->has('data.first_name')
+                 ->has('data.last_name')
+                 ->has('data.company')
+                 ->has('data.phone_numbers')
         );
     }
 
@@ -117,7 +144,16 @@ class ContactControllerTest extends TestCase
         $response = $this->actingAs($this->user)->getJson(route('contact.show', $contact));
 
         $response->assertOk();
-        $response->assertJsonStructure([]);
+        $response->assertJson(
+            fn (AssertableJson $json) =>
+            $json->has('data')
+                ->has('data.id')
+                ->has('data.user_id')
+                ->has('data.first_name')
+                ->has('data.last_name')
+                ->has('data.company')
+                ->has('data.phone_numbers')
+        );
     }
 
     /**
@@ -130,7 +166,6 @@ class ContactControllerTest extends TestCase
         $response = $this->actingAs($this->user)->getJson(route('contact.show', $contact));
 
         $response->assertForbidden();
-        $response->assertJsonStructure([]);
     }
 
 
@@ -167,7 +202,6 @@ class ContactControllerTest extends TestCase
         ]);
 
         $response->assertOk();
-        $response->assertJsonStructure([]);
 
         $contact->refresh();
 
@@ -179,7 +213,13 @@ class ContactControllerTest extends TestCase
             $json->where('data.first_name', $fName)
                 ->where('data.last_name', $lName)
                 ->where('data.user_id', $this->user->id)
-                ->etc()
+                ->has('data')
+                ->has('data.id')
+                ->has('data.user_id')
+                ->has('data.first_name')
+                ->has('data.last_name')
+                ->has('data.company')
+                ->has('data.phone_numbers')
         );
     }
 
@@ -195,7 +235,6 @@ class ContactControllerTest extends TestCase
         ]);
 
         $response->assertForbidden();
-        $response->assertJsonStructure([]);
     }
 
 
@@ -224,6 +263,5 @@ class ContactControllerTest extends TestCase
         $response = $this->actingAs($this->user)->deleteJson(route('contact.show', $contact));
 
         $response->assertForbidden();
-        $response->assertJsonStructure([]);
     }
 }

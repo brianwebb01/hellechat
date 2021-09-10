@@ -5,6 +5,7 @@ namespace Tests\Feature\Http\Controllers\Api;
 use App\Models\User;
 use App\Models\Voicemail;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Testing\Fluent\AssertableJson;
 use Tests\TestCase;
 
 /**
@@ -39,7 +40,30 @@ class VoicemailControllerTest extends TestCase
         $this->assertEquals(3, count($response->json("data")));
         $this->assertCount(1, $userIds);
         $this->assertEquals($this->user->id, $userIds->first());
-        $response->assertJsonStructure([]);
+        $response->assertJson(fn (AssertableJson $json) =>
+            $json->has('data', 3)
+                ->has('data.0.id')
+                ->has('data.0.user_id')
+                ->has('data.0.number_id')
+                ->has('data.0.contact_id')
+                ->has('data.0.media_url')
+                ->has('data.0.length')
+                ->has('data.0.transcription')
+                ->has('links')
+                ->has('links.first')
+                ->has('links.last')
+                ->has('links.prev')
+                ->has('links.next')
+                ->has('meta')
+                ->has('meta.current_page')
+                ->has('meta.from')
+                ->has('meta.last_page')
+                ->has('meta.links')
+                ->has('meta.path')
+                ->has('meta.per_page')
+                ->has('meta.to')
+                ->has('meta.total')
+        );
     }
 
 
@@ -55,7 +79,16 @@ class VoicemailControllerTest extends TestCase
         $response = $this->actingAs($this->user)->getJson(route('voicemail.show', $voicemail));
 
         $response->assertOk();
-        $response->assertJsonStructure([]);
+        $response->assertJson(fn (AssertableJson $json) =>
+            $json->has('data')
+                ->has('data.id')
+                ->has('data.user_id')
+                ->has('data.number_id')
+                ->has('data.contact_id')
+                ->has('data.media_url')
+                ->has('data.length')
+                ->has('data.transcription')
+        );
     }
 
     /**
@@ -68,7 +101,6 @@ class VoicemailControllerTest extends TestCase
         $response = $this->actingAs($this->user)->getJson(route('voicemail.show', $voicemail));
 
         $response->assertForbidden();
-        $response->assertJsonStructure([]);
     }
 
 
@@ -98,6 +130,5 @@ class VoicemailControllerTest extends TestCase
         $response = $this->actingAs($this->user)->deleteJson(route('voicemail.show', $voicemail));
 
         $response->assertForbidden();
-        $response->assertJsonStructure([]);
     }
 }

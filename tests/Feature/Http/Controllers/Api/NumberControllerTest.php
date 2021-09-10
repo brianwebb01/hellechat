@@ -7,6 +7,7 @@ use App\Models\ServiceAccount;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
+use Illuminate\Testing\Fluent\AssertableJson;
 use JMac\Testing\Traits\AdditionalAssertions;
 use Tests\TestCase;
 
@@ -34,10 +35,36 @@ class NumberControllerTest extends TestCase
      */
     public function index_behaves_as_expected()
     {
+        Number::factory()->count(5)->create([
+            'user_id' => $this->user->id,
+            'service_account_id' => $this->serviceAccount->id
+        ]);
+
         $response = $this->actingAs($this->user)->getJson(route('number.index'));
 
         $response->assertOk();
-        $response->assertJsonStructure([]);
+        $response->assertJson(fn (AssertableJson $json) =>
+            $json->has('data', 5)
+                ->has('data.0.id')
+                ->has('data.0.user_id')
+                ->has('data.0.service_account_id')
+                ->has('data.0.phone_number')
+                ->has('data.0.friendly_label')
+                ->has('links')
+                ->has('links.first')
+                ->has('links.last')
+                ->has('links.prev')
+                ->has('links.next')
+                ->has('meta')
+                ->has('meta.current_page')
+                ->has('meta.from')
+                ->has('meta.last_page')
+                ->has('meta.links')
+                ->has('meta.path')
+                ->has('meta.per_page')
+                ->has('meta.to')
+                ->has('meta.total')
+        );
     }
 
 
@@ -76,7 +103,15 @@ class NumberControllerTest extends TestCase
             ->get();
         $this->assertCount(1, $numbers);
 
-        $response->assertJsonStructure([]);
+        $response->assertJson(
+            fn (AssertableJson $json) =>
+            $json->has('data')
+                ->has('data.id')
+                ->has('data.user_id')
+                ->has('data.service_account_id')
+                ->has('data.phone_number')
+                ->has('data.friendly_label')
+        );
     }
 
 
@@ -90,7 +125,15 @@ class NumberControllerTest extends TestCase
         $response = $this->actingAs($this->user)->getJson(route('number.show', $number));
 
         $response->assertOk();
-        $response->assertJsonStructure([]);
+        $response->assertJson(
+            fn (AssertableJson $json) =>
+            $json->has('data')
+                ->has('data.id')
+                ->has('data.user_id')
+                ->has('data.service_account_id')
+                ->has('data.phone_number')
+                ->has('data.friendly_label')
+        );
     }
 
     /**
@@ -103,7 +146,6 @@ class NumberControllerTest extends TestCase
         $response = $this->actingAs($this->user)->getJson(route('number.show', $number));
 
         $response->assertForbidden();
-        $response->assertJsonStructure([]);
     }
 
 
@@ -137,7 +179,15 @@ class NumberControllerTest extends TestCase
         $number->refresh();
 
         $response->assertOk();
-        $response->assertJsonStructure([]);
+        $response->assertJson(
+            fn (AssertableJson $json) =>
+            $json->has('data')
+                ->has('data.id')
+                ->has('data.user_id')
+                ->has('data.service_account_id')
+                ->has('data.phone_number')
+                ->has('data.friendly_label')
+        );
 
         $this->assertEquals($this->user->id, $number->user_id);
         $this->assertEquals($this->serviceAccount->id, $number->service_account_id);
@@ -156,7 +206,6 @@ class NumberControllerTest extends TestCase
             'service_account_id' => 0,
         ]);
         $response->assertForbidden();
-        $response->assertJsonStructure([]);
     }
 
     /**
@@ -175,7 +224,11 @@ class NumberControllerTest extends TestCase
         ]);
 
         $response->assertUnprocessable();
-        $response->assertJsonStructure([]);
+        $response->assertJson(fn (AssertableJson $json) =>
+            $json->has('message')
+                ->has('errors')
+                ->has('errors.service_account_id',1)
+        );
 
         $number->refresh();
         $this->assertEquals($this->serviceAccount->id, $number->service_account_id);
@@ -206,6 +259,5 @@ class NumberControllerTest extends TestCase
         $response = $this->actingAs($this->user)->deleteJson(route('number.show', $number));
 
         $response->assertForbidden();
-        $response->assertJsonStructure([]);
     }
 }

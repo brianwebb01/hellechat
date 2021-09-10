@@ -20,7 +20,6 @@ class NumberResource extends JsonResource
             'service_account_id' => $this->service_account_id,
             'phone_number' => $this->phone_number,
             'friendly_label' => $this->friendly_label,
-            'external_identity' => $this->external_identity,
         ];
     }
 }
