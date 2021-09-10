@@ -21,8 +21,14 @@ Route::prefix('webhooks')->group(function(){
 Route::group(['middleware' => ['auth:sanctum']], function(){
 
     Route::get('/user', function(Request $request){
-        //return $request-> user();
-        return $request->bearerToken();
+        $user = $request-> user();
+
+        return [
+            'id' => $user->id,
+            'hash_id' => $user->getHashId(),
+            'email' => $user->email,
+            'created_at' => $user->created_at
+        ];
     });
 
     Route::apiResource('service-account', App\Http\Controllers\Api\ServiceAccountController::class);

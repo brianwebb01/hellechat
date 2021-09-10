@@ -61,6 +61,11 @@ seeders:
   # ServiceAccount, Message, Number, Contact, Voicemail, User
 
 controllers:
+  Services\Twilio\Messaging:
+    store:
+      find: user.id
+      dispatch: ProcessInboundTwilioMessage with:request
+
   # Api\MessageIngestion:
   #   resource: api.store
   #   store:

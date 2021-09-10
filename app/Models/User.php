@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Hashids\Hashids;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -82,5 +83,12 @@ class User extends Authenticatable
     public function voicemails()
     {
         return $this->hasMany(Voicemail::class);
+    }
+
+    public function getHashId()
+    {
+        $hashids = new Hashids($this->created_at, 6);
+        $hid = $hashids->encode($this->id);
+        return $hid;
     }
 }
