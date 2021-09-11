@@ -16,12 +16,6 @@ class MessagingController extends Controller
      */
     public function store(Request $request, $userHashId)
     {
-        //maybe put this into a reusable middleware
-        try{
-            $user = User::findByHashId($userHashId);
-        } catch(ModelNotFoundException){
-            return response('Unauthorized', 403);
-        }
 
         ProcessInboundTwilioMessage::dispatch();
     }

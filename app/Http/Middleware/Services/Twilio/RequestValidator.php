@@ -19,7 +19,7 @@ class RequestValidator
      */
     public function handle(Request $request, Closure $next)
     {
-        if (App::environment('testing')) {
+        if (App::environment(['testing', 'local'])) {
             return $next($request);
         }
 
