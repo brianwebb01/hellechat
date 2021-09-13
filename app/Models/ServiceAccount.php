@@ -4,10 +4,13 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Twilio\Rest\Client;
 
 class ServiceAccount extends Model
 {
     use HasFactory;
+
+    public const PROVIDER_TWILIO = 'twilio';
 
     /**
      * The attributes that are mass assignable.
@@ -42,5 +45,12 @@ class ServiceAccount extends Model
     public function user()
     {
         return $this->belongsTo(\App\Models\User::class);
+    }
+
+    public function getProviderClient()
+    {
+        if($this->provider = self::PROVIDER_TWILIO){
+            return new Client($this->api_key, $this->api_secret);
+        }
     }
 }
