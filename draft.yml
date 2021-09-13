@@ -61,6 +61,9 @@ seeders:
   # ServiceAccount, Message, Number, Contact, Voicemail, User
 
 controllers:
+  Api\User:
+    resource: api.show
+
   # Services\Twilio\Voicemail:
   #   connect:
   #     find: user.id

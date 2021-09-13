@@ -15,26 +15,8 @@ use Illuminate\Support\Facades\Route;
 */
 Route::group(['middleware' => ['auth:sanctum']], function(){
 
-    Route::get('/user', function(Request $request){
-        $user = $request-> user();
-
-        return [
-            'id' => $user->id,
-            'hash_id' => $user->getHashId(),
-            'email' => $user->email,
-            'twilio_messaging_endpoint' => route('webhooks.twilio.messaging', ['userHashId' => $user->getHashId()]),
-            'twilio_voice_endpoints' => $user->numbers->map(fn($number) =>
-                [
-                    $number->phone_number =>
-                    route('webhooks.twilio.voice', [
-                        'userHashId' => $user->getHashId(),
-                        'numberHashId' => $number->getHashId()
-                    ])
-                ]
-            )->flatMap(fn($a) => $a),
-            'created_at' => $user->created_at
-        ];
-    });
+    Route::get('user', [App\Http\Controllers\Api\UserController::class, 'show'])
+        ->name('user');
 
     Route::apiResource('service-account', App\Http\Controllers\Api\ServiceAccountController::class);
 
