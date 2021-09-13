@@ -47,7 +47,15 @@ class VoicemailController extends Controller
     public function greeting(Request $request)
     {
         $response = new VoiceResponse();
-        $response->say('Please leave a message after the tone');
+        $response->pause(['length' => 3]);
+        $response->say(
+            'The party you have called, '.
+            implode(', ', str_split(
+                str_replace('+', '', $request->get('Called'))
+            )).
+            ' is unavailable. Please leave a message after the tone.'
+        );
+        $response->pause(['length' => 1]);
         $response->record([
             'transcribeCallback' => route(
                 'webhooks.twilio.voice.store',[

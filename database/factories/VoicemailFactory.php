@@ -32,6 +32,7 @@ class VoicemailFactory extends Factory
             'media_url' => $this->faker->word,
             'length' => $this->faker->randomNumber(2),
             'transcription' => $this->faker->text,
+            'from' => $this->faker->e164PhoneNumber
         ];
     }
 }
