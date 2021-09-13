@@ -25,7 +25,19 @@ class MessagingControllerTest extends TestCase
         Queue::fake();
 
         $response = $this->post(route('webhooks.twilio.messaging', ['userHashId' => $user->getHashId()]));
+        $response->assertHeader('Content-Type', 'text/xml; charset=UTF-8');
+        $xml = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<Response/>\n";
+        $this->assertEquals($xml, $response->getContent());
 
         Queue::assertPushed(ProcessInboundTwilioMessage::class);
+    }
+
+    /**
+     * @test
+     */
+    public function store_fails_with_invalid_user()
+    {
+        $response = $this->post(route('webhooks.twilio.messaging', ['userHashId' => 'invalid']));
+        $response->assertForbidden();
     }
 }

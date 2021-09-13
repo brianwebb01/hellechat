@@ -29,6 +29,8 @@ class ServiceAccount extends Model
     protected $casts = [
         'id' => 'integer',
         'user_id' => 'integer',
+        'api_key' => 'encrypted',
+        'api_secret' => 'encrypted'
     ];
 
 

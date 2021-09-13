@@ -4,9 +4,8 @@ namespace App\Http\Controllers\Services\Twilio;
 
 use App\Http\Controllers\Controller;
 use App\Jobs\ProcessInboundTwilioMessage;
-use App\Models\User;
-use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
+use Twilio\TwiML\MessagingResponse;
 
 class MessagingController extends Controller
 {
@@ -14,9 +13,11 @@ class MessagingController extends Controller
      * @param \Illuminate\Http\Request $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request, $userHashId)
+    public function store(Request $request)
     {
+        ProcessInboundTwilioMessage::dispatch($request->all());
 
-        ProcessInboundTwilioMessage::dispatch();
+        return response(new MessagingResponse)
+            ->header('Content-Type', 'text/xml');
     }
 }
