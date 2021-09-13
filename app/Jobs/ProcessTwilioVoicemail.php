@@ -83,10 +83,7 @@ class ProcessTwilioVoicemail implements ShouldQueue
     private function getRecordingDuration()
     {
         try {
-            $tw = new Client(
-                config('services.twilio.account_sid'),
-                config('services.twilio.auth_token')
-            );
+            $tw = app(\Twilio\Rest\Client::class);
 
             $recording = $tw->recordings($this->input['RecordingSid'])
                 ->fetch();
