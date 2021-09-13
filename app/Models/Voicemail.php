@@ -18,6 +18,8 @@ class Voicemail extends Model
         'media_url',
         'length',
         'transcription',
+        'from',
+        'external_identity'
     ];
 
     /**

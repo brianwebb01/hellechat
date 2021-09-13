@@ -20,9 +20,11 @@ class CreateVoicemailsTable extends Migration
             $table->foreignId('user_id')->constrained();
             $table->foreignId('number_id')->constrained();
             $table->unsignedBigInteger('contact_id')->nullable()->onDelete('null');
+            $table->string('from', 15)->index();
             $table->string('media_url');
             $table->unsignedSmallInteger('length')->default(0);
             $table->text('transcription')->nullable();
+            $table->string('external_identity')->nullable();
             $table->timestamps();
         });
 

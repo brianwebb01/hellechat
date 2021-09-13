@@ -2,10 +2,9 @@
 
 namespace App\Models;
 
-use Hashids\Hashids;
+use App\Models\Traits\UsesHashId;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Fortify\TwoFactorAuthenticatable;
@@ -19,6 +18,7 @@ class User extends Authenticatable
     use HasProfilePhoto;
     use Notifiable;
     use TwoFactorAuthenticatable;
+    use UsesHashId;
 
     /**
      * The attributes that are mass assignable.
@@ -86,22 +86,4 @@ class User extends Authenticatable
         return $this->hasMany(Voicemail::class);
     }
 
-    public function getHashId()
-    {
-        $hashids = new Hashids(config('app.key'), 6);
-        $hid = $hashids->encode($this->id);
-        return $hid;
-    }
-
-    public static function findByHashId($hashId)
-    {
-        $hashids = new Hashids(config('app.key'), 6);
-        $decoded = $hashids->decode($hashId);
-
-        if(empty($decoded)){
-            throw new ModelNotFoundException();
-        }
-
-        return static::find($decoded[0]);
-    }
 }

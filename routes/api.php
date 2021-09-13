@@ -23,7 +23,15 @@ Route::group(['middleware' => ['auth:sanctum']], function(){
             'hash_id' => $user->getHashId(),
             'email' => $user->email,
             'twilio_messaging_endpoint' => route('webhooks.twilio.messaging', ['userHashId' => $user->getHashId()]),
-            'twilio_voice_endpoint' => null,
+            'twilio_voice_endpoints' => $user->numbers->map(fn($number) =>
+                [
+                    $number->phone_number =>
+                    route('webhooks.twilio.voice', [
+                        'userHashId' => $user->getHashId(),
+                        'numberHashId' => $number->getHashId()
+                    ])
+                ]
+            )->flatMap(fn($a) => $a),
             'created_at' => $user->created_at
         ];
     });

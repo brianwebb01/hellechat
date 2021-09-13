@@ -20,8 +20,8 @@ class CreateServiceAccountsTable extends Migration
             $table->foreignId('user_id')->constrained();
             $table->string('name', 50);
             $table->string('provider', 15);
-            $table->string('api_key');
-            $table->string('api_secret');
+            $table->text('api_key')->nullable();
+            $table->text('api_secret')->nullable();
             $table->timestamps();
         });
 

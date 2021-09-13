@@ -2,12 +2,14 @@
 
 namespace App\Models;
 
+use App\Models\Traits\UsesHashId;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Number extends Model
 {
     use HasFactory;
+    use UsesHashId;
 
     /**
      * The attributes that are mass assignable.
@@ -17,6 +19,7 @@ class Number extends Model
     protected $fillable = [
         'service_account_id',
         'phone_number',
+        'sip_registration_url',
         'friendly_label',
         'external_identity',
     ];

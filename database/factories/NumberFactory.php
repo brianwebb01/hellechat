@@ -24,10 +24,12 @@ class NumberFactory extends Factory
      */
     public function definition()
     {
+        $n = $this->faker->e164PhoneNumber;
         return [
             'user_id' => User::factory(),
             'service_account_id' => ServiceAccount::factory(),
-            'phone_number' => $this->faker->e164PhoneNumber,
+            'phone_number' => $n,
+            'sip_registration_url' => "{$n}@{$n}.sip.somewhere.com",
             'friendly_label' => $this->faker->regexify('[A-Za-z0-9]{50}'),
             'external_identity' => $this->faker->word,
         ];
