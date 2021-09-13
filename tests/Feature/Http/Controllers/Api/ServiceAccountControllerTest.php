@@ -97,8 +97,6 @@ class ServiceAccountControllerTest extends TestCase
         $serviceAccounts = $this->user->service_accounts()
             ->where('name', $name)
             ->where('provider', $provider)
-            ->where('api_key', $api_key)
-            ->where('api_secret', $api_secret)
             ->get();
         $this->assertCount(1, $serviceAccounts);
 

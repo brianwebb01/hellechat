@@ -22,6 +22,8 @@ Route::group(['middleware' => ['auth:sanctum']], function(){
             'id' => $user->id,
             'hash_id' => $user->getHashId(),
             'email' => $user->email,
+            'twilio_messaging_endpoint' => route('webhooks.twilio.messaging', ['userHashId' => $user->getHashId()]),
+            'twilio_voice_endpoint' => null,
             'created_at' => $user->created_at
         ];
     });
