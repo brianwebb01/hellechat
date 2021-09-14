@@ -99,7 +99,7 @@ class ContactControllerTest extends TestCase
         $lName = $this->faker->lastName;
         $phone_numbers = collect(['mobile', 'home', 'office', 'work', 'main'])
             ->random(rand(0, 3))
-            ->map(fn ($i) => [$i => $this->faker->e164PhoneNumber])
+            ->map(fn ($i) => [$i => $this->faker->e164PhoneNumber()])
             ->flatMap(fn ($i) => $i)
             ->toArray();
 
@@ -191,7 +191,7 @@ class ContactControllerTest extends TestCase
         $lName = $this->faker->lastName;
         $phone_numbers = collect(['mobile', 'home', 'office', 'work', 'main'])
             ->random(rand(0, 3))
-            ->map(fn ($i) => [$i => $this->faker->e164PhoneNumber])
+            ->map(fn ($i) => [$i => $this->faker->e164PhoneNumber()])
             ->flatMap(fn ($i) => $i)
             ->toArray();
 

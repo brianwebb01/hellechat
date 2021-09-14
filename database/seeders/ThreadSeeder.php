@@ -42,7 +42,7 @@ class ThreadSeeder extends Seeder
             'number_id' => $number->id,
             'user_id' => $user->id,
             'from' => $myNumber,
-            'to' => $this->faker->e164PhoneNumber,
+            'to' => $this->faker->e164PhoneNumber(),
             'body' => 'to outer space',
             'direction' => Message::DIRECTION_OUT,
             'created_at' => now()->subDays(4)->subSecond(rand(0,59)),
@@ -53,7 +53,7 @@ class ThreadSeeder extends Seeder
             'contact_id' => null,
             'number_id' => $number->id,
             'user_id' => $user->id,
-            'from' => $this->faker->e164PhoneNumber,
+            'from' => $this->faker->e164PhoneNumber(),
             'to' => $myNumber,
             'body' => 'fancy some spam?',
             'direction' => Message::DIRECTION_IN,
@@ -89,7 +89,7 @@ class ThreadSeeder extends Seeder
             'service_account_id' => $serviceAccount->id,
         ]);
         $myNumber = $number->phone_number;
-        $toNumber = $this->faker->e164PhoneNumber;
+        $toNumber = $this->faker->e164PhoneNumber();
         $contactId = null;
 
         if($withContact){

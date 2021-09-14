@@ -10,6 +10,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Facades\Log;
 
 class ProcessOutboundTwilioMessageJob implements ShouldQueue
 {
@@ -40,7 +41,10 @@ class ProcessOutboundTwilioMessageJob implements ShouldQueue
 
         $data = [
             'from' => $this->message->from,
-            //'statusCallback' => null
+            'statusCallback' => route(
+                'webhooks.twilio.messaging.status',
+                ['userHashId' => $this->message->user->getHashId()]
+            )
         ];
 
         if($this->message->body)

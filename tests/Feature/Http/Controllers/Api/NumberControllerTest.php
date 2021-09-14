@@ -85,7 +85,7 @@ class NumberControllerTest extends TestCase
      */
     public function store_saves()
     {
-        $phone_number = $this->faker->e164PhoneNumber;
+        $phone_number = $this->faker->e164PhoneNumber();
         $friendly_label = $this->faker->word;
 
         $response = $this->actingAs($this->user)->postJson(route('number.store'), [
@@ -167,7 +167,7 @@ class NumberControllerTest extends TestCase
     public function update_behaves_as_expected()
     {
         $number = Number::factory()->create(['user_id' => $this->user->id]);
-        $phone_number = $this->faker->e164PhoneNumber;
+        $phone_number = $this->faker->e164PhoneNumber();
         $friendly_label = $this->faker->word;
 
         $response = $this->actingAs($this->user)->putJson(route('number.update', $number), [

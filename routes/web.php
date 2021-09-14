@@ -24,8 +24,11 @@ Route::middleware(['auth:sanctum', 'verified'])->get('/dashboard', function () {
 
 Route::group(['middleware' => ['TwilioRequestValidator', 'RequiresUserHashId']], function () {
 
-    Route::post('webhooks/twilio/messaging/{userHashId}', [App\Http\Controllers\Services\Twilio\MessagingController::class, 'store'])
+    Route::post('webhooks/twilio/messaging/inbound/{userHashId}', [App\Http\Controllers\Services\Twilio\MessagingController::class, 'store'])
         ->name('webhooks.twilio.messaging');
+
+    Route::post('webhooks/twilio/messaging/status/{userHashId}', [App\Http\Controllers\Services\Twilio\MessagingController::class, 'update'])
+        ->name('webhooks.twilio.messaging.status');
 
     Route::post('webhooks/twilio/voicemail/connect/{numberHashId}/{userHashId}', [App\Http\Controllers\Services\Twilio\VoicemailController::class, 'connect'])
         ->name('webhooks.twilio.voice');

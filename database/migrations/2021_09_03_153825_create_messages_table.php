@@ -30,7 +30,7 @@ class CreateMessagesTable extends Migration
             $table->string('status', 15);
             $table->unsignedSmallInteger('num_media')->default(0);
             $table->text('media')->nullable();
-            $table->string('external_identity')->nullable();
+            $table->string('external_identity')->index()->nullable();
             $table->dateTime('external_date_created')->nullable();
             $table->dateTime('external_date_updated')->nullable();
             $table->timestamps();

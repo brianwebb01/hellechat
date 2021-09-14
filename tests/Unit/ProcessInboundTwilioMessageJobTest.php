@@ -36,7 +36,7 @@ class ProcessInboundTwilioMessageJobTest extends TestCase
         ]);
         $contact = Contact::factory()->create([
             'user_id' => $user->id,
-            'phone_numbers' => ['mobile' => $this->faker->e164PhoneNumber]
+            'phone_numbers' => ['mobile' => $this->faker->e164PhoneNumber()]
         ]);
         $data = [
             'From' => $contact->phone_numbers['mobile'],

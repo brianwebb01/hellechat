@@ -5,6 +5,7 @@ namespace App\Observers;
 use App\Jobs\ProcessOutboundTwilioMessageJob;
 use App\Models\Message;
 use App\Models\ServiceAccount;
+use Illuminate\Support\Facades\Log;
 
 class MessageObserver
 {

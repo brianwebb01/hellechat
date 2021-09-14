@@ -7,6 +7,7 @@ use App\Models\Message;
 use App\Models\Number;
 use App\Models\ServiceAccount;
 use App\Models\User;
+use Illuminate\Foundation\Testing\WithFaker;
 use Mockery;
 use Mockery\MockInterface;
 use Tests\TestCase;
@@ -16,6 +17,14 @@ use Twilio\Rest\Client;
 
 class ProcessOutboundTwilioMessageJobTest extends TestCase
 {
+    use WithFaker;
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+        $this->setUpFaker();
+    }
+
     /**
      * @test
      */
@@ -24,9 +33,7 @@ class ProcessOutboundTwilioMessageJobTest extends TestCase
         $user = User::factory()->create();
         $serviceAccount = ServiceAccount::factory()->create([
             'user_id' => $user->id,
-            'provider' => ServiceAccount::PROVIDER_TWILIO,
-            'api_key' => config('services.twilio.account_sid'),
-            'api_secret' => config('services.twilio.auth_token')
+            'provider' => ServiceAccount::PROVIDER_TWILIO
         ]);
         $number = Number::factory()->create([
             'user_id' => $user->id,
@@ -35,24 +42,29 @@ class ProcessOutboundTwilioMessageJobTest extends TestCase
         ]);
         $to = '+15022987961';
 
+        $media = [
+            $this->faker->imageUrl(),
+            $this->faker->imageUrl()
+        ];
+
         $message = Message::factory()->make([
             'user_id' => $user->id,
             'number_id' => $number->id,
             'service_account_id' => $serviceAccount->id,
             'from' => $number->phone_number,
             'to' => $to,
-            'body' => 'foobar',
-            'num_media' => 0,
-            'media' => [],
+            'body' => now()->timezone('America/New_York')->toDateTimeString(),
+            'media' => $media,
+            'num_media' => count($media),
             'direction' => Message::DIRECTION_OUT,
             'status' => Message::STATUS_LOCAL_CREATED,
             'external_identity' => null
         ]);
+
         $message->saveQuietly();
         $this->assertNull($message->external_identity);
 
-
-        $mClient = Mockery::mock(Client::class, function(MockInterface $mock) use ($message){
+        $mClient = Mockery::mock(Client::class, function (MockInterface $mock) use ($message) {
             $mock->messages = Mockery::mock(
                 MessageList::class,
                 fn (MockInterface $mMessageList) =>
@@ -62,7 +74,12 @@ class ProcessOutboundTwilioMessageJobTest extends TestCase
                         $message->to,
                         [
                             'from' => $message->from,
-                            'body' => $message->body
+                            'statusCallback' => route(
+                                'webhooks.twilio.messaging.status',
+                                ['userHashId' => $message->user->getHashId()]
+                            ),
+                            'body' => $message->body,
+                            'mediaUrl' => $message->media
                         ]
                     )
                     ->andReturn(
@@ -79,12 +96,13 @@ class ProcessOutboundTwilioMessageJobTest extends TestCase
         $mServiceAccount = Mockery::mock(
             ServiceAccount::class,
             fn (MockInterface $mock) =>
-                $mock->shouldReceive('getProviderClient')
-                ->andReturn($mClient)
+            $mock->shouldReceive('getProviderClient')
+            ->andReturn($mClient)
         );
 
         $job = new ProcessOutboundTwilioMessageJob(
-            $mServiceAccount, $message
+            $mServiceAccount,
+            $message
         );
         $job->handle();
 

@@ -24,7 +24,7 @@ class NumberFactory extends Factory
      */
     public function definition()
     {
-        $n = $this->faker->e164PhoneNumber;
+        $n = $this->faker->e164PhoneNumber();
         return [
             'user_id' => User::factory(),
             'service_account_id' => ServiceAccount::factory(),

@@ -45,7 +45,7 @@ class MessageControllerTest extends TestCase
             'user_id' => $user->id,
             'service_account_id' => $serviceAccount->id
         ]);
-        $toPhone = $this->faker->e164PhoneNumber;
+        $toPhone = $this->faker->e164PhoneNumber();
         $contact = Contact::factory()->create([
             'user_id' => $user->id,
             'phone_numbers' => ['mobile' => $toPhone]
@@ -108,7 +108,7 @@ class MessageControllerTest extends TestCase
             'user_id' => $user->id,
             'service_account_id' => $serviceAccount->id
         ]);
-        $toPhone = $this->faker->e164PhoneNumber;
+        $toPhone = $this->faker->e164PhoneNumber();
         $body = 'foo bar biz bang';
 
         $response = $this->actingAs($user)->postJson(route('message.store'), [
