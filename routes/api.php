@@ -37,4 +37,7 @@ Route::group(['middleware' => ['auth:sanctum']], function(){
     Route::apiResource('contact-import', App\Http\Controllers\Api\ContactImportController::class)->only('store');
 
     Route::apiResource('voicemail', App\Http\Controllers\Api\VoicemailController::class)->except('store', 'update');
+
+    Route::apiResource('message', App\Http\Controllers\Api\MessageController::class)->only('store');
+
 });
