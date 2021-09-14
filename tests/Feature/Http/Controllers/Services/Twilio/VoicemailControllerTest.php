@@ -104,9 +104,13 @@ class VoicemailControllerTest extends TestCase
     {
         Queue::fake();
 
+        $number = Number::factory()->create();
+
         $response = $this->post(route('webhooks.twilio.voice.store', [
             'userHashId' => $this->user->getHashId()
-        ]));
+        ]), [
+            'To' => $number->phone_number
+        ]);
         $response->assertHeader('Content-Type', 'text/xml; charset=UTF-8');
 
         Queue::assertPushed(ProcessTwilioVoicemail::class);

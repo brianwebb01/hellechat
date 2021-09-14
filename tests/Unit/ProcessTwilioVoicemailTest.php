@@ -10,6 +10,7 @@ use App\Models\ServiceAccount;
 use App\Models\User;
 use Illuminate\Foundation\Testing\WithFaker;
 use Mockery;
+use Mockery\Mock;
 use Mockery\MockInterface;
 use Twilio\Rest\Client;
 use Twilio\Rest\Api\V2010\Account\RecordingContext;
@@ -31,12 +32,8 @@ class ProcessTwilioVoicemailTest extends TestCase
     public function job_saves_voicemail_as_expected()
     {
         $user = User::factory()->create();
-        $serviceAccount = ServiceAccount::factory()->create([
-            'user_id' => $user->id
-        ]);
         $number = Number::factory()->create([
             'user_id' => $user->id,
-            'service_account_id' => $serviceAccount->id
         ]);
         $contact = Contact::factory()->create([
             'user_id' => $user->id,
@@ -52,16 +49,12 @@ class ProcessTwilioVoicemailTest extends TestCase
             'RecordingSid' => $recordingSid
         ];
 
-        $mClient = Mockery::mock(
-            Client::class,
-            fn (MockInterface $mock) =>
+        $mClient = Mockery::mock(Client::class, fn (MockInterface $mock) =>
             $mock->shouldReceive('recordings')
-            ->once()
+                ->once()
                 ->with($recordingSid)
                 ->andReturn(
-                    Mockery::mock(
-                        RecordingContext::class,
-                        fn (MockInterface $mRecordingContext) =>
+                    Mockery::mock(RecordingContext::class, fn (MockInterface $mRecordingContext) =>
                         $mRecordingContext->shouldReceive('fetch')
                             ->once()
                             ->andReturn(
@@ -72,9 +65,13 @@ class ProcessTwilioVoicemailTest extends TestCase
                     )
                 )
         );
-        $this->instance(\Twilio\Rest\Client::class, $mClient);
+        $mServiceAccount = Mockery::mock(ServiceAccount::class, fn(MockInterface $mock) =>
+            $mock->shouldReceive('getProviderClient')
+                ->andReturn($mClient)
+        );
+        $number->serviceAccount = $mServiceAccount;
 
-        $job = new ProcessTwilioVoicemail($data);
+        $job = new ProcessTwilioVoicemail($number, $data);
         $job->handle();
 
         $voicemail = $user->voicemails()

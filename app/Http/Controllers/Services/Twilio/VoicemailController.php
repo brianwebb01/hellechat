@@ -75,7 +75,16 @@ class VoicemailController extends Controller
      */
     public function store(Request $request)
     {
-        ProcessTwilioVoicemail::dispatch($request->all());
+        $number = Number::wherePhoneNumber($request->get('To'))
+            ->first();
+
+        if (is_null($number)) {
+            throw new ModelNotFoundException(
+                "No number record found for " . $request->get('To')
+            );
+        }
+
+        ProcessTwilioVoicemail::dispatch($number, $request->all());
 
         return response(new MessagingResponse)
             ->header('Content-Type', 'text/xml');

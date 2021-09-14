@@ -10,7 +10,6 @@ use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\Log;
-use Twilio\Rest\Client;
 
 class ProcessTwilioVoicemail implements ShouldQueue
 {
@@ -24,8 +23,9 @@ class ProcessTwilioVoicemail implements ShouldQueue
      *
      * @return void
      */
-    public function __construct($input)
+    public function __construct(Number $number, $input)
     {
+        $this->number = $number;
         $this->input = $input;
     }
 
@@ -36,14 +36,6 @@ class ProcessTwilioVoicemail implements ShouldQueue
      */
     public function handle()
     {
-        $this->number = Number::wherePhoneNumber($this->input['To'])
-            ->first();
-
-        if (is_null($this->number)) {
-            Log::error("No number record found for " . $this->intput['To']);
-            return;
-        }
-
         $data = [
             'from' => $this->input['From'],
             'media_url' => $this->input['RecordingUrl'],
@@ -82,16 +74,16 @@ class ProcessTwilioVoicemail implements ShouldQueue
      */
     private function getRecordingDuration()
     {
-        try {
-            $tw = app(\Twilio\Rest\Client::class);
+        // try {
+            $tw = $this->number->serviceAccount->getProviderClient();
 
             $recording = $tw->recordings($this->input['RecordingSid'])
                 ->fetch();
 
             return $recording->duration;
 
-        } catch(\Twilio\Exceptions\RestException $e){
-            return 0;
-        }
+        // } catch(\Twilio\Exceptions\RestException $e){
+        //     return 0;
+        // }
     }
 }
