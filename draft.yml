@@ -73,12 +73,12 @@ controllers:
   #   greeting:
   #     find: user.id
   #   store:
-  #     dispatch: ProcessTwilioVoicemail
+  #     dispatch: ProcessTwilioVoicemailJob
 
   # Services\Twilio\Messaging:
   #   store:
   #     find: user.id
-  #     dispatch: ProcessInboundTwilioMessage
+  #     dispatch: ProcessInboundTwilioMessageJob
 
   # Api\ServiceAccount:
   #   resource: api

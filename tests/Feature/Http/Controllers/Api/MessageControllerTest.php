@@ -56,8 +56,8 @@ class MessageControllerTest extends TestCase
             'from' => $number->phone_number,
             'to' => $toPhone,
             'body' => $body,
-            'direction' => 'outbound',
-            'status' => 'local-created',
+            'direction' => Message::DIRECTION_OUT,
+            'status' => Message::STATUS_LOCAL_CREATED,
             'num_media' => 0,
         ]);
 
@@ -91,6 +91,50 @@ class MessageControllerTest extends TestCase
                 ->has('data.num_media')
                 ->has('data.media')
                 ->has('data.external_identity')
+        );
+    }
+
+
+    /**
+     * @test
+     */
+    public function store_saves_without_contact()
+    {
+        $user = User::factory()->create();
+        $serviceAccount = ServiceAccount::factory()->create([
+            'user_id' => $user->id
+        ]);
+        $number = Number::factory()->create([
+            'user_id' => $user->id,
+            'service_account_id' => $serviceAccount->id
+        ]);
+        $toPhone = $this->faker->e164PhoneNumber;
+        $body = 'foo bar biz bang';
+
+        $response = $this->actingAs($user)->postJson(route('message.store'), [
+            'from' => $number->phone_number,
+            'to' => $toPhone,
+            'body' => $body,
+            'direction' => Message::DIRECTION_OUT,
+            'status' => Message::STATUS_LOCAL_CREATED,
+            'num_media' => 0,
+        ]);
+
+        $messages = $user->messages()
+            ->where('from', $number->phone_number)
+            ->where('to', $toPhone)
+            ->where('body', $body)
+            ->get();
+
+        $this->assertCount(1, $messages);
+        $message = $messages->first();
+
+        $response->assertCreated();
+        $response->assertJson(
+            fn (AssertableJson $json) =>
+            $json->has('data')
+            ->where('data.contact', null)
+            ->etc()
         );
     }
 }

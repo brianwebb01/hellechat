@@ -2,7 +2,7 @@
 
 namespace Tests\Unit;
 
-use App\Jobs\DeleteRemoteTwilioVoicemail;
+use App\Jobs\DeleteRemoteTwilioVoicemailJob;
 use App\Models\Number;
 use App\Models\ServiceAccount;
 use App\Models\Voicemail;
@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\Queue;
 use Mockery;
 use Mockery\MockInterface;
 
-class DeleteRemoteTwilioVoicemailTest extends TestCase
+class DeleteRemoteTwilioVoicemailJobTest extends TestCase
 {
     /**
      * @test
@@ -40,7 +40,7 @@ class DeleteRemoteTwilioVoicemailTest extends TestCase
                 )
         );
 
-        $job = new DeleteRemoteTwilioVoicemail($mServiceAccount, $voicemail);
+        $job = new DeleteRemoteTwilioVoicemailJob($mServiceAccount, $voicemail);
         $job->handle();
     }
 
@@ -65,6 +65,6 @@ class DeleteRemoteTwilioVoicemailTest extends TestCase
 
         $voicemail->delete();
 
-        Queue::assertPushed(DeleteRemoteTwilioVoicemail::class);
+        Queue::assertPushed(DeleteRemoteTwilioVoicemailJob::class);
     }
 }

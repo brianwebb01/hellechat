@@ -3,7 +3,7 @@
 namespace Tests\Unit;
 
 use Tests\TestCase;
-use App\Jobs\ProcessTwilioVoicemail;
+use App\Jobs\ProcessTwilioVoicemailJob;
 use App\Models\Contact;
 use App\Models\Number;
 use App\Models\ServiceAccount;
@@ -16,7 +16,7 @@ use Twilio\Rest\Client;
 use Twilio\Rest\Api\V2010\Account\RecordingContext;
 use Twilio\Rest\Api\V2010\Account\RecordingInstance;
 
-class ProcessTwilioVoicemailTest extends TestCase
+class ProcessTwilioVoicemailJobTest extends TestCase
 {
     use WithFaker;
 
@@ -71,7 +71,7 @@ class ProcessTwilioVoicemailTest extends TestCase
         );
         $number->serviceAccount = $mServiceAccount;
 
-        $job = new ProcessTwilioVoicemail($number, $data);
+        $job = new ProcessTwilioVoicemailJob($number, $data);
         $job->handle();
 
         $voicemail = $user->voicemails()

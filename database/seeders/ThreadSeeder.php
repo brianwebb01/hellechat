@@ -44,7 +44,7 @@ class ThreadSeeder extends Seeder
             'from' => $myNumber,
             'to' => $this->faker->e164PhoneNumber,
             'body' => 'to outer space',
-            'direction' => 'outbound',
+            'direction' => Message::DIRECTION_OUT,
             'created_at' => now()->subDays(4)->subSecond(rand(0,59)),
         ]);
 
@@ -56,7 +56,7 @@ class ThreadSeeder extends Seeder
             'from' => $this->faker->e164PhoneNumber,
             'to' => $myNumber,
             'body' => 'fancy some spam?',
-            'direction' => 'inbound',
+            'direction' => Message::DIRECTION_IN,
             'created_at' => now()->subDays(5)->subSeconds(rand(0,59)),
         ]);
 
@@ -102,11 +102,11 @@ class ThreadSeeder extends Seeder
 
         foreach (range(0, ($messageCount-1)) as $key) {
             if ($key % 2 == 0) {
-                $direction = 'inbound';
+                $direction = Message::DIRECTION_IN;
                 $from = $toNumber;
                 $to = $myNumber;
             } else {
-                $direction = 'outbound';
+                $direction = Message::DIRECTION_OUT;
                 $from = $myNumber;
                 $to = $toNumber;
             }

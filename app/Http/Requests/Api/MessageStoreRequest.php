@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests\Api;
 
+use App\Models\Message;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
@@ -35,7 +36,7 @@ class MessageStoreRequest extends FormRequest
                 'required',
                 'string',
                 'max:15',
-                Rule::in(['inbound', 'outbound'])
+                Rule::in([Message::DIRECTION_IN, Message::DIRECTION_OUT])
             ],
             'status' => ['required', 'string', 'max:15'],
             'num_media' => ['integer'],

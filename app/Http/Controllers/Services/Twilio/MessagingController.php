@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Services\Twilio;
 
 use App\Http\Controllers\Controller;
-use App\Jobs\ProcessInboundTwilioMessage;
+use App\Jobs\ProcessInboundTwilioMessageJob;
 use Illuminate\Http\Request;
 use Twilio\TwiML\MessagingResponse;
 
@@ -15,7 +15,7 @@ class MessagingController extends Controller
      */
     public function store(Request $request)
     {
-        ProcessInboundTwilioMessage::dispatch($request->all());
+        ProcessInboundTwilioMessageJob::dispatch($request->all());
 
         return response(new MessagingResponse)
             ->header('Content-Type', 'text/xml');

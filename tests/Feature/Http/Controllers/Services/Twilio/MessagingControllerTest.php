@@ -2,7 +2,7 @@
 
 namespace Tests\Feature\Http\Controllers\Services\Twilio;
 
-use App\Jobs\ProcessInboundTwilioMessage;
+use App\Jobs\ProcessInboundTwilioMessageJob;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Queue;
@@ -29,7 +29,7 @@ class MessagingControllerTest extends TestCase
         $xml = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<Response/>\n";
         $this->assertEquals($xml, $response->getContent());
 
-        Queue::assertPushed(ProcessInboundTwilioMessage::class);
+        Queue::assertPushed(ProcessInboundTwilioMessageJob::class);
     }
 
     /**

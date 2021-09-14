@@ -2,7 +2,7 @@
 
 namespace App\Observers;
 
-use App\Jobs\DeleteRemoteTwilioVoicemail;
+use App\Jobs\DeleteRemoteTwilioVoicemailJob;
 use App\Models\ServiceAccount;
 use App\Models\Voicemail;
 
@@ -39,7 +39,7 @@ class VoicemailObserver
     public function deleted(Voicemail $voicemail)
     {
         if($voicemail->number->serviceAccount->provider == ServiceAccount::PROVIDER_TWILIO){
-            DeleteRemoteTwilioVoicemail::dispatch($voicemail->number->serviceAccount, $voicemail);
+            DeleteRemoteTwilioVoicemailJob::dispatch($voicemail->number->serviceAccount, $voicemail);
         }
     }
 

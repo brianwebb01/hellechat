@@ -11,7 +11,7 @@ use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\Log;
 
-class ProcessInboundTwilioMessage implements ShouldQueue
+class ProcessInboundTwilioMessageJob implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
@@ -46,7 +46,7 @@ class ProcessInboundTwilioMessage implements ShouldQueue
             'from' => $this->input['From'],
             'to' => $this->input['To'],
             'body' => $this->input['Body'],
-            'direction' => 'inbound',
+            'direction' => Message::DIRECTION_IN,
             'status' => $this->input['SmsStatus'],
             'num_media' => $this->input['NumMedia'],
             'media' => $this->getMediaArray(),

@@ -10,6 +10,20 @@ class Message extends Model
 {
     use HasFactory;
 
+    public const DIRECTION_OUT = 'outbound';
+    public const DIRECTION_IN = 'inbound';
+
+    public const STATUS_LOCAL_CREATED = 'local-created';
+    public const STATUS_ACCEPTED = 'accepted';
+    public const STATUS_QUEUED = 'queued';
+    public const STATUS_SENDING = 'sending';
+    public const STATUS_SENT = 'sent';
+    public const STATUS_DELIVERY_UNKNOWN = 'delivery_unknown';
+    public const STATUS_DELIVERED = 'delivered';
+    public const STATUS_UNDELIVERED = 'undelivered';
+    public const STATUS_FAILED = 'failed';
+    public const STATUS_RECEIVED = 'received';
+
     /**
      * The attributes that are mass assignable.
      *

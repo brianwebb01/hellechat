@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Services\Twilio;
 
 use App\Http\Controllers\Controller;
-use App\Jobs\ProcessTwilioVoicemail;
+use App\Jobs\ProcessTwilioVoicemailJob;
 use App\Models\Number;
 use App\Models\User;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
@@ -84,7 +84,7 @@ class VoicemailController extends Controller
             );
         }
 
-        ProcessTwilioVoicemail::dispatch($number, $request->all());
+        ProcessTwilioVoicemailJob::dispatch($number, $request->all());
 
         return response(new MessagingResponse)
             ->header('Content-Type', 'text/xml');

@@ -2,7 +2,7 @@
 
 namespace Tests\Unit;
 
-use App\Jobs\ProcessInboundTwilioMessage;
+use App\Jobs\ProcessInboundTwilioMessageJob;
 use App\Models\Contact;
 use App\Models\Message;
 use App\Models\Number;
@@ -11,7 +11,7 @@ use App\Models\User;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
 
-class ProcessInboundTwilioMessageTest extends TestCase
+class ProcessInboundTwilioMessageJobTest extends TestCase
 {
     use WithFaker;
 
@@ -49,7 +49,7 @@ class ProcessInboundTwilioMessageTest extends TestCase
             'MessageSid' => 'abc123'
         ];
 
-        $job = new ProcessInboundTwilioMessage($data);
+        $job = new ProcessInboundTwilioMessageJob($data);
         $job->handle();
 
         $message = $user->messages()
@@ -65,7 +65,7 @@ class ProcessInboundTwilioMessageTest extends TestCase
         $this->assertEquals($contact->phone_numbers['mobile'], $message->from);
         $this->assertEquals($number->phone_number, $message->to);
         $this->assertEquals($data['Body'], $message->body);
-        $this->assertEquals('inbound', $message->direction);
+        $this->assertEquals(Message::DIRECTION_IN, $message->direction);
         $this->assertEquals($data['SmsStatus'], $message->status);
         $this->assertEquals($data['NumMedia'], $message->num_media);
         $this->assertEquals(2, count($message->media));

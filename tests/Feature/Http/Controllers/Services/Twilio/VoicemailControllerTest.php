@@ -2,7 +2,7 @@
 
 namespace Tests\Feature\Http\Controllers\Services\Twilio;
 
-use App\Jobs\ProcessTwilioVoicemail;
+use App\Jobs\ProcessTwilioVoicemailJob;
 use App\Models\Number;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -113,6 +113,6 @@ class VoicemailControllerTest extends TestCase
         ]);
         $response->assertHeader('Content-Type', 'text/xml; charset=UTF-8');
 
-        Queue::assertPushed(ProcessTwilioVoicemail::class);
+        Queue::assertPushed(ProcessTwilioVoicemailJob::class);
     }
 }
