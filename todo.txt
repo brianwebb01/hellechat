@@ -1,0 +1,50 @@
+SMS App
+
+
+==========
+@@ TODO @@
+==========
+
+[ MUST HAVE ]
+--------------
+- UIs for:
+  - Message thread.summary w/ delete, thread.show, message.create
+  - Voicemail index w/ delete, show w/ delete
+  - Contact; index w/ delete, show w/ delete, edit, create
+  - Display config
+
+
+[ SHOULD HAVE ]
+---------------
+- user gotify endpoint setting on user w/ new message, new voicemail requests
+- Contact Import
+
+
+[ COULD HAVE ]
+--------------
+- Number could have custom voicemail text or recording
+- Observers / queued jobs to delete records from provider after ingestion. (means we have to store files locally)
+
+
+[ WOULD LIKE TO HAVE]
+---------------------
+- Encrypted database w/ User Key SO... access to DB still can't see everything.
+- Purchase numbers & auto-config sip.
+- Self hosted docker-compose setup with: web, app, db, queue-worker, queue-server, gotify
+- Inbound / Outbound message handling with Telnyx
+- Voicemail call control for Telnyx
+- Voicemail recording handling with Telnyx
+
+
+UI
+  Contacts
+    Index: https://tailwindui.com/components/application-ui/lists/stacked-lists#component-f426e5b090a3887f40863034589d365b
+    Alt-Index: https://tailwindui.com/components/application-ui/lists/stacked-lists#component-09767d67facc566b4999c78410ffb81a
+    Form: https://tailwindui.com/components/application-ui/forms/form-layouts#component-30dffb06e58cdbe872820ed3f943d85a
+  Threads
+    Index: https://tailwindui.com/components/application-ui/lists/feeds#component-14de0cf5b3984e2df49b3262ddb7441e
+    Alt-Index: https://tailwindui.com/components/application-ui/lists/stacked-lists#component-fc562eab6360667233bf420f141d6e9e
+    Show: https://tailwindui.com/components/application-ui/lists/stacked-lists#component-873e7c6c9d62158fc888708dc1dcfa03
+  Voicemail:
+      Index: https://tailwindui.com/components/application-ui/lists/feeds#component-14de0cf5b3984e2df49b3262ddb7441e
+    Alt-Index: https://tailwindui.com/components/application-ui/lists/stacked-lists#component-fc562eab6360667233bf420f141d6e9e
