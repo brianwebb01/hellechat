@@ -17,10 +17,26 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::middleware(['auth:sanctum', 'verified'])->get('/dashboard', function () {
-    return view('dashboard');
-})->name('dashboard');
+Route::group(['middleware' => ['auth:sanctum', 'verified']], function(){
 
+    Route::get('/dashboard', function () {
+        return view('dashboard');
+    })->name('dashboard');
+
+    Route::get('contacts', [App\Http\Controllers\ContactController::class, 'index'])
+        ->name('ui.contact.index');
+
+    Route::get('messages', [App\Http\Controllers\ThreadController::class, 'index'])
+        ->name('ui.thread.index');
+
+    Route::get('messages/{phoneNumber}', [App\Http\Controllers\ThreadController::class, 'show'])
+        ->name('ui.thread.show')
+        ->where('phoneNumber', '\+[1-9]\d{1,14}');
+
+    Route::get('voicemails', [App\Http\Controllers\VoicemailController::class, 'index'])
+        ->name('ui.voicemail.index');
+
+});
 
 Route::group(['middleware' => ['TwilioRequestValidator', 'RequiresUserHashId']], function () {
 
