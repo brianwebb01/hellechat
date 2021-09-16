@@ -62,19 +62,19 @@ seeders:
 
 controllers:
 
-  Contact:
-    index:
-      render: contact.index
+  # Contact:
+  #   index:
+  #     render: contact.index
 
-  Thread:
-    index:
-      render: thread.index
-    show:
-      render: thread.show
+  # Thread:
+  #   index:
+  #     render: thread.index
+  #   show:
+  #     render: thread.show
 
-  Voicemail:
-    index:
-      render: voicemail.index
+  # Voicemail:
+  #   index:
+  #     render: voicemail.index
 
   # Api\Message:
   #   resource: api.store

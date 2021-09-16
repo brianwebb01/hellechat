@@ -12,15 +12,15 @@
 
                 <!-- Navigation Links -->
                 <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
-                    <x-jet-nav-link href="{{ route('ui.thread.index') }}" :active="request()->routeIs('thread.index')">
+                    <x-jet-nav-link href="{{ route('ui.thread.index') }}" :active="request()->routeIs('ui.thread.index')">
                         {{ __('Messages') }}
                     </x-jet-nav-link>
 
-                    <x-jet-nav-link href="{{ route('ui.voicemail.index') }}" :active="request()->routeIs('voicemail.index')">
+                    <x-jet-nav-link href="{{ route('ui.voicemail.index') }}" :active="request()->routeIs('ui.voicemail.index')">
                         {{ __('Voicemail') }}
                     </x-jet-nav-link>
 
-                    <x-jet-nav-link href="{{ route('ui.contact.index') }}" :active="request()->routeIs('contact.index')">
+                    <x-jet-nav-link href="{{ route('ui.contact.index') }}" :active="request()->routeIs('ui.contact.index')">
                         {{ __('Contacts') }}
                     </x-jet-nav-link>
                 </div>
@@ -149,8 +149,14 @@
     <!-- Responsive Navigation Menu -->
     <div :class="{'block': open, 'hidden': ! open}" class="hidden sm:hidden">
         <div class="pt-2 pb-3 space-y-1">
-            <x-jet-responsive-nav-link href="{{ route('dashboard') }}" :active="request()->routeIs('dashboard')">
-                {{ __('Dashboard') }}
+            <x-jet-responsive-nav-link href="{{ route('ui.thread.index') }}" :active="request()->routeIs('ui.thread.index')">
+                {{ __('Messages') }}
+            </x-jet-responsive-nav-link>
+            <x-jet-responsive-nav-link href="{{ route('ui.voicemail.index') }}" :active="request()->routeIs('ui.voicemail.index')">
+                {{ __('Voicemail') }}
+            </x-jet-responsive-nav-link>
+            <x-jet-responsive-nav-link href="{{ route('ui.contact.index') }}" :active="request()->routeIs('ui.contact.index')">
+                {{ __('Contacts') }}
             </x-jet-responsive-nav-link>
         </div>
 

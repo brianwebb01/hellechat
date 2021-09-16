@@ -8,6 +8,6 @@ class ContactManager extends Component
 {
     public function render()
     {
-        return view('livewire.contact-manager');
+        return view('livewire.contact-manager.base');
     }
 }
