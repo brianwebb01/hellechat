@@ -3,7 +3,7 @@
     <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
 
 
-        <div class="max-w-3xl mx-auto px-4 sm:px-6 md:flex md:items-center md:justify-between md:space-x-5 lg:max-w-7xl lg:px-8">
+        <div class=" mx-auto  md:flex md:items-center md:justify-between md:space-x-5 max-w-7xl">
             <div class="flex items-center space-x-5">
                 <div>
                     <h2 class=" font-semibold text-xl text-gray-800 leading-tight">
