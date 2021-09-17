@@ -38,16 +38,6 @@ SMS App
 -------------------------------------------------------------------------------------------------------------
 * 1 Component per page. Perhaps use Livewire/Turbolinks for SPA feel
 * Thoughts
-  * Contact.index
-    * Alpha listing. NO context menu per item.  Actions on slide-in show.
-    * Ever present search box
-    * Ever present (add) button
-    * Index > add: slide-in form
-    * Index > item.select: slide-in show
-    * slide-in show > edit: slide-in edit
-    * slide-in show has: call, message, edit and delete buttons.
-    * slide-in show.delete hides slide-in, refreshes index
-
   * Thread.index
     * Ever present (new) button
     * Listing with context menu: delete
@@ -69,17 +59,16 @@ SMS App
       * Displays: Transcription, date, contact / number info
     * Slide-in show.delete hides slide-in, refreshes index
 
+  * Service Accounts CRUD
+
+  * Numbers CRUD
+
+  * Configuration.Index
+
 
 UI
   General
     In-row-edit-menu: https://tailwindui.com/components/application-ui/overlays/slide-overs#component-e925f5b20e7d4110cc16920f1cf1a6fc
-    Notification: https://tailwindui.com/components/application-ui/overlays/notifications#component-a065edf8f08a35f06943b2e266ca9af1
-  Contacts
-    Index: https://tailwindui.com/components/application-ui/lists/stacked-lists#component-f426e5b090a3887f40863034589d365b
-    Alt-Index: https://tailwindui.com/components/application-ui/lists/stacked-lists#component-09767d67facc566b4999c78410ffb81a
-    Form: (slide in): https://tailwindui.com/components/application-ui/overlays/slide-overs#component-4d1d575bd79eef81afc9a4f2e1900ecb
-    Show: (slide in): https://tailwindui.com/components/application-ui/overlays/slide-overs#component-bc95c7efe53ae0494dccab42b64f5e73
-    Form: https://tailwindui.com/components/application-ui/forms/form-layouts#component-30dffb06e58cdbe872820ed3f943d85a
   Threads
     Index: https://tailwindui.com/components/application-ui/lists/feeds#component-14de0cf5b3984e2df49b3262ddb7441e
     Alt-Index: https://tailwindui.com/components/application-ui/lists/stacked-lists#component-fc562eab6360667233bf420f141d6e9e
