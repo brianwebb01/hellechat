@@ -74,6 +74,3 @@ UI
     Alt-Index: https://tailwindui.com/components/application-ui/lists/stacked-lists#component-fc562eab6360667233bf420f141d6e9e
     Show: (slide in): https://tailwindui.com/components/application-ui/overlays/slide-overs#component-b4584a872076ca045124da4c49716604
     Show: https://tailwindui.com/components/application-ui/lists/stacked-lists#component-873e7c6c9d62158fc888708dc1dcfa03
-  Voicemail:
-    Index: https://tailwindui.com/components/application-ui/lists/feeds#component-14de0cf5b3984e2df49b3262ddb7441e
-    Alt-Index: https://tailwindui.com/components/application-ui/lists/stacked-lists#component-fc562eab6360667233bf420f141d6e9e

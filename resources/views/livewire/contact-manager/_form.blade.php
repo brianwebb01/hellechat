@@ -2,7 +2,7 @@
     <div class="absolute inset-0 overflow-hidden">
         <!-- Background overlay, show/hide based on slide-over state. -->
         <div class="absolute inset-0" aria-hidden="true">
-            <div class="fixed inset-y-0 pl-16 max-w-full right-0 flex" x-cloak x-show="contactFormOpen" x-transition:enter="transform transition ease-in-out duration-500 sm:duration-700" x-transition:enter-start="translate-x-full" x-transition:enter-end="translate-x-0" x-transition:leave="transform transition ease-in-out duration-500 sm:duration-700" x-transition:leave-start="translate-x-0" x-transition:leave-end="translate-x-full">
+            <div class="fixed inset-y-0 pl-10 max-w-full right-0 flex sm:pl-16" x-cloak x-show="contactFormOpen" x-transition:enter="transform transition ease-in-out duration-500 sm:duration-700" x-transition:enter-start="translate-x-full" x-transition:enter-end="translate-x-0" x-transition:leave="transform transition ease-in-out duration-500 sm:duration-700" x-transition:leave-start="translate-x-0" x-transition:leave-end="translate-x-full">
 
                 <div class="w-screen max-w-md">
                     <form class="h-full divide-y divide-gray-200 flex flex-col bg-white shadow-xl">
