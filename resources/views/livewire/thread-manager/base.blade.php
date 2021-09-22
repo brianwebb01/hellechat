@@ -6,7 +6,7 @@
 
     <div class="border-t border-gray-200">
         <div>
-            <div class="relative h-chat-area flex flex-col bg-gray-50">
+            <div class="h-chat-area relative flex flex-col bg-gray-50">
 
                 <div class="flex-grow w-full max-w-7xl mx-auto lg:flex">
                     <div class="flex-1 min-w-0 xl:flex">

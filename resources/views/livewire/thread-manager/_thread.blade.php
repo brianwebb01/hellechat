@@ -1,4 +1,5 @@
-<div id="messages" class="flex flex-col space-y-4 p-3 overflow-y-auto scrollbar-thumb-blue scrollbar-thumb-rounded scrollbar-track-blue-lighter scrollbar-w-2 scrolling-touch">
+<div x-init="$nextTick(() => { this.scrollTo({top: this.clientHeight}) })"
+    id="messages" class="h-thread-ui-mobile flex flex-col space-y-4 p-3 overflow-y-auto scrollbar-thumb-blue scrollbar-thumb-rounded scrollbar-track-blue-lighter scrollbar-w-2 scrolling-touch">
     <div class="chat-message">
         <div class="flex items-end">
             <div class="flex flex-col space-y-2 text-xs max-w-xs mx-2 order-2 items-start">

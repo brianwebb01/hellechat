@@ -4,3 +4,7 @@
 .h-chat-area {
   height: calc(100vh - 139px);
 }
+.h-thread-ui-mobile {
+  height: calc(100vh - 207px);
+}
+[x-cloak] { display: none !important; }
