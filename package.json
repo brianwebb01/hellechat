@@ -19,5 +19,8 @@
         "postcss": "^8.1.14",
         "postcss-import": "^14.0.1",
         "tailwindcss": "^2.2.15"
+    },
+    "dependencies": {
+        "turbolinks": "^5.2.0"
     }
 }
