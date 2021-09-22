@@ -1,4 +1,5 @@
-<div class="xl:flex-shrink-0 xl:w-64 xl:border-r bg-gray-50">
+<div x-cloak x-show="!threadIsOpen || window.innerWidth >= 1280" x-transition:enter="transform transition ease-in-out duration-300" x-transition:enter-start="-translate-x-full" x-transition:enter-end="translate-x-0" class="xl:flex-shrink-0 xl:w-64 xl:border-r bg-gray-50">
+
     <div class="h-full pl-4 pr-2 py-3 sm:pl-6 lg:pl-8 xl:pl-0">
         <div class="h-full relative" style="min-height: 12rem">
 
@@ -17,7 +18,7 @@
                     <img class="h-10 w-10 rounded-full" src="https://images.unsplash.com/photo-1600486913747-55e5470d6f40?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&amp;ixlib=rb-1.2.1&amp;auto=format&amp;fit=crop&amp;w=80&amp;h=80&amp;q=80" alt="" />
                 </div>
                 <div class="flex-1 min-w-0">
-                    <a href="#one" class="focus:outline-none">
+                    <a @click.prevent="toggleThreadOpen()" href="#one" class="focus:outline-none">
                         <span class="absolute inset-0" aria-hidden="true"></span>
                         <div class="flex items-center justify-between">
                             <p class="text-sm font-bold text-gray-900">Lina Dry</p>
@@ -37,7 +38,7 @@
                     <img class="h-10 w-10 rounded-full" src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?auto=format&amp;fit=crop&amp;w=100&amp;h=100&amp;q=80" alt="" />
                 </div>
                 <div class="flex-1 min-w-0">
-                    <a href="#two" class="focus:outline-none">
+                    <a @click.prevent="toggleThreadOpen()" href="#two" class="focus:outline-none">
                         <span class="absolute inset-0" aria-hidden="true"></span>
                         <div class="flex items-center justify-between">
                             <p class="text-sm font-bold text-gray-900">Kina Mayer</p>
@@ -54,7 +55,7 @@
                     <img class="h-10 w-10 rounded-full" src="https://images.unsplash.com/photo-1600486913747-55e5470d6f40?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&amp;ixlib=rb-1.2.1&amp;auto=format&amp;fit=crop&amp;w=80&amp;h=80&amp;q=80" alt="" />
                 </div>
                 <div class="flex-1 min-w-0">
-                    <a href="#three" class="focus:outline-none">
+                    <a @click.prevent="toggleThreadOpen()" href="#three" class="focus:outline-none">
                         <span class="absolute inset-0" aria-hidden="true"></span>
                         <div class="flex items-center justify-between">
                             <p class="text-sm font-bold text-gray-900">Lina Dry</p>

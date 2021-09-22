@@ -12,6 +12,7 @@ class ContactController extends Controller
      */
     public function index(Request $request)
     {
+        session(['responsive-nav-heading' => 'Contacts']);
         return view('contact.index');
     }
 }
