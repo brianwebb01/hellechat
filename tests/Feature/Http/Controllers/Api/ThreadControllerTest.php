@@ -44,7 +44,7 @@ class ThreadControllerTest extends TestCase
         foreach (range(0, 4) as $c)
             with(new ThreadSeeder)->seedThread($this->user, true, 10);
 
-        $response = $this->actingAs($this->user)->getJson(route('thread.index'));
+        $response = $this->actingAs($this->user)->getJson(route('threads.index'));
 
         $response->assertOk();
         $response->assertJson(fn (AssertableJson $json) =>
@@ -67,7 +67,7 @@ class ThreadControllerTest extends TestCase
             ->seedThread($this->user, true, 3);
 
         $response = $this->actingAs($this->user)
-            ->getJson(route('thread.show', ['phoneNumber' => $contactNumber]));
+            ->getJson(route('threads.show', ['phoneNumber' => $contactNumber]));
 
         $response->assertOk();
         $response->assertJson(function(AssertableJson $json){
@@ -98,7 +98,7 @@ class ThreadControllerTest extends TestCase
             ->orWhere('to', $contactNumber)->get();
 
         $response = $this->actingAs($this->user)
-            ->deleteJson(route('thread.destroy', ['phoneNumber' => $contactNumber]));
+            ->deleteJson(route('threads.destroy', ['phoneNumber' => $contactNumber]));
 
         $response->assertNoContent();
 

@@ -35,7 +35,7 @@ class ServiceAccountControllerTest extends TestCase
         ]);
         ServiceAccount::factory()->count(3)->create();
 
-        $response = $this->actingAs($this->user)->getJson(route('service-account.index'));
+        $response = $this->actingAs($this->user)->getJson(route('service-accounts.index'));
 
         $response->assertOk();
         $userIds = collect($response->json("data"))->pluck('user_id')->unique();
@@ -87,7 +87,7 @@ class ServiceAccountControllerTest extends TestCase
         $api_key = $this->faker->word;
         $api_secret = $this->faker->word;
 
-        $response = $this->actingAs($this->user)->postJson(route('service-account.store'), [
+        $response = $this->actingAs($this->user)->postJson(route('service-accounts.store'), [
             'name' => $name,
             'provider' => $provider,
             'api_key' => $api_key,
@@ -126,7 +126,7 @@ class ServiceAccountControllerTest extends TestCase
         $api_key = $this->faker->word;
         $api_secret = $this->faker->word;
 
-        $response = $this->actingAs($this->user)->postJson(route('service-account.store'), [
+        $response = $this->actingAs($this->user)->postJson(route('service-accounts.store'), [
             'name' => $name,
             'provider' => $provider,
             'api_key' => $api_key,
@@ -150,7 +150,7 @@ class ServiceAccountControllerTest extends TestCase
             'user_id' => $this->user->id
         ]);
 
-        $response = $this->actingAs($this->user)->getJson(route('service-account.show', $serviceAccount));
+        $response = $this->actingAs($this->user)->getJson(route('service-accounts.show', $serviceAccount));
 
         $response->assertOk();
         $response->assertJson(fn (AssertableJson $json) =>
@@ -169,7 +169,7 @@ class ServiceAccountControllerTest extends TestCase
     {
         $serviceAccount = ServiceAccount::factory()->create();
 
-        $response = $this->actingAs($this->user)->getJson(route('service-account.show', $serviceAccount));
+        $response = $this->actingAs($this->user)->getJson(route('service-accounts.show', $serviceAccount));
 
         $response->assertForbidden();
     }
@@ -198,7 +198,7 @@ class ServiceAccountControllerTest extends TestCase
         $name = $this->faker->name;
         $api_key = $this->faker->word;
 
-        $response = $this->actingAs($this->user)->putJson(route('service-account.update', $serviceAccount), [
+        $response = $this->actingAs($this->user)->putJson(route('service-accounts.update', $serviceAccount), [
             'name' => $name,
             'api_key' => $api_key,
         ]);
@@ -226,7 +226,7 @@ class ServiceAccountControllerTest extends TestCase
     {
         $serviceAccount = ServiceAccount::factory()->create();
 
-        $response = $this->actingAs($this->user)->putJson(route('service-account.update', $serviceAccount), [
+        $response = $this->actingAs($this->user)->putJson(route('service-accounts.update', $serviceAccount), [
             'name' => 'foo'
         ]);
         $response->assertForbidden();
@@ -242,7 +242,7 @@ class ServiceAccountControllerTest extends TestCase
             'user_id' => $this->user->id
         ]);
 
-        $response = $this->actingAs($this->user)->deleteJson(route('service-account.destroy', $serviceAccount));
+        $response = $this->actingAs($this->user)->deleteJson(route('service-accounts.destroy', $serviceAccount));
 
         $response->assertNoContent();
 
@@ -256,7 +256,7 @@ class ServiceAccountControllerTest extends TestCase
     {
         $serviceAccount = ServiceAccount::factory()->create();
 
-        $response = $this->actingAs($this->user)->deleteJson(route('service-account.show', $serviceAccount));
+        $response = $this->actingAs($this->user)->deleteJson(route('service-accounts.show', $serviceAccount));
 
         $response->assertForbidden();
     }

@@ -6,9 +6,9 @@ use App\Models\User;
 use Tests\TestCase;
 
 /**
- * @see \App\Http\Controllers\ThreadController
+ * @see \App\Http\Controllers\NumberController
  */
-class ThreadControllerTest extends TestCase
+class NumberControllerTest extends TestCase
 {
     protected $user;
 
@@ -23,9 +23,9 @@ class ThreadControllerTest extends TestCase
      */
     public function index_displays_view()
     {
-        $response = $this->actingAs($this->user)->get(route('ui.thread.index'));
+        $response = $this->actingAs($this->user)->get(route('ui.numbers.index'));
 
         $response->assertOk();
-        $response->assertViewIs('thread.index');
+        $response->assertViewIs('number.index');
     }
 }

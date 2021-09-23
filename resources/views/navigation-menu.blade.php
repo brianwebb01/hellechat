@@ -114,8 +114,12 @@
                             </x-jet-dropdown-link>
                             @endif
 
-                            <x-jet-dropdown-link href="{{ route('dashboard') }}">
-                                {{ __('Config') }}
+                            <x-jet-dropdown-link href="{{ route('ui.service-accounts.index') }}">
+                                {{ __('Service Accounts') }}
+                            </x-jet-dropdown-link>
+
+                            <x-jet-dropdown-link href="{{ route('ui.numbers.index') }}">
+                                {{ __('Numbers') }}
                             </x-jet-dropdown-link>
 
                             <div class="border-t border-gray-100"></div>
@@ -194,6 +198,14 @@
                     {{ __('API Tokens') }}
                 </x-jet-responsive-nav-link>
                 @endif
+
+                <x-jet-responsive-nav-link href="{{ route('ui.service-accounts.index') }}" :active="request()->routeIs('ui.service-accounts.index')">
+                    {{ __('Service Accounts') }}
+                </x-jet-responsive-nav-link>
+
+                <x-jet-responsive-nav-link href="{{ route('ui.numbers.index') }}" :active="request()->routeIs('ui.numbers.index')">
+                    {{ __('Numbers') }}
+                </x-jet-responsive-nav-link>
 
                 <!-- Authentication -->
                 <form method="POST" action="{{ route('logout') }}">

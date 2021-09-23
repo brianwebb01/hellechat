@@ -6,10 +6,11 @@ use App\Models\User;
 use Tests\TestCase;
 
 /**
- * @see \App\Http\Controllers\ThreadController
+ * @see \App\Http\Controllers\ServiceAccountController
  */
-class ThreadControllerTest extends TestCase
+class ServiceAccountControllerTest extends TestCase
 {
+
     protected $user;
 
     protected function setUp(): void
@@ -23,9 +24,9 @@ class ThreadControllerTest extends TestCase
      */
     public function index_displays_view()
     {
-        $response = $this->actingAs($this->user)->get(route('ui.thread.index'));
+        $response = $this->actingAs($this->user)->get(route('ui.service-accounts.index'));
 
         $response->assertOk();
-        $response->assertViewIs('thread.index');
+        $response->assertViewIs('service_account.index');
     }
 }

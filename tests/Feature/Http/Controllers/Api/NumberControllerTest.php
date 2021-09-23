@@ -40,7 +40,7 @@ class NumberControllerTest extends TestCase
             'service_account_id' => $this->serviceAccount->id
         ]);
 
-        $response = $this->actingAs($this->user)->getJson(route('number.index'));
+        $response = $this->actingAs($this->user)->getJson(route('numbers.index'));
 
         $response->assertOk();
         $response->assertJson(fn (AssertableJson $json) =>
@@ -50,6 +50,8 @@ class NumberControllerTest extends TestCase
                 ->has('data.0.service_account_id')
                 ->has('data.0.phone_number')
                 ->has('data.0.friendly_label')
+                ->has('data.0.messaging_endpoint')
+                ->has('data.0.voice_endpoint')
                 ->has('links')
                 ->has('links.first')
                 ->has('links.last')
@@ -88,7 +90,7 @@ class NumberControllerTest extends TestCase
         $phone_number = $this->faker->e164PhoneNumber();
         $friendly_label = $this->faker->word;
 
-        $response = $this->actingAs($this->user)->postJson(route('number.store'), [
+        $response = $this->actingAs($this->user)->postJson(route('numbers.store'), [
             'service_account_id' => $this->serviceAccount->id,
             'phone_number' => $phone_number,
             'friendly_label' => $friendly_label,
@@ -111,6 +113,8 @@ class NumberControllerTest extends TestCase
                 ->has('data.service_account_id')
                 ->has('data.phone_number')
                 ->has('data.friendly_label')
+                ->has('data.messaging_endpoint')
+                ->has('data.voice_endpoint')
         );
     }
 
@@ -122,7 +126,7 @@ class NumberControllerTest extends TestCase
     {
         $number = Number::factory()->create(['user_id' => $this->user->id]);
 
-        $response = $this->actingAs($this->user)->getJson(route('number.show', $number));
+        $response = $this->actingAs($this->user)->getJson(route('numbers.show', $number));
 
         $response->assertOk();
         $response->assertJson(
@@ -133,6 +137,8 @@ class NumberControllerTest extends TestCase
                 ->has('data.service_account_id')
                 ->has('data.phone_number')
                 ->has('data.friendly_label')
+                ->has('data.messaging_endpoint')
+                ->has('data.voice_endpoint')
         );
     }
 
@@ -143,7 +149,7 @@ class NumberControllerTest extends TestCase
     {
         $number = Number::factory()->create();
 
-        $response = $this->actingAs($this->user)->getJson(route('number.show', $number));
+        $response = $this->actingAs($this->user)->getJson(route('numbers.show', $number));
 
         $response->assertForbidden();
     }
@@ -170,7 +176,7 @@ class NumberControllerTest extends TestCase
         $phone_number = $this->faker->e164PhoneNumber();
         $friendly_label = $this->faker->word;
 
-        $response = $this->actingAs($this->user)->putJson(route('number.update', $number), [
+        $response = $this->actingAs($this->user)->putJson(route('numbers.update', $number), [
             'service_account_id' => $this->serviceAccount->id,
             'phone_number' => $phone_number,
             'friendly_label' => $friendly_label,
@@ -187,6 +193,8 @@ class NumberControllerTest extends TestCase
                 ->has('data.service_account_id')
                 ->has('data.phone_number')
                 ->has('data.friendly_label')
+                ->has('data.messaging_endpoint')
+                ->has('data.voice_endpoint')
         );
 
         $this->assertEquals($this->user->id, $number->user_id);
@@ -202,7 +210,7 @@ class NumberControllerTest extends TestCase
     {
         $number = Number::factory()->create();
 
-        $response = $this->actingAs($this->user)->putJson(route('number.update', $number), [
+        $response = $this->actingAs($this->user)->putJson(route('numbers.update', $number), [
             'service_account_id' => 0,
         ]);
         $response->assertForbidden();
@@ -219,7 +227,7 @@ class NumberControllerTest extends TestCase
         ]);
         $sa = ServiceAccount::factory()->create();
 
-        $response = $this->actingAs($this->user)->putJson(route('number.update', $number), [
+        $response = $this->actingAs($this->user)->putJson(route('numbers.update', $number), [
             'service_account_id' => $sa->id,
         ]);
 
@@ -242,7 +250,7 @@ class NumberControllerTest extends TestCase
     {
         $number = Number::factory()->create(['user_id' => $this->user->id]);
 
-        $response = $this->actingAs($this->user)->deleteJson(route('number.destroy', $number));
+        $response = $this->actingAs($this->user)->deleteJson(route('numbers.destroy', $number));
 
         $response->assertNoContent();
 
@@ -256,7 +264,7 @@ class NumberControllerTest extends TestCase
     {
         $number = Number::factory()->create();
 
-        $response = $this->actingAs($this->user)->deleteJson(route('number.show', $number));
+        $response = $this->actingAs($this->user)->deleteJson(route('numbers.show', $number));
 
         $response->assertForbidden();
     }

@@ -18,26 +18,26 @@ Route::group(['middleware' => ['auth:sanctum']], function(){
     Route::get('user', [App\Http\Controllers\Api\UserController::class, 'show'])
         ->name('user');
 
-    Route::apiResource('service-account', App\Http\Controllers\Api\ServiceAccountController::class);
+    Route::apiResource('service-accounts', App\Http\Controllers\Api\ServiceAccountController::class);
 
-    Route::apiResource('thread', App\Http\Controllers\Api\ThreadController::class)->only('index');
+    Route::apiResource('threads', App\Http\Controllers\Api\ThreadController::class)->only('index');
 
-    Route::get('thread/{phoneNumber}', [App\Http\Controllers\Api\ThreadController::class, 'show'])
-        ->name('thread.show')
+    Route::get('threads/{phoneNumber}', [App\Http\Controllers\Api\ThreadController::class, 'show'])
+        ->name('threads.show')
         ->where('phoneNumber', '\+[1-9]\d{1,14}');
 
-    Route::delete('thread/{phoneNumber}', [App\Http\Controllers\Api\ThreadController::class, 'destroy'])
-        ->name('thread.destroy')
+    Route::delete('threads/{phoneNumber}', [App\Http\Controllers\Api\ThreadController::class, 'destroy'])
+        ->name('threads.destroy')
         ->where('phoneNumber', '\+[1-9]\d{1,14}');
 
-    Route::apiResource('number', App\Http\Controllers\Api\NumberController::class);
+    Route::apiResource('numbers', App\Http\Controllers\Api\NumberController::class);
 
-    Route::apiResource('contact', App\Http\Controllers\Api\ContactController::class);
+    Route::apiResource('contacts', App\Http\Controllers\Api\ContactController::class);
 
-    Route::apiResource('contact-import', App\Http\Controllers\Api\ContactImportController::class)->only('store');
+    Route::apiResource('contacts-import', App\Http\Controllers\Api\ContactImportController::class)->only('store');
 
-    Route::apiResource('voicemail', App\Http\Controllers\Api\VoicemailController::class)->except('store', 'update');
+    Route::apiResource('voicemails', App\Http\Controllers\Api\VoicemailController::class)->except('store', 'update');
 
-    Route::apiResource('message', App\Http\Controllers\Api\MessageController::class)->only('store');
+    Route::apiResource('messages', App\Http\Controllers\Api\MessageController::class)->only('store');
 
 });

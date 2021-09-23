@@ -52,7 +52,7 @@ class MessageControllerTest extends TestCase
         ]);
         $body = 'foo bar biz bang';
 
-        $response = $this->actingAs($user)->postJson(route('message.store'), [
+        $response = $this->actingAs($user)->postJson(route('messages.store'), [
             'from' => $number->phone_number,
             'to' => $toPhone,
             'body' => $body,
@@ -111,7 +111,7 @@ class MessageControllerTest extends TestCase
         $toPhone = $this->faker->e164PhoneNumber();
         $body = 'foo bar biz bang';
 
-        $response = $this->actingAs($user)->postJson(route('message.store'), [
+        $response = $this->actingAs($user)->postJson(route('messages.store'), [
             'from' => $number->phone_number,
             'to' => $toPhone,
             'body' => $body,

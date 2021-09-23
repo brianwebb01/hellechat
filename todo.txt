@@ -8,10 +8,13 @@ SMS App
 [ MUST HAVE ]
 --------------
 - UIs for:
-  - Message thread.summary w/ delete, thread.show, message.create
-  - Voicemail index w/ delete, show w/ delete
-  - Contact; index w/ delete, show w/ delete, edit, create
   - Display config
+  - Number management
+  - Service account management
+- Wire up messages ui
+- Wire up voicemail ui
+- Wire up contacts ui
+
 
 
 [ SHOULD HAVE ]
@@ -36,7 +39,6 @@ SMS App
 - Voicemail recording handling with Telnyx
 
 -------------------------------------------------------------------------------------------------------------
-* 1 Component per page. Perhaps use Livewire/Turbolinks for SPA feel
 * Thoughts
   * Thread.index
     * Ever present (new) button
@@ -64,13 +66,3 @@ SMS App
   * Numbers CRUD
 
   * Configuration.Index
-
-
-UI
-  General
-    In-row-edit-menu: https://tailwindui.com/components/application-ui/overlays/slide-overs#component-e925f5b20e7d4110cc16920f1cf1a6fc
-  Threads
-    Index: https://tailwindui.com/components/application-ui/lists/feeds#component-14de0cf5b3984e2df49b3262ddb7441e
-    Alt-Index: https://tailwindui.com/components/application-ui/lists/stacked-lists#component-fc562eab6360667233bf420f141d6e9e
-    Show: (slide in): https://tailwindui.com/components/application-ui/overlays/slide-overs#component-b4584a872076ca045124da4c49716604
-    Show: https://tailwindui.com/components/application-ui/lists/stacked-lists#component-873e7c6c9d62158fc888708dc1dcfa03

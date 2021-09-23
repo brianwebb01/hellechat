@@ -32,7 +32,7 @@ class ContactControllerTest extends TestCase
     public function index_behaves_as_expected()
     {
         Contact::factory()->count(5)->create(['user_id' => $this->user->id]);
-        $response = $this->actingAs($this->user)->getJson(route('contact.index'));
+        $response = $this->actingAs($this->user)->getJson(route('contacts.index'));
 
         $response->assertOk();
         $response->assertJson(fn (AssertableJson $json) =>
@@ -68,7 +68,7 @@ class ContactControllerTest extends TestCase
         Contact::factory()->count(5)->create(['user_id' => $this->user->id]);
         Contact::factory()->count(5)->create();
 
-        $response = $this->actingAs($this->user)->getJson(route('contact.index'));
+        $response = $this->actingAs($this->user)->getJson(route('contacts.index'));
 
         $response->assertOk();
 
@@ -103,7 +103,7 @@ class ContactControllerTest extends TestCase
             ->flatMap(fn ($i) => $i)
             ->toArray();
 
-        $response = $this->actingAs($this->user)->postJson(route('contact.store'), [
+        $response = $this->actingAs($this->user)->postJson(route('contacts.store'), [
             'first_name' => $fName,
             'last_name' => $lName,
             'phone_numbers' => json_encode($phone_numbers),
@@ -141,7 +141,7 @@ class ContactControllerTest extends TestCase
     {
         $contact = Contact::factory()->create(['user_id' => $this->user->id]);
 
-        $response = $this->actingAs($this->user)->getJson(route('contact.show', $contact));
+        $response = $this->actingAs($this->user)->getJson(route('contacts.show', $contact));
 
         $response->assertOk();
         $response->assertJson(
@@ -163,7 +163,7 @@ class ContactControllerTest extends TestCase
     {
         $contact = Contact::factory()->create();
 
-        $response = $this->actingAs($this->user)->getJson(route('contact.show', $contact));
+        $response = $this->actingAs($this->user)->getJson(route('contacts.show', $contact));
 
         $response->assertForbidden();
     }
@@ -195,7 +195,7 @@ class ContactControllerTest extends TestCase
             ->flatMap(fn ($i) => $i)
             ->toArray();
 
-        $response = $this->actingAs($this->user)->putJson(route('contact.update', $contact), [
+        $response = $this->actingAs($this->user)->putJson(route('contacts.update', $contact), [
             'first_name' => $fName,
             'last_name' => $lName,
             'phone_numbers' => json_encode($phone_numbers),
@@ -230,7 +230,7 @@ class ContactControllerTest extends TestCase
     {
         $contact = Contact::factory()->create();
 
-        $response = $this->actingAs($this->user)->putJson(route('contact.update', $contact), [
+        $response = $this->actingAs($this->user)->putJson(route('contacts.update', $contact), [
             'first_name' => 'foo',
         ]);
 
@@ -245,7 +245,7 @@ class ContactControllerTest extends TestCase
     {
         $contact = Contact::factory()->create(['user_id' => $this->user->id]);
 
-        $response = $this->actingAs($this->user)->deleteJson(route('contact.destroy', $contact));
+        $response = $this->actingAs($this->user)->deleteJson(route('contacts.destroy', $contact));
 
         $response->assertNoContent();
 
@@ -260,7 +260,7 @@ class ContactControllerTest extends TestCase
     {
         $contact = Contact::factory()->create();
 
-        $response = $this->actingAs($this->user)->deleteJson(route('contact.show', $contact));
+        $response = $this->actingAs($this->user)->deleteJson(route('contacts.show', $contact));
 
         $response->assertForbidden();
     }

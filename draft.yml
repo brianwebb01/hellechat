@@ -62,6 +62,14 @@ seeders:
 
 controllers:
 
+  # ServiceAccount:
+  #   index:
+  #     render: service_account.index
+
+  # Number:
+  #   index:
+  #     render: number.index
+
   # Contact:
   #   index:
   #     render: contact.index

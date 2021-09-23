@@ -29,12 +29,14 @@ Route::group(['middleware' => ['auth:sanctum', 'verified']], function(){
     Route::get('messages', [App\Http\Controllers\ThreadController::class, 'index'])
         ->name('ui.thread.index');
 
-    Route::get('messages/{phoneNumber}', [App\Http\Controllers\ThreadController::class, 'show'])
-        ->name('ui.thread.show')
-        ->where('phoneNumber', '\+[1-9]\d{1,14}');
-
     Route::get('voicemails', [App\Http\Controllers\VoicemailController::class, 'index'])
         ->name('ui.voicemail.index');
+
+    Route::get('service-accounts', [App\Http\Controllers\ServiceAccountController::class, 'index'])
+        ->name('ui.service-accounts.index');
+
+    Route::get('numbers', [App\Http\Controllers\NumberController::class, 'index'])
+        ->name('ui.numbers.index');
 
 });
 

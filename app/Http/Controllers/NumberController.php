@@ -2,10 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\thread;
 use Illuminate\Http\Request;
 
-class ThreadController extends Controller
+class NumberController extends Controller
 {
     /**
      * @param \Illuminate\Http\Request $request
@@ -13,7 +12,7 @@ class ThreadController extends Controller
      */
     public function index(Request $request)
     {
-        session(['responsive-nav-heading' => 'Messages']);
-        return view('thread.index');
+        session(['responsive-nav-heading' => 'Numbers']);
+        return view('number.index');
     }
 }

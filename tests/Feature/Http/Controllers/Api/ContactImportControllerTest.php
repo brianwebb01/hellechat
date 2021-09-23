@@ -21,7 +21,7 @@ class ContactImportControllerTest extends TestCase
 
         $user = User::factory()->create();
 
-        $response = $this->actingAs($user)->postJson(route('contact-import.store'));
+        $response = $this->actingAs($user)->postJson(route('contacts-import.store'));
 
         Queue::assertPushed(ImportContactsJob::class);
     }

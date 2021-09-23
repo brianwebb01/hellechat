@@ -33,7 +33,7 @@ class VoicemailControllerTest extends TestCase
         ]);
         Voicemail::factory()->count(3)->create();
 
-        $response = $this->actingAs($this->user)->getJson(route('voicemail.index'));
+        $response = $this->actingAs($this->user)->getJson(route('voicemails.index'));
 
         $response->assertOk();
         $userIds = collect($response->json("data"))->pluck('user_id')->unique();
@@ -76,7 +76,7 @@ class VoicemailControllerTest extends TestCase
             'user_id' => $this->user->id
         ]);
 
-        $response = $this->actingAs($this->user)->getJson(route('voicemail.show', $voicemail));
+        $response = $this->actingAs($this->user)->getJson(route('voicemails.show', $voicemail));
 
         $response->assertOk();
         $response->assertJson(fn (AssertableJson $json) =>
@@ -98,7 +98,7 @@ class VoicemailControllerTest extends TestCase
     {
         $voicemail = Voicemail::factory()->create();
 
-        $response = $this->actingAs($this->user)->getJson(route('voicemail.show', $voicemail));
+        $response = $this->actingAs($this->user)->getJson(route('voicemails.show', $voicemail));
 
         $response->assertForbidden();
     }
@@ -113,7 +113,7 @@ class VoicemailControllerTest extends TestCase
             'user_id' => $this->user->id
         ]);
 
-        $response = $this->actingAs($this->user)->deleteJson(route('voicemail.destroy', $voicemail));
+        $response = $this->actingAs($this->user)->deleteJson(route('voicemails.destroy', $voicemail));
 
         $response->assertNoContent();
 
@@ -127,7 +127,7 @@ class VoicemailControllerTest extends TestCase
     {
         $voicemail = Voicemail::factory()->create();
 
-        $response = $this->actingAs($this->user)->deleteJson(route('voicemail.show', $voicemail));
+        $response = $this->actingAs($this->user)->deleteJson(route('voicemails.show', $voicemail));
 
         $response->assertForbidden();
     }
