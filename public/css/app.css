@@ -1280,6 +1280,9 @@ select {
 .-mr-px {
 	margin-right: -1px;
 }
+.mt-0\.5 {
+	margin-top: 0.125rem;
+}
 .block {
 	display: block;
 }
@@ -1919,6 +1922,18 @@ select {
 .p-20 {
 	padding: 5rem;
 }
+.p-10 {
+	padding: 2.5rem;
+}
+.p-8 {
+	padding: 2rem;
+}
+.p-9 {
+	padding: 2.25rem;
+}
+.p-7 {
+	padding: 1.75rem;
+}
 .px-4 {
 	padding-left: 1rem;
 	padding-right: 1rem;
@@ -2076,6 +2091,15 @@ select {
 }
 .pb-20 {
 	padding-bottom: 5rem;
+}
+.pb-7 {
+	padding-bottom: 1.75rem;
+}
+.pb-9 {
+	padding-bottom: 2.25rem;
+}
+.pr-10 {
+	padding-right: 2.5rem;
 }
 .text-left {
 	text-align: left;
