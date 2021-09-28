@@ -7,10 +7,13 @@ SMS App
 
 [ MUST HAVE ]
 --------------
-- UIs for:
-  - Display config
-  - Number management
-  - Service account management
+- Customize the SAIL docker configuration to have 2 app servers that nginx
+proxies to so a request running in PHP can make a request to itself (the app).
+With just artisan serve this fails bc the app is locked trying to call itself
+till the request times out.
+
+- Wire up service accounts ui
+- Wire up numbers ui
 - Wire up messages ui
 - Wire up voicemail ui
 - Wire up contacts ui
@@ -19,6 +22,7 @@ SMS App
 
 [ SHOULD HAVE ]
 ---------------
+- post account creation dashboard directions (goes away after some event)
 - user gotify endpoint setting on user w/ new message, new voicemail requests
 - Contact Import
 
@@ -32,37 +36,8 @@ SMS App
 [ WOULD LIKE TO HAVE]
 ---------------------
 - Encrypted database w/ User Key SO... access to DB still can't see everything.
-- Purchase numbers & auto-config sip.
+- Purchase numbers & auto-config sip, number and message endpoints.  All user would do would be enter service-account info.
 - Self hosted docker-compose setup with: web, app, db, queue-worker, queue-server, gotify
 - Inbound / Outbound message handling with Telnyx
 - Voicemail call control for Telnyx
 - Voicemail recording handling with Telnyx
-
--------------------------------------------------------------------------------------------------------------
-* Thoughts
-  * Thread.index
-    * Ever present (new) button
-    * Listing with context menu: delete
-    * Index > item.select: takes you to the show action / page.
-    * (new): Takes you to thread.show in "new" state
-
-  * Thread.show
-    * Displays contact info in heading area
-    * Lists out thread
-    * Footer compose form w/ attach, text, send.  Send disabled if content empty.
-    * If "new" state contact select / number type UI shown. Cancel shown.
-    * "new" state > cancel, goes back to thread.index
-
-  * Voicemail.index
-    * Displays list w/ no context menu
-    * Index > item.select: slide-in show
-    * Slide-in show has:
-      * Actions: call back, message, play/pause, scrub, delete
-      * Displays: Transcription, date, contact / number info
-    * Slide-in show.delete hides slide-in, refreshes index
-
-  * Service Accounts CRUD
-
-  * Numbers CRUD
-
-  * Configuration.Index

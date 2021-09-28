@@ -1,4 +1,6 @@
-<div x-data="{serviceAccountFormOpen: true, deleteConfirmOpen: false, notificationOpen: false }">
+<div
+    wire:init="fetchAll"
+    x-data="{serviceAccountFormOpen: false, deleteConfirmOpen: false, notificationOpen: false }">
 
     @include('livewire.service-account-manager._heading')
 
