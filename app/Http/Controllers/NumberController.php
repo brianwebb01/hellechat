@@ -13,6 +13,6 @@ class NumberController extends Controller
     public function index(Request $request)
     {
         session(['responsive-nav-heading' => 'Numbers']);
-        return view('number.index');
+        return view('number-manager.base');
     }
 }

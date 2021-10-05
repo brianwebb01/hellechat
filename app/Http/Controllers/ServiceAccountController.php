@@ -13,6 +13,6 @@ class ServiceAccountController extends Controller
     public function index(Request $request)
     {
         session(['responsive-nav-heading' => 'Service Accounts']);
-        return view('service_account.index');
+        return view('service-account-manager.base');
     }
 }

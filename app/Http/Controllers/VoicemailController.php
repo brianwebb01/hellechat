@@ -13,6 +13,6 @@ class VoicemailController extends Controller
     public function index(Request $request)
     {
         session(['responsive-nav-heading' => 'Voicemail']);
-        return view('voicemail.index');
+        return view('voicemail-manager.base');
     }
 }

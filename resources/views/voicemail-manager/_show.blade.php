@@ -48,7 +48,7 @@
                                             </div>
 
                                             <div class="mt-1 mb-6 border-t border-b border-gray-200">
-                                                @include('livewire.voicemail-manager._slider')
+                                                @include('voicemail-manager._slider')
                                             </div>
 
                                             <div class="mt-5 flex flex-wrap space-x-3 sm:space-x-3">
