@@ -24,6 +24,11 @@ class UserSeeder extends Seeder
             'api_key' => config('services.twilio.account_sid'),
             'api_secret' => config('services.twilio.auth_token')
         ]);
+        $sa2 = ServiceAccount::factory()->create([
+            'user_id' => $user->id,
+            'name' => 'test 2',
+            'provider' => 'telnyx'
+        ]);
         $number = Number::factory()->create([
             'user_id' => $user->id,
             'service_account_id' => $serviceAccount->id,

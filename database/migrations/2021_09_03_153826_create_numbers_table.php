@@ -18,7 +18,7 @@ class CreateNumbersTable extends Migration
         Schema::create('numbers', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained();
-            $table->foreignId('service_account_id')->constrained();
+            $table->foreignId('service_account_id')->constrained()->cascadeOnDelete();
             $table->string('phone_number', 15)->index();
             $table->string('sip_registration_url')->nullable();
             $table->string('friendly_label', 50);
