@@ -40,7 +40,6 @@
                     editRecord: function(id) {
                         this.formOpen = true;
                         this.currentRecord = this.records.find(r => r.id == id);
-                        console.log(this.currentRecord);
                     },
                     deleteRecord: function(id) {
                         this.currentRecord = this.records.find(r => r.id == id);
@@ -51,7 +50,7 @@
                     },
                     confirmDelete: function() {
                         this.deleting = true;
-                        fetch("{{ route('service-accounts.destroy', [1234]) }}".replace('1234', this.currentRecord.id), {
+                        fetch("{{ route('service-accounts.destroy', [123]) }}".replace('123', this.currentRecord.id), {
                                 method: 'DELETE',
                                 headers: {
                                     'Accept': 'application/json',
@@ -63,6 +62,7 @@
                                     this.records = this.records.filter(record => record.id != this.currentRecord.id);
                                     this.deleteConfirmOpen = false;
                                     this.deleting = false;
+                                    this.currentRecord = {};
                                 } else {
                                     this.deleteConfirmOpen = false;
                                     this.deleting = false;
@@ -72,9 +72,11 @@
                             .catch((err) => console.log(err));
                     },
                     cancelForm: function() {
+                        this.currentRecord = {};
                         this.formOpen = false;
                     },
                     closeFormSuccess: function() {
+                        this.currentRecord = {};
                         this.formOpen = false;
                         this.notificationOpen = true;
                         this.saving = false;
@@ -85,10 +87,11 @@
                         this.currentRecord.id ? this.updateRecord() : this.createRecord();
                     },
                     createRecord: function() {
-                        fetch("{{ route('service-accounts.store', [1234]) }}".replace('1234', this.currentRecord.id), {
+                        fetch("{{ route('service-accounts.store') }}", {
                                 method: 'POST',
                                 headers: {
                                     'Accept': 'application/json',
+                                    'Content-Type': 'application/json',
                                     'X-CSRF-TOKEN': "{{ csrf_token() }}"
                                 },
                                 body: JSON.stringify(this.currentRecord)
@@ -96,23 +99,47 @@
                             .then(response => {
 
                                 if (response.status == 201) {
-                                    //push data to records[]
-                                    this.closeFormSuccess();
+                                    response.json()
+                                        .then(res => this.records.push(res.data))
+                                        .then(() => this.closeFormSuccess());
                                 } else if (response.status == 422) {
                                     response.json()
-                                        .then(res => this.errors = res.errors)
-                                        .then(err => console.log(this.errors));
+                                        .then(res => this.errors = res.errors);
                                 } else {
-                                    alert('Error, could not save record');
+                                    alert('Fatal error, could not save record');
                                 }
                                 this.saving = false;
                             })
                             .catch((err) => console.log(err));
                     },
                     updateRecord: function() {
-                        // @TODO - make put api request & wire up next actions accordingly
-                        console.log('update');
-                        setTimeout(() => this.closeFormSuccess(), 1000)
+                        fetch("{{ route('service-accounts.update', [123]) }}".replace('123', this.currentRecord.id), {
+                                method: 'PUT',
+                                headers: {
+                                    'Accept': 'application/json',
+                                    'Content-Type': 'application/json',
+                                    'X-CSRF-TOKEN': "{{ csrf_token() }}"
+                                },
+                                body: JSON.stringify(this.currentRecord)
+                            })
+                            .then(response => {
+
+                                if (response.status == 200) {
+                                    response.json()
+                                        .then(res => {
+                                            let idx = this.records.findIndex(r => r.id == this.currentRecord.id);
+                                            this.records[idx] = res.data;
+                                        })
+                                        .then(() => this.closeFormSuccess());
+                                } else if (response.status == 422) {
+                                    response.json()
+                                        .then(res => this.errors = res.errors);
+                                } else {
+                                    alert('Fatal error, could not save record');
+                                }
+                                this.saving = false;
+                            })
+                            .catch((err) => console.log(err));
                     }
                 };
             }

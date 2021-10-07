@@ -19,7 +19,8 @@ class ServiceAccountStoreRequest extends ServiceAccountUpdateRequest
 
         $rules['name'][] = 'required';
         $rules['provider'][] = 'required';
-        $rules['api_key'][] = 'required';
+        $rules['api_key'] = ['required', 'string'];
+        $rules['api_secret'][] = 'required_if:provider,twilio';
 
         return $rules;
     }
