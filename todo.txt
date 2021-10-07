@@ -7,17 +7,12 @@ SMS App
 
 [ MUST HAVE ]
 --------------
-- Customize the SAIL docker configuration to have 2 app servers that nginx
-proxies to so a request running in PHP can make a request to itself (the app).
-With just artisan serve this fails bc the app is locked trying to call itself
-till the request times out.
-   - Not sure if this will work b/c sail combines the app and the nginx container
 
-- Wire up service accounts ui
 - Wire up numbers ui
 - Wire up messages ui
 - Wire up voicemail ui
 - Wire up contacts ui
+- wire up pagination on serviceAccounts, numbers, voicemail, contacts
 
 
 

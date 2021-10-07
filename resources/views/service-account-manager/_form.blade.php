@@ -43,7 +43,7 @@
                                         <div>
                                             <label for="provider" class="block text-sm font-medium text-gray-700">Provider</label>
                                             <select x-model="currentRecord.provider" id="provider" name="provider" :class="(errors.provider ? 'border-red-300 text-red-900' : 'border-gray-300') + ' mt-1 block w-full pl-3 pr-10 py-2 text-base focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md'">
-                                                <option value=""></option>
+                                                <option value="" disabled>Select a provider...</option>
                                                 <option value="twilio">Twilio</option>
                                             </select>
                                             <p x-show="errors.provider" x-text="errors.provider ? errors.provider.join(', ') : ''" class="text-sm text-red-600"></p>
