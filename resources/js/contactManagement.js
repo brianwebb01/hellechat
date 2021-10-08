@@ -31,16 +31,10 @@ window.manageContacts = function() {
             this.loadPaginatedRecords()
                 .then(json => {
                     this.lastPage = json.meta.last_page;
-                    console.log(this.records);
-                    console.log(json.data);
-                    this.records.push(json.data);
-                    //this.setGroupedRecords(this.groupByLastFirst(this.records));
-                    if(this.page == 1){
-                        this.setGroupedRecords(this.groupByLastFirst(json.data));
-                    }
-
+                    json.data.forEach(item => this.records.push(item));
+                    this.setGroupedRecords(this.groupByLastFirst(this.records));
                     this.page++;
-                    if(this.page < this.lastPage){
+                    if(this.page <= this.lastPage){
                         this.showInfiniteScroll = true;
                     } else{
                         this.showInfiniteScroll = false;

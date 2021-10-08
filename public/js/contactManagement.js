@@ -922,19 +922,15 @@ window.manageContacts = function () {
               case 0:
                 this.loadPaginatedRecords().then(function (json) {
                   _this.lastPage = json.meta.last_page;
-                  console.log(_this.records);
-                  console.log(json.data);
+                  json.data.forEach(function (item) {
+                    return _this.records.push(item);
+                  });
 
-                  _this.records.push(json.data); //this.setGroupedRecords(this.groupByLastFirst(this.records));
-
-
-                  if (_this.page == 1) {
-                    _this.setGroupedRecords(_this.groupByLastFirst(json.data));
-                  }
+                  _this.setGroupedRecords(_this.groupByLastFirst(_this.records));
 
                   _this.page++;
 
-                  if (_this.page < _this.lastPage) {
+                  if (_this.page <= _this.lastPage) {
                     _this.showInfiniteScroll = true;
                   } else {
                     _this.showInfiniteScroll = false;
