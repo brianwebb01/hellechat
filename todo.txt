@@ -8,18 +8,23 @@ SMS App
 [ MUST HAVE ]
 --------------
 
-- Wire up numbers ui
-- Wire up messages ui
-- Wire up voicemail ui
 - Wire up contacts ui
-- wire up pagination on serviceAccounts, numbers, voicemail, contacts
+   - contact search
+- Wire up voicemail ui
+- Wire up messages ui
+   - thread contact search
+   - support rendering of attachments
+   - support sending of attachments
+- wire up pagination on serviceAccounts, numbers, voicemail, contacts, messages?
 
 
 
 [ SHOULD HAVE ]
 ---------------
 - post account creation dashboard directions (goes away after some event)
-- user gotify endpoint setting on user w/ new message, new voicemail requests
+- user gotify endpoint setting on user w/ new message, new voicemail requests.
+  - OR webhook capability & docker-compose included gotify server (config'd to use existing mysql)
+  - OR api integraiton with docker-compose included gotify server (config'd to use existing mysql)
 - Contact Import
 
 

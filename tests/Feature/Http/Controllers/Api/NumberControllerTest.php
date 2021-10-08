@@ -51,6 +51,8 @@ class NumberControllerTest extends TestCase
                 ->has('data.0.service_account.provider')
                 ->has('data.0.phone_number')
                 ->has('data.0.friendly_label')
+                ->has('data.0.external_identity')
+                ->has('data.0.sip_registration_url')
                 ->has('data.0.messaging_endpoint')
                 ->has('data.0.voice_endpoint')
                 ->has('links')
@@ -115,6 +117,8 @@ class NumberControllerTest extends TestCase
                 ->has('data.service_account.provider')
                 ->has('data.phone_number')
                 ->has('data.friendly_label')
+                ->has('data.external_identity')
+                ->has('data.sip_registration_url')
                 ->has('data.messaging_endpoint')
                 ->has('data.voice_endpoint')
         );
@@ -140,6 +144,8 @@ class NumberControllerTest extends TestCase
                 ->has('data.service_account.provider')
                 ->has('data.phone_number')
                 ->has('data.friendly_label')
+                ->has('data.external_identity')
+                ->has('data.sip_registration_url')
                 ->has('data.messaging_endpoint')
                 ->has('data.voice_endpoint')
         );
@@ -197,6 +203,8 @@ class NumberControllerTest extends TestCase
                 ->has('data.service_account.provider')
                 ->has('data.phone_number')
                 ->has('data.friendly_label')
+                ->has('data.external_identity')
+                ->has('data.sip_registration_url')
                 ->has('data.messaging_endpoint')
                 ->has('data.voice_endpoint')
         );

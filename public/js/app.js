@@ -1,6 +1,53 @@
 /******/ (() => { // webpackBootstrap
 /******/ 	var __webpack_modules__ = ({
 
+/***/ "./node_modules/@alpinejs/intersect/dist/module.esm.js":
+/*!*************************************************************!*\
+  !*** ./node_modules/@alpinejs/intersect/dist/module.esm.js ***!
+  \*************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* binding */ module_default)
+/* harmony export */ });
+// packages/intersect/src/index.js
+function src_default(Alpine) {
+  Alpine.directive("intersect", (el, {value, expression, modifiers}, {evaluateLater, cleanup}) => {
+    let evaluate = evaluateLater(expression);
+    let options = {
+      threshold: getThreshhold(modifiers)
+    };
+    let observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (!entry.isIntersecting && value === "enter" || entry.isIntersecting && value === "leave" || entry.intersectionRatio === 0 && !value)
+          return;
+        evaluate();
+        modifiers.includes("once") && observer.disconnect();
+      });
+    }, options);
+    observer.observe(el);
+    cleanup(() => {
+      observer.disconnect();
+    });
+  });
+}
+function getThreshhold(modifiers) {
+  if (modifiers.includes("full"))
+    return 0.99;
+  if (modifiers.includes("half"))
+    return 0.5;
+  return 0;
+}
+
+// packages/intersect/builds/module.js
+var module_default = src_default;
+
+
+
+/***/ }),
+
 /***/ "./node_modules/alpinejs/dist/module.esm.js":
 /*!**************************************************!*\
   !*** ./node_modules/alpinejs/dist/module.esm.js ***!
@@ -4984,9 +5031,12 @@ module.exports = {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var alpinejs__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! alpinejs */ "./node_modules/alpinejs/dist/module.esm.js");
+/* harmony import */ var _alpinejs_intersect__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @alpinejs/intersect */ "./node_modules/@alpinejs/intersect/dist/module.esm.js");
 __webpack_require__(/*! ./bootstrap */ "./resources/js/bootstrap.js");
 
 
+
+alpinejs__WEBPACK_IMPORTED_MODULE_0__["default"].plugin(_alpinejs_intersect__WEBPACK_IMPORTED_MODULE_1__["default"]);
 window.Alpine = alpinejs__WEBPACK_IMPORTED_MODULE_0__["default"];
 alpinejs__WEBPACK_IMPORTED_MODULE_0__["default"].start();
 

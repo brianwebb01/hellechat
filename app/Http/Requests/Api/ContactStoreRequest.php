@@ -17,8 +17,7 @@ class ContactStoreRequest extends ContactUpdateRequest
         $rules = parent::rules();
 
         $rules['first_name'][] = 'required_without:company';
-        $rules['last_name'][] = 'required_without:company';
-        $rules['company'][] = 'required_without:first_name,last_name';
+        $rules['company'][] = 'required_without:first_name';
         $rules['phone_numbers'][] = 'required';
 
         return $rules;

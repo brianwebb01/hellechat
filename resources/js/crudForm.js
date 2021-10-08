@@ -17,10 +17,10 @@ window.initCrudForm = function(data) {
                     'Accept': 'application/json'
                 }
             })
-                .then((response) => response.json())
-                .then((response) => this.records = response.data)
-                .then(this.loading = false)
-                .catch((err) => console.log(err));
+            .then((response) => response.json())
+            .then((json) => this.records = json.data)
+            .then(this.loading = false)
+            .catch((err) => console.log(err));
         },
         newRecord: function () {
             this.formOpen = true;

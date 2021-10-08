@@ -2,5 +2,6 @@
     "/js/app.js": "/js/app.js",
     "/js/crudForm.js": "/js/crudForm.js",
     "/js/serviceAccountForm.js": "/js/serviceAccountForm.js",
+    "/js/contactManagement.js": "/js/contactManagement.js",
     "/css/app.css": "/css/app.css"
 }

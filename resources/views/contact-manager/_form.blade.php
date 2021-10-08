@@ -1,8 +1,8 @@
-<div x-cloak x-show="contactFormOpen" class="fixed inset-0 overflow-hidden" aria-labelledby="slide-over-title" role="dialog" aria-modal="true">
+<div x-cloak x-show="formOpen" class="fixed inset-0 overflow-hidden" aria-labelledby="slide-over-title" role="dialog" aria-modal="true">
     <div class="absolute inset-0 overflow-hidden">
         <!-- Background overlay, show/hide based on slide-over state. -->
         <div class="absolute inset-0" aria-hidden="true">
-            <div class="fixed inset-y-0 pl-10 max-w-full right-0 flex sm:pl-16" x-cloak x-show="contactFormOpen" x-transition:enter="transform transition ease-in-out duration-500 sm:duration-700" x-transition:enter-start="translate-x-full" x-transition:enter-end="translate-x-0" x-transition:leave="transform transition ease-in-out duration-500 sm:duration-700" x-transition:leave-start="translate-x-0" x-transition:leave-end="translate-x-full">
+            <div class="fixed inset-y-0 pl-10 max-w-full right-0 flex sm:pl-16" x-cloak x-show="formOpen" x-transition:enter="transform transition ease-in-out duration-500 sm:duration-700" x-transition:enter-start="translate-x-full" x-transition:enter-end="translate-x-0" x-transition:leave="transform transition ease-in-out duration-500 sm:duration-700" x-transition:leave-start="translate-x-0" x-transition:leave-end="translate-x-full">
 
                 <div class="w-screen max-w-md">
                     <form class="h-full divide-y divide-gray-200 flex flex-col bg-white shadow-xl">
@@ -13,7 +13,7 @@
                                         New Contact
                                     </h2>
                                     <div class="ml-3 h-7 flex items-center">
-                                        <button @click="contactFormOpen = false;" type="button" class="bg-indigo-700 rounded-md text-indigo-200 hover:text-white focus:outline-none focus:ring-2 focus:ring-white">
+                                        <button @click="cancelForm();" type="button" class="bg-indigo-700 rounded-md text-indigo-200 hover:text-white focus:outline-none focus:ring-2 focus:ring-white">
                                             <span class="sr-only">Close panel</span>
                                             <!-- Heroicon name: outline/x -->
                                             <svg class="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
@@ -148,10 +148,10 @@
                             </div>
                         </div>
                         <div class="flex-shrink-0 px-4 py-4 flex justify-end">
-                            <button type="button" class="bg-white py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                            <button @click="cancelForm();" type="button" class="bg-white py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
                                 Cancel
                             </button>
-                            <button @click.prevent="contactFormOpen = false; notificationOpen = true; setTimeout(() => notificationOpen = false, 2000)" type="submit" class="ml-4 inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                            <button @click="saveForm();" type="submit" class="ml-4 inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
                                 Save
                             </button>
                         </div>

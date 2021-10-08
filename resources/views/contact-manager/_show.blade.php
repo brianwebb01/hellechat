@@ -1,9 +1,9 @@
-<div x-cloak x-show="showContactOpen">
+<div x-cloak x-show="showingContact">
     <div class="fixed inset-0 overflow-hidden" role="dialog" aria-modal="true">
         <div class="absolute inset-0 overflow-hidden">
             <!-- Background overlay, show/hide based on slide-over state. -->
             <div class="absolute inset-0" aria-hidden="true">
-                <div class="fixed inset-y-0 right-0 pl-10 max-w-full flex sm:pl-16" x-cloak x-show="showContactOpen" x-transition:enter="transform transition ease-in-out duration-500 sm:duration-700" x-transition:enter-start="translate-x-full" x-transition:enter-end="translate-x-0" x-transition:leave="transform transition ease-in-out duration-500 sm:duration-700" x-transition:leave-start="translate-x-0" x-transition:leave-end="translate-x-full">
+                <div class="fixed inset-y-0 right-0 pl-10 max-w-full flex sm:pl-16" x-cloak x-show="showingContact" x-transition:enter="transform transition ease-in-out duration-500 sm:duration-700" x-transition:enter-start="translate-x-full" x-transition:enter-end="translate-x-0" x-transition:leave="transform transition ease-in-out duration-500 sm:duration-700" x-transition:leave-start="translate-x-0" x-transition:leave-end="translate-x-full">
 
                     <div class="w-screen max-w-md">
                         <div class="h-full flex flex-col bg-white shadow-xl overflow-y-scroll">
@@ -13,7 +13,7 @@
                                         Contact Details
                                     </h2>
                                     <div class="ml-3 h-7 flex items-center">
-                                        <button @click="showContactOpen = false;" type="button" class="bg-white rounded-md text-gray-400 hover:text-gray-500 focus:ring-2 focus:ring-indigo-500">
+                                        <button @click="hideContact();" type="button" class="bg-white rounded-md text-gray-400 hover:text-gray-500 focus:ring-2 focus:ring-indigo-500">
                                             <span class="sr-only">Close panel</span>
                                             <!-- Heroicon name: outline/x -->
                                             <svg class="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
@@ -36,10 +36,10 @@
                                                     <p class="text-sm text-gray-500">Acme Incorporated</p>
                                                 </div>
                                                 <div class="mt-5 flex flex-wrap space-x-3 sm:space-x-3">
-                                                    <button type="button" class="flex-1 w-full inline-flex items-center justify-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                                                    <button @click="hideContact(); editRecord(1);" type="button" class="flex-1 w-full inline-flex items-center justify-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
                                                         Edit
                                                     </button>
-                                                    <button type="button" class="flex-1 w-full inline-flex items-center justify-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-red-500 hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                                                    <button @click="hideContact(); deleteRecord(1);" type="button" class="flex-1 w-full inline-flex items-center justify-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-red-500 hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
                                                         Delete
                                                     </button>
                                                 </div>

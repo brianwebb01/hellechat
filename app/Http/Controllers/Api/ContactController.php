@@ -9,6 +9,7 @@ use App\Http\Resources\Api\ContactCollection;
 use App\Http\Resources\Api\ContactResource;
 use App\Models\Contact;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class ContactController extends Controller
 {
@@ -23,7 +24,9 @@ class ContactController extends Controller
      */
     public function index(Request $request)
     {
-        $contacts = $request->user()->contacts()->paginate();
+        $contacts = $request->user()->contacts()
+            ->orderBy(DB::raw('COALESCE(last_name, company, first_name)'), 'asc')
+            ->paginate();
 
         return new ContactCollection($contacts);
     }

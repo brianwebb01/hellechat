@@ -848,9 +848,9 @@ var __webpack_exports__ = {};
 // This entry need to be wrapped in an IIFE because it need to be in strict mode.
 (() => {
 "use strict";
-/*!**********************************!*\
-  !*** ./resources/js/crudForm.js ***!
-  \**********************************/
+/*!*******************************************!*\
+  !*** ./resources/js/contactManagement.js ***!
+  \*******************************************/
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/regenerator */ "./node_modules/@babel/runtime/regenerator/index.js");
 /* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0__);
@@ -860,40 +860,45 @@ function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try
 
 function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
 
-window.initCrudForm = function (data) {
+window.manageContacts = function () {
   return {
-    formOpen: false,
-    deleteConfirmOpen: false,
-    notificationOpen: false,
-    loading: true,
-    saving: false,
-    deleting: false,
-    urls: data.urls,
-    csrfToken: data.csrf_token,
-    errors: [],
-    records: [],
-    currentRecord: {},
-    fetchIndex: function () {
-      var _fetchIndex = _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee() {
-        var _this = this;
-
+    showingContact: false,
+    groupedRecords: [],
+    showInfiniteScroll: false,
+    page: 1,
+    lastPage: null,
+    showContact: function showContact(id) {
+      this.showingContact = true;
+    },
+    hideContact: function hideContact() {
+      this.showingContact = false;
+    },
+    loadPaginatedRecords: function () {
+      var _loadPaginatedRecords = _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee() {
+        var response, json;
         return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().wrap(function _callee$(_context) {
           while (1) {
             switch (_context.prev = _context.next) {
               case 0:
-                fetch(this.urls.index, {
+                _context.next = 2;
+                return fetch("/api/contacts?page=".concat(this.page), {
                   headers: {
                     'Accept': 'application/json'
                   }
-                }).then(function (response) {
-                  return response.json();
-                }).then(function (json) {
-                  return _this.records = json.data;
-                }).then(this.loading = false)["catch"](function (err) {
+                })["catch"](function (err) {
                   return console.log(err);
                 });
 
-              case 1:
+              case 2:
+                response = _context.sent;
+                _context.next = 5;
+                return response.json();
+
+              case 5:
+                json = _context.sent;
+                return _context.abrupt("return", json);
+
+              case 7:
               case "end":
                 return _context.stop();
             }
@@ -901,148 +906,65 @@ window.initCrudForm = function (data) {
         }, _callee, this);
       }));
 
-      function fetchIndex() {
-        return _fetchIndex.apply(this, arguments);
+      function loadPaginatedRecords() {
+        return _loadPaginatedRecords.apply(this, arguments);
       }
 
-      return fetchIndex;
+      return loadPaginatedRecords;
     }(),
-    newRecord: function newRecord() {
-      this.formOpen = true;
-    },
-    editRecord: function editRecord(id) {
-      this.formOpen = true;
-      this.currentRecord = this.records.find(function (r) {
-        return r.id == id;
-      });
-    },
-    deleteRecord: function deleteRecord(id) {
-      this.currentRecord = this.records.find(function (r) {
-        return r.id == id;
-      });
-      this.deleteConfirmOpen = true;
-    },
-    cancelDelete: function cancelDelete() {
-      this.deleteConfirmOpen = false;
-    },
-    confirmDelete: function confirmDelete() {
-      var _this2 = this;
+    addRecords: function () {
+      var _addRecords = _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee2() {
+        var _this = this;
 
-      this.deleting = true;
-      fetch(this.urls["delete"].replace('123', this.currentRecord.id), {
-        method: 'DELETE',
-        headers: {
-          'Accept': 'application/json',
-          'X-CSRF-TOKEN': this.csrfToken
-        }
-      }).then(function (response) {
-        if (response.status == 204) {
-          _this2.records = _this2.records.filter(function (record) {
-            return record.id != _this2.currentRecord.id;
-          });
-          _this2.deleteConfirmOpen = false;
-          _this2.deleting = false;
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().wrap(function _callee2$(_context2) {
+          while (1) {
+            switch (_context2.prev = _context2.next) {
+              case 0:
+                this.loadPaginatedRecords().then(function (json) {
+                  _this.lastPage = json.meta.last_page;
+                  console.log(_this.records);
+                  console.log(json.data);
 
-          _this2.resetCurrent();
-        } else {
-          _this2.deleteConfirmOpen = false;
-          _this2.deleting = false;
-          setTimeout(function () {
-            return alert('Error, could not delete record');
-          }, 500);
-        }
-      })["catch"](function (err) {
-        return console.log(err);
-      });
+                  _this.records.push(json.data); //this.setGroupedRecords(this.groupByLastFirst(this.records));
+
+
+                  if (_this.page == 1) {
+                    _this.setGroupedRecords(_this.groupByLastFirst(json.data));
+                  }
+
+                  _this.page++;
+
+                  if (_this.page < _this.lastPage) {
+                    _this.showInfiniteScroll = true;
+                  } else {
+                    _this.showInfiniteScroll = false;
+                  }
+                });
+
+              case 1:
+              case "end":
+                return _context2.stop();
+            }
+          }
+        }, _callee2, this);
+      }));
+
+      function addRecords() {
+        return _addRecords.apply(this, arguments);
+      }
+
+      return addRecords;
+    }(),
+    groupByLastFirst: function groupByLastFirst(array) {
+      return array.reduce(function (acc, obj) {
+        var letter = obj.last_name ? obj.last_name.charAt(0) : obj.first_name ? obj.first_name.charAt(0) : obj.company.charAt(0);
+        acc[letter] = acc[letter] || [];
+        acc[letter].push(obj);
+        return acc;
+      }, {});
     },
-    resetCurrent: function resetCurrent() {
-      this.currentRecord = {};
-      this.errors = [];
-    },
-    cancelForm: function cancelForm() {
-      this.resetCurrent();
-      this.formOpen = false;
-    },
-    closeFormSuccess: function closeFormSuccess() {
-      var _this3 = this;
-
-      this.resetCurrent();
-      this.formOpen = false;
-      this.notificationOpen = true;
-      this.saving = false;
-      setTimeout(function () {
-        return _this3.notificationOpen = false;
-      }, 2000);
-    },
-    saveForm: function saveForm() {
-      this.saving = true;
-      this.currentRecord.id ? this.updateRecord() : this.createRecord();
-    },
-    createRecord: function createRecord() {
-      var _this4 = this;
-
-      fetch(this.urls.store, {
-        method: 'POST',
-        headers: {
-          'Accept': 'application/json',
-          'Content-Type': 'application/json',
-          'X-CSRF-TOKEN': this.csrfToken
-        },
-        body: JSON.stringify(this.currentRecord)
-      }).then(function (response) {
-        if (response.status == 201) {
-          response.json().then(function (res) {
-            return _this4.records.push(res.data);
-          }).then(function () {
-            return _this4.closeFormSuccess();
-          });
-        } else if (response.status == 422) {
-          response.json().then(function (res) {
-            return _this4.errors = res.errors;
-          });
-        } else {
-          alert('Fatal error, could not save record');
-        }
-
-        _this4.saving = false;
-      })["catch"](function (err) {
-        return console.log(err);
-      });
-    },
-    updateRecord: function updateRecord() {
-      var _this5 = this;
-
-      fetch(this.urls.update.replace('123', this.currentRecord.id), {
-        method: 'PUT',
-        headers: {
-          'Accept': 'application/json',
-          'Content-Type': 'application/json',
-          'X-CSRF-TOKEN': this.csrfToken
-        },
-        body: JSON.stringify(this.currentRecord)
-      }).then(function (response) {
-        if (response.status == 200) {
-          response.json().then(function (res) {
-            var idx = _this5.records.findIndex(function (r) {
-              return r.id == _this5.currentRecord.id;
-            });
-
-            _this5.records[idx] = res.data;
-          }).then(function () {
-            return _this5.closeFormSuccess();
-          });
-        } else if (response.status == 422) {
-          response.json().then(function (res) {
-            return _this5.errors = res.errors;
-          });
-        } else {
-          alert('Fatal error, could not save record');
-        }
-
-        _this5.saving = false;
-      })["catch"](function (err) {
-        return console.log(err);
-      });
+    setGroupedRecords: function setGroupedRecords(data) {
+      this.groupedRecords = data;
     }
   };
 };

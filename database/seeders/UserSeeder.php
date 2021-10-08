@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\Contact;
 use App\Models\Number;
 use App\Models\ServiceAccount;
 use App\Models\User;
@@ -36,6 +37,10 @@ class UserSeeder extends Seeder
             'phone_number' => '+15024105645',
             'sip_registration_url' => '5024105645@5024105645.sip.us1.twilio.com',
             'external_identity' => 'PN6073db21e05003438a7c4340457ac090'
+        ]);
+
+        Contact::factory()->count(100)->create([
+            'user_id' => $user->id
         ]);
 
         User::factory()->count(4)->create();
