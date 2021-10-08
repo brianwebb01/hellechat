@@ -26,6 +26,6 @@ class NumberControllerTest extends TestCase
         $response = $this->actingAs($this->user)->get(route('ui.numbers.index'));
 
         $response->assertOk();
-        $response->assertViewIs('number.index');
+        $response->assertViewIs('number-manager.base');
     }
 }

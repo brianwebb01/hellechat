@@ -27,6 +27,6 @@ class ServiceAccountControllerTest extends TestCase
         $response = $this->actingAs($this->user)->get(route('ui.service-accounts.index'));
 
         $response->assertOk();
-        $response->assertViewIs('service_account.index');
+        $response->assertViewIs('service-account-manager.base');
     }
 }

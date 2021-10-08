@@ -22,4 +22,11 @@ class NumberStoreRequest extends NumberUpdateRequest
 
         return $rules;
     }
+
+    public function messages()
+    {
+        return [
+            'service_account_id.required' => 'A service account selection is required'
+        ];
+    }
 }

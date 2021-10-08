@@ -18,6 +18,6 @@
 
         @include('notification')
 
-        <script src="{{ mix('js/alpineCrudForm.js') }}"></script>
+        <script src="{{ mix('js/crudForm.js') }}"></script>
     </div>
 </x-app-layout>

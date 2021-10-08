@@ -18,9 +18,12 @@ class NumberResource extends JsonResource
         $data = [
             'id' => $this->id,
             'user_id' => $this->user_id,
+            'service_account' => (new ServiceAccountResource($this->serviceAccount)),
             'service_account_id' => $this->service_account_id,
             'phone_number' => $this->phone_number,
             'friendly_label' => $this->friendly_label,
+            'external_identity' => $this->external_identity,
+            'sip_registration_url' => $this->sip_registration_url,
             'messaging_endpoint' => null,
             'voice_endpoint' => null,
         ];

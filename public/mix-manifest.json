@@ -1,5 +1,6 @@
 {
-    "/js/app.js": "/js/app.js?id=658b1a7dfaec42a50921",
-    "/js/alpineCrudForm.js": "/js/alpineCrudForm.js?id=559303099a8dc90cace7",
-    "/css/app.css": "/css/app.css?id=e188ef7a4f9b5c16fa6a"
+    "/js/app.js": "/js/app.js",
+    "/js/crudForm.js": "/js/crudForm.js",
+    "/js/serviceAccountForm.js": "/js/serviceAccountForm.js",
+    "/css/app.css": "/css/app.css"
 }

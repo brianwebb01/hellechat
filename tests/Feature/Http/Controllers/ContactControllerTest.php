@@ -19,6 +19,6 @@ class ContactControllerTest extends TestCase
         $response = $this->actingAs($user)->get(route('ui.contact.index'));
 
         $response->assertOk();
-        $response->assertViewIs('contact.index');
+        $response->assertViewIs('contact-manager.base');
     }
 }

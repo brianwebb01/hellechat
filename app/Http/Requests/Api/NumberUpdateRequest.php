@@ -31,7 +31,8 @@ class NumberUpdateRequest extends FormRequest
             ],
             'phone_number' => ['string', 'max:15'],
             'friendly_label' => ['string', 'max:50'],
-            'external_identity' => ['string'],
+            'external_identity' => ['nullable'],
+            'sip_registration_url' => ['url']
         ];
     }
 }

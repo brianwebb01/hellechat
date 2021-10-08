@@ -26,6 +26,6 @@ class ThreadControllerTest extends TestCase
         $response = $this->actingAs($this->user)->get(route('ui.thread.index'));
 
         $response->assertOk();
-        $response->assertViewIs('thread.index');
+        $response->assertViewIs('thread-manager.base');
     }
 }

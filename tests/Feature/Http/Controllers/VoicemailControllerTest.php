@@ -20,6 +20,6 @@ class VoicemailControllerTest extends TestCase
         $response = $this->actingAs($user)->get(route('ui.voicemail.index'));
 
         $response->assertOk();
-        $response->assertViewIs('voicemail.index');
+        $response->assertViewIs('voicemail-manager.base');
     }
 }
