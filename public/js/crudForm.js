@@ -863,6 +863,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 window.initCrudForm = function (data) {
   return {
     formOpen: false,
+    showOpen: false,
     deleteConfirmOpen: false,
     notificationOpen: false,
     loading: true,
@@ -873,6 +874,19 @@ window.initCrudForm = function (data) {
     errors: [],
     records: [],
     currentRecord: {},
+    page: 1,
+    lastPage: null,
+    showInfiniteScroll: false,
+    afterRecordsAdded: function afterRecordsAdded() {},
+    beforeSave: function beforeSave() {},
+    afterSave: function afterSave() {},
+    beforeCreate: function beforeCreate() {},
+    afterCreate: function afterCreate() {},
+    beforeUpdate: function beforeUpdate() {},
+    afterUpdate: function afterUpdate() {},
+    beforeDelete: function beforeDelete() {},
+    afterDelete: function afterDelete() {},
+    //function used to load the index listing of records one time
     fetchIndex: function () {
       var _fetchIndex = _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee() {
         var _this = this;
@@ -881,16 +895,11 @@ window.initCrudForm = function (data) {
           while (1) {
             switch (_context.prev = _context.next) {
               case 0:
-                fetch(this.urls.index, {
-                  headers: {
-                    'Accept': 'application/json'
-                  }
-                }).then(function (response) {
-                  return response.json();
-                }).then(function (json) {
-                  return _this.records = json.data;
-                }).then(this.loading = false)["catch"](function (err) {
-                  return console.log(err);
+                this.loadRecords().then(function (json) {
+                  json.data.forEach(function (item) {
+                    return _this.records.push(item);
+                  });
+                  _this.loading = false;
                 });
 
               case 1:
@@ -907,29 +916,128 @@ window.initCrudForm = function (data) {
 
       return fetchIndex;
     }(),
+    //function used for loading index listing of records either
+    //on initial load or multiple times for pagination.
+    loadRecords: function () {
+      var _loadRecords = _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee2() {
+        var response, json;
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().wrap(function _callee2$(_context2) {
+          while (1) {
+            switch (_context2.prev = _context2.next) {
+              case 0:
+                _context2.next = 2;
+                return fetch("".concat(this.urls.index, "?page=").concat(this.page), {
+                  headers: {
+                    'Accept': 'application/json'
+                  }
+                })["catch"](function (err) {
+                  return console.log(err);
+                });
+
+              case 2:
+                response = _context2.sent;
+                _context2.next = 5;
+                return response.json();
+
+              case 5:
+                json = _context2.sent;
+                return _context2.abrupt("return", json);
+
+              case 7:
+              case "end":
+                return _context2.stop();
+            }
+          }
+        }, _callee2, this);
+      }));
+
+      function loadRecords() {
+        return _loadRecords.apply(this, arguments);
+      }
+
+      return loadRecords;
+    }(),
+    //function used for infinite scroll pagination to make the request
+    //for additional records, update local variables accordingly
+    //and call afterRecordsAdded() for any post-records-received functionality
+    addRecords: function () {
+      var _addRecords = _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee3() {
+        var _this2 = this;
+
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().wrap(function _callee3$(_context3) {
+          while (1) {
+            switch (_context3.prev = _context3.next) {
+              case 0:
+                this.loadRecords().then(function (json) {
+                  _this2.lastPage = json.meta.last_page;
+                  json.data.forEach(function (item) {
+                    return _this2.records.push(item);
+                  });
+
+                  _this2.afterRecordsAdded();
+
+                  _this2.page++;
+
+                  if (_this2.page <= _this2.lastPage) {
+                    _this2.showInfiniteScroll = true;
+                  } else {
+                    _this2.showInfiniteScroll = false;
+                  }
+                });
+
+              case 1:
+              case "end":
+                return _context3.stop();
+            }
+          }
+        }, _callee3, this);
+      }));
+
+      function addRecords() {
+        return _addRecords.apply(this, arguments);
+      }
+
+      return addRecords;
+    }(),
+    setCurrentRecord: function setCurrentRecord(record) {
+      this.currentRecord = record;
+    },
+    getCurrentRecord: function getCurrentRecord() {
+      return this.currentRecord;
+    },
+    showRecord: function showRecord(id) {
+      this.showOpen = true;
+      this.setCurrentRecord(this.records.find(function (r) {
+        return r.id == id;
+      }));
+    },
+    hideRecord: function hideRecord() {
+      this.showOpen = false;
+    },
     newRecord: function newRecord() {
       this.formOpen = true;
     },
     editRecord: function editRecord(id) {
       this.formOpen = true;
-      this.currentRecord = this.records.find(function (r) {
+      this.setCurrentRecord(this.records.find(function (r) {
         return r.id == id;
-      });
+      }));
     },
     deleteRecord: function deleteRecord(id) {
-      this.currentRecord = this.records.find(function (r) {
+      this.setCurrentRecord(this.records.find(function (r) {
         return r.id == id;
-      });
+      }));
       this.deleteConfirmOpen = true;
     },
     cancelDelete: function cancelDelete() {
       this.deleteConfirmOpen = false;
     },
     confirmDelete: function confirmDelete() {
-      var _this2 = this;
+      var _this3 = this;
 
+      this.beforeDelete();
       this.deleting = true;
-      fetch(this.urls["delete"].replace('123', this.currentRecord.id), {
+      fetch(this.urls["delete"].replace('123', this.getCurrentRecord().id), {
         method: 'DELETE',
         headers: {
           'Accept': 'application/json',
@@ -937,16 +1045,18 @@ window.initCrudForm = function (data) {
         }
       }).then(function (response) {
         if (response.status == 204) {
-          _this2.records = _this2.records.filter(function (record) {
-            return record.id != _this2.currentRecord.id;
+          _this3.records = _this3.records.filter(function (record) {
+            return record.id != _this3.getCurrentRecord().id;
           });
-          _this2.deleteConfirmOpen = false;
-          _this2.deleting = false;
+          _this3.deleteConfirmOpen = false;
+          _this3.deleting = false;
 
-          _this2.resetCurrent();
+          _this3.resetCurrent();
+
+          _this3.afterDelete();
         } else {
-          _this2.deleteConfirmOpen = false;
-          _this2.deleting = false;
+          _this3.deleteConfirmOpen = false;
+          _this3.deleting = false;
           setTimeout(function () {
             return alert('Error, could not delete record');
           }, 500);
@@ -956,7 +1066,7 @@ window.initCrudForm = function (data) {
       });
     },
     resetCurrent: function resetCurrent() {
-      this.currentRecord = {};
+      this.setCurrentRecord({});
       this.errors = [];
     },
     cancelForm: function cancelForm() {
@@ -964,23 +1074,25 @@ window.initCrudForm = function (data) {
       this.formOpen = false;
     },
     closeFormSuccess: function closeFormSuccess() {
-      var _this3 = this;
+      var _this4 = this;
 
       this.resetCurrent();
       this.formOpen = false;
       this.notificationOpen = true;
       this.saving = false;
       setTimeout(function () {
-        return _this3.notificationOpen = false;
+        return _this4.notificationOpen = false;
       }, 2000);
     },
     saveForm: function saveForm() {
+      this.beforeSave();
       this.saving = true;
-      this.currentRecord.id ? this.updateRecord() : this.createRecord();
+      this.getCurrentRecord().id ? this.updateRecord() : this.createRecord();
     },
     createRecord: function createRecord() {
-      var _this4 = this;
+      var _this5 = this;
 
+      this.beforeCreate();
       fetch(this.urls.store, {
         method: 'POST',
         headers: {
@@ -988,46 +1100,11 @@ window.initCrudForm = function (data) {
           'Content-Type': 'application/json',
           'X-CSRF-TOKEN': this.csrfToken
         },
-        body: JSON.stringify(this.currentRecord)
+        body: JSON.stringify(this.getCurrentRecord())
       }).then(function (response) {
         if (response.status == 201) {
           response.json().then(function (res) {
-            return _this4.records.push(res.data);
-          }).then(function () {
-            return _this4.closeFormSuccess();
-          });
-        } else if (response.status == 422) {
-          response.json().then(function (res) {
-            return _this4.errors = res.errors;
-          });
-        } else {
-          alert('Fatal error, could not save record');
-        }
-
-        _this4.saving = false;
-      })["catch"](function (err) {
-        return console.log(err);
-      });
-    },
-    updateRecord: function updateRecord() {
-      var _this5 = this;
-
-      fetch(this.urls.update.replace('123', this.currentRecord.id), {
-        method: 'PUT',
-        headers: {
-          'Accept': 'application/json',
-          'Content-Type': 'application/json',
-          'X-CSRF-TOKEN': this.csrfToken
-        },
-        body: JSON.stringify(this.currentRecord)
-      }).then(function (response) {
-        if (response.status == 200) {
-          response.json().then(function (res) {
-            var idx = _this5.records.findIndex(function (r) {
-              return r.id == _this5.currentRecord.id;
-            });
-
-            _this5.records[idx] = res.data;
+            return _this5.records.push(res.data);
           }).then(function () {
             return _this5.closeFormSuccess();
           });
@@ -1040,6 +1117,50 @@ window.initCrudForm = function (data) {
         }
 
         _this5.saving = false;
+
+        _this5.afterCreate();
+
+        _this5.afterSave();
+      })["catch"](function (err) {
+        return console.log(err);
+      });
+    },
+    updateRecord: function updateRecord() {
+      var _this6 = this;
+
+      this.beforeUpdate();
+      fetch(this.urls.update.replace('123', this.getCurrentRecord().id), {
+        method: 'PUT',
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json',
+          'X-CSRF-TOKEN': this.csrfToken
+        },
+        body: JSON.stringify(this.getCurrentRecord())
+      }).then(function (response) {
+        if (response.status == 200) {
+          response.json().then(function (res) {
+            var idx = _this6.records.findIndex(function (r) {
+              return r.id == _this6.getCurrentRecord().id;
+            });
+
+            _this6.records[idx] = res.data;
+          }).then(function () {
+            return _this6.closeFormSuccess();
+          });
+        } else if (response.status == 422) {
+          response.json().then(function (res) {
+            return _this6.errors = res.errors;
+          });
+        } else {
+          alert('Fatal error, could not save record');
+        }
+
+        _this6.saving = false;
+
+        _this6.afterUpdate();
+
+        _this6.afterSave();
       })["catch"](function (err) {
         return console.log(err);
       });

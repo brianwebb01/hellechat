@@ -93,6 +93,26 @@ class ContactControllerTest extends TestCase
     /**
      * @test
      */
+    public function store_validates_phone_numbers()
+    {
+        $response = $this->actingAs($this->user)->postJson(route('contacts.store'), [
+            'first_name' => $this->faker->firstName,
+            'last_name' => $this->faker->lastName,
+            'phone_numbers' => json_encode(['mobile' => 'foo', 'home' => 'bar']),
+        ]);
+
+        $response->assertUnprocessable();
+        $response->assertJson(
+            fn (AssertableJson $json) =>
+            $json->has('message')
+            ->has('errors')
+                ->has('errors.phone_numbers', 1)
+        );
+    }
+
+    /**
+     * @test
+     */
     public function store_saves()
     {
         $fName = $this->faker->firstName;
@@ -178,6 +198,27 @@ class ContactControllerTest extends TestCase
             \App\Http\Controllers\Api\ContactController::class,
             'update',
             \App\Http\Requests\Api\ContactUpdateRequest::class
+        );
+    }
+
+    /**
+     * @test
+     */
+    public function update_validates_phone_numbers()
+    {
+        $contact = Contact::factory()->create(['user_id' => $this->user->id]);
+        $response = $this->actingAs($this->user)->putJson(route('contacts.update', $contact), [
+            'first_name' => $this->faker->firstName,
+            'last_name' => $this->faker->lastName,
+            'phone_numbers' => json_encode(['mobile' => 'foo', 'home' => 'bar']),
+        ]);
+
+        $response->assertUnprocessable();
+        $response->assertJson(
+            fn (AssertableJson $json) =>
+            $json->has('message')
+            ->has('errors')
+            ->has('errors.phone_numbers', 1)
         );
     }
 

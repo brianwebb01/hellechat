@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests\Api;
 
+use App\Rules\PhoneNumbersInJsonAreE164;
 use Illuminate\Foundation\Http\FormRequest;
 
 class ContactUpdateRequest extends FormRequest
@@ -27,7 +28,7 @@ class ContactUpdateRequest extends FormRequest
             'first_name' => ['string', 'max:50'],
             'last_name' => ['string', 'max:50'],
             'company' => ['string', 'max:75'],
-            'phone_numbers' => ['json'],
+            'phone_numbers' => ['json', new PhoneNumbersInJsonAreE164],
         ];
     }
 }
