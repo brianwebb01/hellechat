@@ -31,7 +31,7 @@ class UserResource extends JsonResource
                     ])
                 ]
             )->flatMap(fn ($a) => $a),
-            'created_at' => $user->created_at
+            'created_at' => $user->created_at->timezone($user->time_zone)->format(\DateTime::ISO8601)
         ];
     }
 }

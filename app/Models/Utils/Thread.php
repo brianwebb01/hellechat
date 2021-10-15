@@ -121,7 +121,7 @@ class Thread
         else
             $thread->previewBody = $message->body;
 
-        $thread->lastUpdatedAt = $message->created_at;
+        $thread->lastUpdatedAt = $message->created_at->timezone($message->user->time_zone)->format(\DateTime::ISO8601);
 
         $thread->contact = $message->contact;
 
@@ -146,15 +146,16 @@ class Thread
             ->orWhere('to', $phoneNumber)
             ->orderBy('created_at', 'ASC')
             ->get();
-        if(is_null($thread->messages->last()->body)
-            && $thread->messages->last()->num_media > 0
-        ){
-            $thread->previewBody = $thread->messages->last()->media[0];
+
+        $last = $thread->messages->last();
+
+        if(is_null($last->body) && $last->num_media > 0){
+            $thread->previewBody = $last->media[0];
         } else {
-            $thread->previewBody = $thread->messages->last()->body;
+            $thread->previewBody = $last->body;
         }
 
-        $thread->lastUpdatedAt = $thread->messages->last()->created_at;
+        $thread->lastUpdatedAt = $last->created_at->timezone($last->user->time_zone)->format(\DateTime::ISO8601);
         $thread->contact = $user->contacts()
             ->firstWhere('phone_numbers', 'like', '%'.$phoneNumber.'%');
 
