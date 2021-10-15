@@ -30,7 +30,6 @@ class PhoneNumbersInJsonAreE164 implements Rule
     public function passes($attribute, $value)
     {
         $numbers = array_values(json_decode($value, true));
-        Log::debug($numbers);
         for($i=0; $i < count($numbers); $i++){
             if(preg_match('/\+[1-9]\d{1,14}/', $numbers[$i]) !== 1){
                 $this->badIndexes[] = $i;

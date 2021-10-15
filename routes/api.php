@@ -32,12 +32,15 @@ Route::group(['middleware' => ['auth:sanctum']], function(){
 
     Route::apiResource('numbers', App\Http\Controllers\Api\NumberController::class);
 
+    Route::post('contacts/search', [App\Http\Controllers\Api\ContactSearchController::class, 'search'])
+        ->name('contacts.search');
+
     Route::apiResource('contacts', App\Http\Controllers\Api\ContactController::class);
 
     Route::apiResource('contacts-import', App\Http\Controllers\Api\ContactImportController::class)->only('store');
 
     Route::apiResource('voicemails', App\Http\Controllers\Api\VoicemailController::class)->except('store', 'update');
 
-    Route::apiResource('messages', App\Http\Controllers\Api\MessageController::class)->only('store');
+    Route::apiResource('messages', App\Http\Controllers\Api\MessageController::class)->only('store', 'update');
 
 });

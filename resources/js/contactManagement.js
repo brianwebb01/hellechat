@@ -22,7 +22,6 @@ window.manageContacts = function() {
             this.records = this.unfilteredRecords;
 
             const options = {
-                includeScore: false,
                 keys: ['first_name', 'last_name', 'company']
             }
             const fuse = new Fuse(this.records, options);

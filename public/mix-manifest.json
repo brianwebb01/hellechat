@@ -4,5 +4,6 @@
     "/js/serviceAccountForm.js": "/js/serviceAccountForm.js",
     "/js/contactManagement.js": "/js/contactManagement.js",
     "/js/voicemailManagement.js": "/js/voicemailManagement.js",
+    "/js/messageManagement.js": "/js/messageManagement.js",
     "/css/app.css": "/css/app.css"
 }

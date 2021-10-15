@@ -6,7 +6,6 @@ use App\Models\Number;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
-use JMac\Testing\Traits\AdditionalAssertions;
 use Tests\TestCase;
 use Illuminate\Testing\Fluent\AssertableJson;
 
@@ -15,7 +14,7 @@ use Illuminate\Testing\Fluent\AssertableJson;
  */
 class UserControllerTest extends TestCase
 {
-    use AdditionalAssertions, RefreshDatabase, WithFaker;
+    use RefreshDatabase, WithFaker;
 
 
     /**

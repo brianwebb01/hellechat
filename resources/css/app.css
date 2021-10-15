@@ -2,7 +2,10 @@
 @import 'tailwindcss/components';
 @import 'tailwindcss/utilities';
 .h-chat-area {
-  height: calc(100vh - 139px);
+  height: calc(100vh - 66px);
+}
+.h-threads {
+  height: calc(100vh - 90px);
 }
 .h-thread-ui-mobile {
   height: calc(100vh - 207px);

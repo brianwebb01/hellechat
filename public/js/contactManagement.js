@@ -1884,7 +1884,6 @@ window.manageContacts = function () {
 
       this.records = this.unfilteredRecords;
       var options = {
-        includeScore: false,
         keys: ['first_name', 'last_name', 'company']
       };
       var fuse = new fuse_js__WEBPACK_IMPORTED_MODULE_0__["default"](this.records, options);

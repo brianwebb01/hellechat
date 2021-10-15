@@ -10,6 +10,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Log;
 
 class ProcessOutboundTwilioMessageJob implements ShouldQueue
@@ -39,24 +40,34 @@ class ProcessOutboundTwilioMessageJob implements ShouldQueue
     {
         $tw = $this->serviceAccount->getProviderClient();
 
+        $callbackUrl = route(
+            'webhooks.twilio.messaging.status',
+            ['userHashId' => $this->message->user->getHashId()]
+        );
+
         $data = [
             'from' => $this->message->from,
-            'statusCallback' => route(
-                'webhooks.twilio.messaging.status',
-                ['userHashId' => $this->message->user->getHashId()]
-            )
+            'statusCallback' => $callbackUrl
         ];
 
         if($this->message->body)
             $data['body'] = $this->message->body;
 
         if(! empty($this->message->media))
-            $data['mediaUrl'] = $this->message->media;
+            $data['mediaUrl'] = collect($this->message->media)
+                ->map(fn($i) => config('app.url'). $i )->all();
 
-        $remoteMessage = $tw->messages->create(
-            $this->message->to,
-            $data
-        );
+        if(!App::environment('production') && config('services.twilio.use_sandbox')){
+            $remoteMessage = \json_decode(\json_encode([
+                'sid' => \base64_encode(\uniqid('', true)),
+                'status' => Message::STATUS_DELIVERED
+            ]));
+        } else {
+            $remoteMessage = $tw->messages->create(
+                $this->message->to,
+                $data
+            );
+        }
 
         $this->message->update([
             'external_identity' => $remoteMessage->sid,

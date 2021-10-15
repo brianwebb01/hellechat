@@ -33,6 +33,7 @@ return [
     'twilio' => [
         'account_sid' => env('TWILIO_ACCOUNT_SID'),
         'auth_token' => env('TWILIO_AUTH_TOKEN'),
+        'use_sandbox' => env('TWILIO_SANDBOX')
     ]
 
 ];

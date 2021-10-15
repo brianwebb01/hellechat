@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Casts\AsCollection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Storage;
 
 class Message extends Model
 {
@@ -42,6 +43,7 @@ class Message extends Model
         'external_identity',
         'external_date_created',
         'external_date_updated',
+        'read'
     ];
 
     /**
@@ -59,6 +61,7 @@ class Message extends Model
         'media' => 'array',
         'external_date_created' => 'datetime',
         'external_date_updated' => 'datetime',
+        'read' => 'boolean'
     ];
 
 
@@ -80,5 +83,16 @@ class Message extends Model
     public function contact()
     {
         return $this->belongsTo(\App\Models\Contact::class);
+    }
+
+    public function deleteMediaFiles()
+    {
+        //get the prefix that should have been added to the path when
+        //saved as a URL
+        $prefix = str_replace('foo/bar', '', Storage::url('foo/bar'));
+        foreach($this->media as $file){
+            $del = str_replace($prefix, '', $file);
+            Storage::disk('public')->delete($del);
+        }
     }
 }

@@ -2,10 +2,9 @@
 
 namespace App\Http\Requests\Api;
 
-use App\Rules\PhoneNumbersInJsonAreE164;
 use Illuminate\Foundation\Http\FormRequest;
 
-class ContactUpdateRequest extends FormRequest
+class ContactSearchRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -25,10 +24,7 @@ class ContactUpdateRequest extends FormRequest
     public function rules()
     {
         return [
-            'first_name' => ['nullable', 'string', 'max:50'],
-            'last_name' => ['nullable', 'string', 'max:50'],
-            'company' => ['nullable', 'string', 'max:75'],
-            'phone_numbers' => ['json', new PhoneNumbersInJsonAreE164],
+            'query' => ['required', 'string']
         ];
     }
 }

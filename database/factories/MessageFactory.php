@@ -44,6 +44,7 @@ class MessageFactory extends Factory
             'external_identity' => $this->faker->word,
             'external_date_created' => $this->faker->dateTime(),
             'external_date_updated' => $this->faker->dateTime(),
+            'read' => true
         ];
     }
 }

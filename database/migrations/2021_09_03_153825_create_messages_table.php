@@ -33,6 +33,7 @@ class CreateMessagesTable extends Migration
             $table->string('external_identity')->index()->nullable();
             $table->dateTime('external_date_created')->nullable();
             $table->dateTime('external_date_updated')->nullable();
+            $table->boolean('read')->default(false);
             $table->timestamps();
         });
 
