@@ -2375,6 +2375,9 @@ select {
   height: calc(100vh - 207px);
 }
 [x-cloak] { display: none !important; }
+.last\:border-b-0:last-child {
+	border-bottom-width: 0px;
+}
 .focus-within\:z-10:focus-within {
 	z-index: 10;
 }
