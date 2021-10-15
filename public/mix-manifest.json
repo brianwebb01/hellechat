@@ -3,5 +3,6 @@
     "/js/crudForm.js": "/js/crudForm.js",
     "/js/serviceAccountForm.js": "/js/serviceAccountForm.js",
     "/js/contactManagement.js": "/js/contactManagement.js",
+    "/js/voicemailManagement.js": "/js/voicemailManagement.js",
     "/css/app.css": "/css/app.css"
 }

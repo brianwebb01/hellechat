@@ -878,6 +878,8 @@ window.initCrudForm = function (data) {
     lastPage: null,
     showInfiniteScroll: false,
     afterRecordsAdded: function afterRecordsAdded() {},
+    beforeSetCurrentRecord: function beforeSetCurrentRecord() {},
+    afterSetCurrentRecord: function afterSetCurrentRecord() {},
     beforeSave: function beforeSave() {},
     afterSave: function afterSave() {},
     beforeCreate: function beforeCreate() {},
@@ -1000,7 +1002,9 @@ window.initCrudForm = function (data) {
       return addRecords;
     }(),
     setCurrentRecord: function setCurrentRecord(record) {
+      this.beforeSetCurrentRecord();
       this.currentRecord = record;
+      this.afterSetCurrentRecord();
     },
     getCurrentRecord: function getCurrentRecord() {
       return this.currentRecord;

@@ -18,10 +18,12 @@ class VoicemailResource extends JsonResource
             'id' => $this->id,
             'user_id' => $this->user_id,
             'number_id' => $this->number_id,
-            'contact_id' => $this->contact_id,
+            'contact' => $this->contact_id ? (new ContactResource($this->contact)) : null,
+            'from' => $this->from,
             'media_url' => $this->media_url,
             'length' => $this->length,
             'transcription' => $this->transcription,
+            'created_at' => $this->created_at
         ];
     }
 }

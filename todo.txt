@@ -7,24 +7,22 @@ SMS App
 
 [ MUST HAVE ]
 --------------
-
-- Wire up contacts ui
-   - contact search
 - Wire up voicemail ui
+- update voicemail resource tests (contact, !contact_id, from, created_at)
+- time zone setting & conversion in resources
 - Wire up messages ui
    - thread contact search
    - support rendering of attachments
    - support sending of attachments
-- wire up pagination on serviceAccounts, numbers, voicemail, contacts, messages?
-
-
+- wire up pagination on serviceAccounts, numbers, voicemail, messages?
+- user gotify endpoint setting on user w/ new message, new voicemail requests.
+  - OR webhook capability & docker-compose included gotify server (config'd to use existing mysql)
+  - OR api integraiton with docker-compose included gotify server (config'd to use existing mysql)
+- UI tests
 
 [ SHOULD HAVE ]
 ---------------
 - post account creation dashboard directions (goes away after some event)
-- user gotify endpoint setting on user w/ new message, new voicemail requests.
-  - OR webhook capability & docker-compose included gotify server (config'd to use existing mysql)
-  - OR api integraiton with docker-compose included gotify server (config'd to use existing mysql)
 - Contact Import
 
 

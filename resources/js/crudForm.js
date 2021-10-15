@@ -16,6 +16,8 @@ window.initCrudForm = function(data) {
         lastPage: null,
         showInfiniteScroll: false,
         afterRecordsAdded: function(){},
+        beforeSetCurrentRecord: function(){},
+        afterSetCurrentRecord: function(){},
         beforeSave: function(){},
         afterSave: function(){},
         beforeCreate: function(){},
@@ -67,7 +69,9 @@ window.initCrudForm = function(data) {
         },
 
         setCurrentRecord: function(record) {
+            this.beforeSetCurrentRecord();
             this.currentRecord = record;
+            this.afterSetCurrentRecord();
         },
 
         getCurrentRecord: function() {
