@@ -40,10 +40,11 @@ class MessageStoreRequest extends FormRequest
             ],
             'status' => ['required', 'string', 'max:15'],
             'num_media' => ['integer'],
-            'media' => ['string'],
+            'media.*' => ['max:2048'],
             'external_identity' => [''],
             'external_date_created' => [''],
             'external_date_updated' => [''],
+            'read' => ['boolean']
         ];
     }
 }

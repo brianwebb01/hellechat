@@ -14,6 +14,17 @@
             </button>
         </li>
 
+        <li class="col-span-1 bg-white rounded-lg shadow divide-y divide-gray-200">
+            <button @click="newRecord();" type="button" class="relative block w-full border-2 border-gray-300 border-dashed rounded-lg p-8 pb-9 text-center hover:border-gray-400 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                <svg class="mx-auto h-12 w-12 text-gray-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v3m0 0v3m0-3h3m-3 0H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                <span class="mt-2 block text-sm font-medium text-gray-900">
+                    Add Service Account
+                </span>
+            </button>
+        </li>
+
         <template x-for="record in records">
             <li class="col-span-1 bg-white rounded-lg shadow divide-y divide-gray-200">
                 <div class="w-full flex items-center justify-between p-6 pb-5 space-x-6">
@@ -46,17 +57,6 @@
                 </div>
             </li>
         </template>
-
-        <li class="col-span-1 bg-white rounded-lg shadow divide-y divide-gray-200">
-            <button @click="newRecord();" type="button" class="relative block w-full border-2 border-gray-300 border-dashed rounded-lg p-8 pb-9 text-center hover:border-gray-400 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
-                <svg class="mx-auto h-12 w-12 text-gray-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v3m0 0v3m0-3h3m-3 0H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z" />
-                </svg>
-                <span class="mt-2 block text-sm font-medium text-gray-900">
-                    Add Service Account
-                </span>
-            </button>
-        </li>
 
     </ul>
 </div>

@@ -10,6 +10,8 @@ use App\Models\Contact;
 use App\Models\Message;
 use App\Models\Utils\Thread;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class ThreadController extends Controller
 {
@@ -19,9 +21,17 @@ class ThreadController extends Controller
      */
     public function index(Request $request)
     {
-        $threads = Thread::threadsSummaryForUser($request->user());
+        $IDsAndReads = Thread::getRecentThreadSql($request->user());
 
-        return ['data' => $threads];
+        $response = $request->user()->messages()
+            ->with('number', 'contact')
+            ->whereIn('id', collect($IDsAndReads)->pluck('id')->flatten())
+            ->orderBy('created_at', 'desc')
+            ->paginate();
+
+        $array = $response->toArray();
+        $array = Thread::addReadCountsForRecentThreads($array, $IDsAndReads);
+        return Thread::formatApiResponse($array);
     }
 
     /**
@@ -31,9 +41,13 @@ class ThreadController extends Controller
      */
     public function show(Request $request, $phoneNumber)
     {
-        $thread = Thread::getThread($request->user(), $phoneNumber);
+        $messages = $request->user()->messages()
+            ->where('from', $phoneNumber)
+            ->orWhere('to', $phoneNumber)
+            ->orderBy('created_at', 'asc')
+            ->paginate();
 
-        return ['data' => $thread];
+        return new MessageCollection($messages);
     }
 
     /**

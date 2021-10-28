@@ -10,7 +10,6 @@ use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Testing\Fluent\AssertableJson;
-use JMac\Testing\Traits\AdditionalAssertions;
 use Tests\TestCase;
 
 /**
@@ -18,19 +17,8 @@ use Tests\TestCase;
  */
 class MessageControllerTest extends TestCase
 {
-    use AdditionalAssertions, RefreshDatabase, WithFaker;
+    use RefreshDatabase, WithFaker;
 
-    /**
-     * @test
-     */
-    public function store_uses_form_request_validation()
-    {
-        $this->assertActionUsesFormRequest(
-            \App\Http\Controllers\Api\MessageController::class,
-            'store',
-            \App\Http\Requests\Api\MessageStoreRequest::class
-        );
-    }
 
     /**
      * @test
@@ -91,6 +79,7 @@ class MessageControllerTest extends TestCase
                 ->has('data.num_media')
                 ->has('data.media')
                 ->has('data.external_identity')
+                ->has('data.read')
         );
     }
 
@@ -136,5 +125,42 @@ class MessageControllerTest extends TestCase
             ->where('data.contact', null)
             ->etc()
         );
+    }
+
+
+    /**
+     * @test
+     */
+    public function update_behaves_as_expected()
+    {
+        $user = User::factory()->create();
+        $serviceAccount = ServiceAccount::factory()->create([
+            'user_id' => $user->id
+        ]);
+        $number = Number::factory()->create([
+            'user_id' => $user->id,
+            'service_account_id' => $serviceAccount->id
+        ]);
+        $toPhone = $this->faker->e164PhoneNumber();
+        $body = 'foo bar biz bang';
+
+        $message = Message::factory()->create([
+            'user_id' => $user->id,
+            'number_id' => $number->id,
+            'read' => false,
+            'from' => $number->phone_number,
+            'to' => $toPhone,
+            'body' => $body
+        ]);
+        $this->assertFalse($message->read);
+
+        $response = $this->actingAs($user)->putJson(route('messages.update', $message), [
+            'read' => true
+        ]);
+
+        $response->assertOk();
+
+        $message->refresh();
+        $this->assertTrue($message->read);
     }
 }

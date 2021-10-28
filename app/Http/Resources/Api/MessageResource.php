@@ -30,7 +30,8 @@ class MessageResource extends JsonResource
             'num_media' => $this->num_media,
             'media' => $this->media,
             'external_identity' => $this->external_identity,
-            'created_at' => $this->created_at->timezone($this->user->time_zone)->format(\DateTime::ISO8601)
+            'created_at' => $this->created_at->timezone($this->user->time_zone)->format(\DateTime::ISO8601),
+            'read' => $this->read
         ];
     }
 }

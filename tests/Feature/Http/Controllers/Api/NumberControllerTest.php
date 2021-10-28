@@ -8,7 +8,6 @@ use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Testing\Fluent\AssertableJson;
-use JMac\Testing\Traits\AdditionalAssertions;
 use Tests\TestCase;
 
 /**
@@ -16,7 +15,7 @@ use Tests\TestCase;
  */
 class NumberControllerTest extends TestCase
 {
-    use AdditionalAssertions, RefreshDatabase, WithFaker;
+    use RefreshDatabase, WithFaker;
 
     protected $user;
     protected $serviceAccount;
@@ -73,17 +72,6 @@ class NumberControllerTest extends TestCase
     }
 
 
-    /**
-     * @test
-     */
-    public function store_uses_form_request_validation()
-    {
-        $this->assertActionUsesFormRequest(
-            \App\Http\Controllers\Api\NumberController::class,
-            'store',
-            \App\Http\Requests\Api\NumberStoreRequest::class
-        );
-    }
 
     /**
      * @test
@@ -164,17 +152,6 @@ class NumberControllerTest extends TestCase
     }
 
 
-    /**
-     * @test
-     */
-    public function update_uses_form_request_validation()
-    {
-        $this->assertActionUsesFormRequest(
-            \App\Http\Controllers\Api\NumberController::class,
-            'update',
-            \App\Http\Requests\Api\NumberUpdateRequest::class
-        );
-    }
 
     /**
      * @test

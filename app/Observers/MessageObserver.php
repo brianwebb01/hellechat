@@ -45,7 +45,7 @@ class MessageObserver
      */
     public function deleted(Message $message)
     {
-        //
+        $message->deleteMediaFiles();
     }
 
     /**

@@ -27,7 +27,7 @@ class ThreadSeeder extends Seeder
      */
     public function run()
     {
-        $user = User::factory()->create(['email' => 'user@threads.com']);
+        $user = User::whereEmail('test@test.com')->first();
         $serviceAccount = ServiceAccount::factory()->create(['user_id' => $user->id]);
         $number = Number::factory()->create([
             'user_id' => $user->id,
@@ -58,6 +58,7 @@ class ThreadSeeder extends Seeder
             'body' => 'fancy some spam?',
             'direction' => Message::DIRECTION_IN,
             'created_at' => now()->subDays(5)->subSeconds(rand(0,59)),
+            'read' => false
         ]);
 
         //create a message thread that has no contact
@@ -120,6 +121,7 @@ class ThreadSeeder extends Seeder
                 'body' => str_split('abcdefghijklmnopqrstuvwxyz')[$key],
                 'direction' => $direction,
                 'created_at' => now()->subDays($subDays)->addMinutes($key)->addSeconds(rand(0, 59)),
+                'read' => $direction == Message::DIRECTION_IN ? false : true
             ]);
         }
 

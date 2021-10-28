@@ -30,8 +30,8 @@ class NumberFactory extends Factory
             'service_account_id' => ServiceAccount::factory(),
             'phone_number' => $n,
             'sip_registration_url' => "{$n}@{$n}.sip.somewhere.com",
-            'friendly_label' => $this->faker->regexify('[A-Za-z0-9]{50}'),
-            'external_identity' => $this->faker->word,
+            'friendly_label' => $this->faker->words(2, true),
+            'external_identity' => $this->faker->regexify('[A-Za-z0-9]{24}'),
         ];
     }
 }

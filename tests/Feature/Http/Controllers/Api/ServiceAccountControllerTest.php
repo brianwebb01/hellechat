@@ -7,7 +7,6 @@ use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Testing\Fluent\AssertableJson;
-use JMac\Testing\Traits\AdditionalAssertions;
 use Tests\TestCase;
 
 /**
@@ -15,7 +14,7 @@ use Tests\TestCase;
  */
 class ServiceAccountControllerTest extends TestCase
 {
-    use AdditionalAssertions, RefreshDatabase, WithFaker;
+    use RefreshDatabase, WithFaker;
 
     protected $user;
 
@@ -65,17 +64,6 @@ class ServiceAccountControllerTest extends TestCase
         );
     }
 
-    /**
-     * @test
-     */
-    public function store_uses_form_request_validation()
-    {
-        $this->assertActionUsesFormRequest(
-            \App\Http\Controllers\Api\ServiceAccountController::class,
-            'store',
-            \App\Http\Requests\Api\ServiceAccountStoreRequest::class
-        );
-    }
 
     /**
      * @test
@@ -174,18 +162,6 @@ class ServiceAccountControllerTest extends TestCase
         $response->assertForbidden();
     }
 
-
-    /**
-     * @test
-     */
-    public function update_uses_form_request_validation()
-    {
-        $this->assertActionUsesFormRequest(
-            \App\Http\Controllers\Api\ServiceAccountController::class,
-            'update',
-            \App\Http\Requests\Api\ServiceAccountUpdateRequest::class
-        );
-    }
 
     /**
      * @test

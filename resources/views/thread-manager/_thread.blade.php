@@ -1,154 +1,29 @@
-<div x-init="$nextTick(() => { this.scrollTo({top: this.clientHeight}) })"
-    id="messages" class="h-thread-ui-mobile flex flex-col space-y-4 p-3 overflow-y-auto scrollbar-thumb-blue scrollbar-thumb-rounded scrollbar-track-blue-lighter scrollbar-w-2 scrolling-touch">
-    <div class="chat-message">
-        <div class="flex items-end">
-            <div class="flex flex-col space-y-2 text-xs max-w-xs mx-2 order-2 items-start">
-                <div>
-                    <span class="px-4 py-2 rounded-lg inline-block rounded-bl-none bg-gray-200 text-gray-600">
-                        Lorem ipsum dolor sit amet, consectetur
-                    </span>
+<div id="messages" class="h-thread-ui-mobile flex flex-col space-y-2  p-3 overflow-y-auto scrollbar-thumb-blue scrollbar-thumb-rounded scrollbar-track-blue-lighter scrollbar-w-2 scrolling-touch">
+
+    <div x-cloak x-show="showMessagesInfiniteScroll" x-intersect="addMessages()" class="h-24 w-full flex text-gray-600 items-center justify-center" id="infinite-scroll-trigger">
+        <svg class="animate-spin -ml-1 mr-3 h-5 w-5 " xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+        </svg>
+        <span>Loading...</span>
+    </div>
+
+
+    <template x-for="(message,index) in messages">
+        <div class="chat-message" x-intersect="markAsRead(message.id)">
+            <div x-show="renderMessageTime(message, index) != null"  class="justify-center flex">
+                <div x-text="renderMessageTime(message, index)" class="text-white text-xs px-3 py-0.5 bg-gray-400 rounded-xl"></div>
+            </div>
+            <div :class="(message.direction == 'outbound' ? 'justify-end' : '') + ' flex items-end'">
+                <div :class="(message.direction == 'outbound' ? 'order-1 items-end' : 'order-2 items-start') + ' flex flex-col space-y-2 text-xs max-w-xs mx-2'">
+                    <div>
+                        <span x-html="renderMessageContent(message)" :class="(message.direction == 'outbound' ? 'bg-indigo-500 text-white' : 'bg-gray-200 text-gray-600') + ' px-4 py-2 rounded-lg inline-block'">
+                            Lorem ipsum dolor sit amet, consectetur
+                        </span>
+                    </div>
                 </div>
             </div>
-            <img src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?auto=format&amp;fit=crop&amp;w=100&amp;h=100&amp;q=80" alt="My profile" class="w-6 h-6 rounded-full order-1" />
         </div>
-    </div>
-    <div class="chat-message">
-        <div class="flex items-end justify-end">
-            <div class="flex flex-col space-y-2 text-xs max-w-xs mx-2 order-1 items-end">
-                <div>
-                    <span class="px-4 py-2 rounded-lg inline-block rounded-br-none bg-indigo-500 text-white">
-                        adipiscing elit, sed do eiusmod tempor
-                    </span>
-                </div>
-            </div>
-            <img src="https://images.unsplash.com/photo-1590031905470-a1a1feacbb0b?ixlib=rb-1.2.1&amp;ixid=eyJhcHBfaWQiOjEyMDd9&amp;auto=format&amp;fit=facearea&amp;facepad=3&amp;w=144&amp;h=144" alt="My profile" class="w-6 h-6 rounded-full order-2" />
-        </div>
-    </div>
-    <div class="chat-message">
-        <div class="flex items-end">
-            <div class="flex flex-col space-y-2 text-xs max-w-xs mx-2 order-2 items-start">
-                <div>
-                    <span class="px-4 py-2 rounded-lg inline-block bg-gray-200 text-gray-600">
-                        Duis aute irure dolor in reprehenderit
-                    </span>
-                </div>
-                <div>
-                    <span class="px-4 py-2 rounded-lg inline-block bg-gray-200 text-gray-600">
-                        Lorem ipsum dolor sit amet, consectetur adipiscing elit,
-                        sed do eiusmod tempor incididunt ut labore et dolore
-                        magna aliqua. Ut enim ad minim veniam
-                    </span>
-                </div>
-                <div>
-                    <span class="px-4 py-2 rounded-lg inline-block rounded-bl-none bg-gray-200 text-gray-600">
-                        Elit, sed do eiusmod tempor incididunt ut labore et
-                        dolore magna aliqua. Ut enim ad minim veniam
-                    </span>
-                </div>
-            </div>
-            <img src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?auto=format&amp;fit=crop&amp;w=100&amp;h=100&amp;q=80" alt="My profile" class="w-6 h-6 rounded-full order-1" />
-        </div>
-    </div>
-    <div class="chat-message">
-        <div class="flex items-end justify-end">
-            <div class="flex flex-col space-y-2 text-xs max-w-xs mx-2 order-1 items-end">
-                <div>
-                    <span class="px-4 py-2 rounded-lg inline-block rounded-br-none bg-indigo-500 text-white">
-                        👍 laboris nisi ut aliquip ex ea commodo consequat. Duis
-                        aute irure dolor in reprehenderit in voluptate velit
-                        esse cillum dolore eu fugiat nulla pariatur.
-                    </span>
-                </div>
-            </div>
-            <img src="https://images.unsplash.com/photo-1590031905470-a1a1feacbb0b?ixlib=rb-1.2.1&amp;ixid=eyJhcHBfaWQiOjEyMDd9&amp;auto=format&amp;fit=facearea&amp;facepad=3&amp;w=144&amp;h=144" alt="My profile" class="w-6 h-6 rounded-full order-2" />
-        </div>
-    </div>
-    <div class="chat-message">
-        <div class="flex items-end">
-            <div class="flex flex-col space-y-2 text-xs max-w-xs mx-2 order-2 items-start">
-                <div>
-                    <span class="px-4 py-2 rounded-lg inline-block rounded-bl-none bg-gray-200 text-gray-600">
-                        laboris nisi ut aliquip ex ea commodo consequat. Duis
-                        aute irure dolor in
-                    </span>
-                </div>
-            </div>
-            <img src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?auto=format&amp;fit=crop&amp;w=100&amp;h=100&amp;q=80" alt="My profile" class="w-6 h-6 rounded-full order-1" />
-        </div>
-    </div>
-    <div class="chat-message">
-        <div class="flex items-end justify-end">
-            <div class="flex flex-col space-y-2 text-xs max-w-xs mx-2 order-1 items-end">
-                <div>
-                    <span class="px-4 py-2 rounded-lg inline-block bg-indigo-500 text-white">
-                        Duis aute irure dolor
-                    </span>
-                </div>
-                <div>
-                    <span class="px-4 py-2 rounded-lg inline-block rounded-br-none bg-indigo-500 text-white">
-                        Lorem ipsum dolor sit amet, consectetur adipiscing elit,
-                        sed do eiusmod tempor incididunt ut labore et dolore
-                        magna aliqua. Ut enim ad minim veniam
-                    </span>
-                </div>
-            </div>
-            <img src="https://images.unsplash.com/photo-1590031905470-a1a1feacbb0b?ixlib=rb-1.2.1&amp;ixid=eyJhcHBfaWQiOjEyMDd9&amp;auto=format&amp;fit=facearea&amp;facepad=3&amp;w=144&amp;h=144" alt="My profile" class="w-6 h-6 rounded-full order-2" />
-        </div>
-    </div>
-    <div class="chat-message">
-        <div class="flex items-end">
-            <div class="flex flex-col space-y-2 text-xs max-w-xs mx-2 order-2 items-start">
-                <div>
-                    <span class="px-4 py-2 rounded-lg inline-block bg-gray-200 text-gray-600">
-                        Lorem ipsum dolor sit amet, consectetur adipiscing elit,
-                        sed
-                    </span>
-                </div>
-                <div>
-                    <span class="px-4 py-2 rounded-lg inline-block rounded-bl-none bg-gray-200 text-gray-600">
-                        Cadipiscing elit, sed do eiusmod tempor incididunt ut
-                        labore et dolore magna aliqua. Ut enim ad minim veniam
-                    </span>
-                </div>
-            </div>
-            <img src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?auto=format&amp;fit=crop&amp;w=100&amp;h=100&amp;q=80" alt="My profile" class="w-6 h-6 rounded-full order-1" />
-        </div>
-    </div>
-    <div class="chat-message">
-        <div class="flex items-end justify-end">
-            <div class="flex flex-col space-y-2 text-xs max-w-xs mx-2 order-1 items-end">
-                <div>
-                    <span class="px-4 py-2 rounded-lg inline-block rounded-br-none bg-indigo-500 text-white">
-                        Sed do eiusmod tempor incididunt ut labore et dolore
-                        magna aliqua. Ut enim ad minim veniam
-                    </span>
-                </div>
-            </div>
-            <img src="https://images.unsplash.com/photo-1590031905470-a1a1feacbb0b?ixlib=rb-1.2.1&amp;ixid=eyJhcHBfaWQiOjEyMDd9&amp;auto=format&amp;fit=facearea&amp;facepad=3&amp;w=144&amp;h=144" alt="My profile" class="w-6 h-6 rounded-full order-2" />
-        </div>
-    </div>
-    <div class="chat-message">
-        <div class="flex items-end">
-            <div class="flex flex-col space-y-2 text-xs max-w-xs mx-2 order-2 items-start">
-                <div>
-                    <span class="px-4 py-2 rounded-lg inline-block bg-gray-200 text-gray-600">
-                        Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                    </span>
-                </div>
-                <div>
-                    <span class="px-4 py-2 rounded-lg inline-block bg-gray-200 text-gray-600">
-                        Consectetur adipiscing elit, sed do eiusmod tempor
-                        incididunt ut labore et dolore magna aliqua. Ut enim ad
-                        minim veniam
-                    </span>
-                </div>
-                <div>
-                    <span class="px-4 py-2 rounded-lg inline-block rounded-bl-none bg-gray-200 text-gray-600">
-                        Good bye
-                    </span>
-                </div>
-            </div>
-            <img src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?auto=format&amp;fit=crop&amp;w=100&amp;h=100&amp;q=80" alt="My profile" class="w-6 h-6 rounded-full order-1" />
-        </div>
-    </div>
+    </template>
+
 </div>

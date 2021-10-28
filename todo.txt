@@ -1,25 +1,22 @@
 SMS App
 
-
 ==========
 @@ TODO @@
 ==========
 
 [ MUST HAVE ]
 --------------
-- time zone setting & conversion in resources
-- Wire up messages ui
-   - thread contact search
-   - support rendering of attachments
-   - support sending of attachments
-- wire up pagination on serviceAccounts, numbers, messages?
+- bundle all js
 - user gotify endpoint setting on user w/ new message, new voicemail requests.
   - OR webhook capability & docker-compose included gotify server (config'd to use existing mysql)
   - OR api integraiton with docker-compose included gotify server (config'd to use existing mysql)
-- UI tests
+
 
 [ SHOULD HAVE ]
 ---------------
+- UI tests
+- wire up pagination on serviceAccounts, numbers?
+- show 'active' thread in messages ui w/ 'currentThread' setter or click, activating
 - post account creation dashboard directions (goes away after some event)
 - Contact Import
 

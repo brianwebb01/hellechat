@@ -2,190 +2,188 @@
 
 namespace App\Models\Utils;
 
-use App\Models\Message;
 use App\Models\User;
 use Illuminate\Support\Facades\DB;
 
 class Thread
 {
-    public $phoneNumber;
-    public $messages;
-    public $lastUpdatedAt;
-    public $previewBody;
-    public $contact;
-
-    /**
-     * Function to get a listing of threads for the given
-     * user.
-     *
-     * @param User $user
-     * @return \Illuminate\Support\Collection
-     */
-    public static function threadsSummaryForUser(User $user)
-    {
-        return $user->messages()
-            ->with('number', 'contact')
-            ->whereIn('id', static::getThreadMessageIdsForUser($user))
-            ->orderBy('created_at', 'asc')
-            ->get()
-            ->map(fn($m) => static::newThreadFromMessage($m));
-    }
 
     /**
      * Function to return an array of message IDs that are
-     * the most recent message to / from a particular phone number
-     *
-     * - gets a list of distinct phone numbers used on messages
-     *   both to and from
-     *
-     * - join a list of messages on from||to number matching the
-     *   unique list, get the max created at, group by unique number
-     *
-     * - join in all messages where the unique number matches the
-     *   from||to and having the created_at that matches the found
-     *   max, group by id
+     * the most recent message to / from a particular phone number and
+     * the count of unread messages associated with that number
      *
      * @param User $user
      * @return array
      */
-    public static function getThreadMessageIdsForUser(User $user)
+    public static function getRecentThreadSql(User $user)
     {
         $sql = <<<SQL
         select
-            threads.id
+            `message_ids`.`id`, count(`rdata`.`id`) as unread
         from (
-            select
-                uniq_numbers.number,
-                MAX(m.created_at) as max_created
-            from (
-                select
-                    distinct(number)
+                select threads.id,
+                        threads.from,
+                        threads.to,
+                        threads.created_at
                 from (
-                    select
-                        `from` as number
-                    from
-                        messages
-                    where
-                        user_id = {$user->id}
+                        -- get the most recent message created at to/from each unique number, with the number
+                        select uniq_numbers.number,
+                                MAX(m.created_at) as max_created
+                        from (
+                                -- get a distinct list of numbers involved in messaging
+                                select distinct(number)
+                                from (
+                                            select `from` as number
+                                            from messages
+                                            where user_id = {$user->id}
 
-                    UNION ALL
+                                            UNION ALL
 
-                    select
-                        `to` as number
-                    from
-                        messages
-                    where
-                        user_id = {$user->id}
-                ) all_user_numbers
-            ) uniq_numbers
-            join
-                messages m on
-                    m.from = uniq_numbers.number
-                    or m.to = uniq_numbers.number
-            group by
-                uniq_numbers.number
-        ) locator_records
-        join messages as threads on
-            (locator_records.number = threads.to OR locator_records.number = threads.from)
-            AND locator_records.max_created = threads.created_at
+                                            select `to` as number
+                                            from messages
+                                            where user_id = {$user->id}
+                                        ) all_user_numbers
+                            ) uniq_numbers
+                                join
+                            messages m on
+                                        m.from = uniq_numbers.number
+                                    or m.to = uniq_numbers.number
+                        group by uniq_numbers.number
+                    ) locator_records
+                        join messages as threads on
+                        (locator_records.number = threads.to OR locator_records.number = threads.from)
+                        AND locator_records.max_created = threads.created_at
+                group by threads.id
+                order by threads.created_at desc
+            ) message_ids
+        left join
+            messages rdata on
+                rdata.read = 0 AND
+                    (
+                        rdata.from IN(message_ids.from, message_ids.to) OR
+                        rdata.to IN(message_ids.from, message_ids.to)
+                    )
         group by
-            threads.id
+            message_ids.id
         order by
-            threads.created_at desc;
+             message_ids.created_at desc
         SQL;
 
-        return collect(
-            json_decode(json_encode(DB::select($sql)), true)
-        )->flatten();
+        return json_decode(json_encode(DB::select($sql)), true);
     }
 
-    /**
-     * Function to take a message and convert it into a thread
-     * instance.  The intended use is for building up summary
-     * thread instances.
-     *
-     * @param Message $message
-     * @return Thread
-     */
-    public static function newThreadFromMessage(Message $message)
-    {
-        $thread = new static;
-
-        if ($message->number->phone_number == $message->from)
-            $thread->phoneNumber = $message->to;
-        else
-            $thread->phoneNumber = $message->from;
-
-        if (is_null($message->body) && $message->num_media > 0)
-            $thread->previewBody = $message->media[0];
-        else
-            $thread->previewBody = $message->body;
-
-        $thread->lastUpdatedAt = $message->created_at->timezone($message->user->time_zone)->format(\DateTime::ISO8601);
-
-        $thread->contact = $message->contact;
-
-        return $thread;
-    }
 
     /**
-     * Function to return a full thread with all messages belonging
-     * to the given user and conversing with the given phone number
+     * Function to add the number of unread messages to an already
+     * processed request for thread data
      *
-     * @param User $user
-     * @param string $phoneNumber
-     * @return Thread
+     * @param array $array - processed query data
+     * @param array $data - read count data
+     * @return void
      */
-    public static function getThread(User $user, $phoneNumber)
+    public static function addReadCountsForRecentThreads($array, $data)
     {
-        $thread = new static;
+        $readData = collect($data);
 
-        $thread->phoneNumber = $phoneNumber;
-        $thread->messages = $user->messages()
-            ->where('from', $phoneNumber)
-            ->orWhere('to', $phoneNumber)
-            ->orderBy('created_at', 'ASC')
-            ->get();
-
-        $last = $thread->messages->last();
-
-        if(is_null($last->body) && $last->num_media > 0){
-            $thread->previewBody = $last->media[0];
-        } else {
-            $thread->previewBody = $last->body;
+        for($i=0; $i < count($array['data']); $i++)
+        {
+            $read = $readData->where('id', $array['data'][$i]['id'])->pluck('unread')->first();
+            $array['data'][$i]['unread'] = $read;
         }
 
-        $thread->lastUpdatedAt = $last->created_at->timezone($last->user->time_zone)->format(\DateTime::ISO8601);
-        $thread->contact = $user->contacts()
-            ->firstWhere('phone_numbers', 'like', '%'.$phoneNumber.'%');
-
-        return $thread;
+        return $array;
     }
 
+
     /**
-     * Convert the thread instance to an array
+     * Function to take a paginated response that has been
+     * converted toArray() and format it for api return data
      *
+     * @param array $array
      * @return array
      */
-    public function toArray()
+    public static function formatApiResponse($array)
     {
         return [
-            'phone_number' => $this->phoneNumber,
-            'last_updated_at' => $this->lastUpdatedAt,
-            'preview_body' => $this->previewBody,
-            'messages' => $this->messages->toArray(),
-            'contact' => $this->contact ?
-                $this->contact->toArray() : null
+            'data' => static::formatApiResponseData($array['data']),
+            'links' => static::formatApiResponseLinks($array),
+            'meta' => static::formatApiResponseMeta($array)
         ];
     }
 
+
     /**
-     * Convert the thread instance to JSON
+     * Function to take paginated response data and format it similar to
+     * ResourceCollection and return
      *
-     * @return string
+     * @param array $array
+     * @return array
      */
-    public function toJson()
+    public static function formatApiResponseMeta($array)
     {
-        return \json_encode($this->toArray(), \JSON_PRETTY_PRINT);
+        return [
+            'current_page' => $array['current_page'],
+            'from' => $array['from'],
+            'last_page' => $array['last_page'],
+            'links' => $array['links'],
+            'path' => $array['path'],
+            'per_page' => $array['per_page'],
+            'to' => $array['to'],
+            'total' => $array['total']
+        ];
+    }
+
+
+    /**
+     * Function to take paginated response data and format it similar to
+     * ResourceCollection and return
+     *
+     * @param array $array
+     * @return array
+     */
+    public static function formatApiResponseLinks($array)
+    {
+        return [
+            'first' => $array['first_page_url'],
+            'last' => $array['last_page_url'],
+            'prev' => $array['prev_page_url'],
+            'next' => $array['next_page_url']
+        ];
+    }
+
+
+    /**
+     * Thread formatting of 'data' for api response
+     *
+     * @param array $data
+     * @return array
+     */
+    public static function formatApiResponseData($data)
+    {
+        return array_map(function($m){
+            $return = [];
+
+            $return['id'] = $m['id'];
+            $return['unread'] = $m['unread'];
+            $return['number_id'] = $m['number_id'];
+
+            if ($m['number']['phone_number'] == $m['from'])
+                $return['phone_number'] = $m['to'];
+            else
+                $return['phone_number'] = $m['from'];
+
+            if (is_null($m['body']) && $m['num_media'] > 0)
+                $return['preview'] = $m['media'][0];
+            else
+                $return['preview'] = $m['body'];
+
+            $return['contact'] = $m['contact'];
+            $return['last_updated_at'] = \Carbon\Carbon::parse($m['created_at'])
+                ->timezone(request()->user()->time_zone)
+                ->format(\DateTime::ISO8601);
+
+            return $return;
+        }, $data);
     }
 }

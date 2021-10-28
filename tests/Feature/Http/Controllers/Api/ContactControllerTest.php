@@ -8,7 +8,6 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Testing\Fluent\AssertableJson;
-use JMac\Testing\Traits\AdditionalAssertions;
 use Tests\TestCase;
 
 /**
@@ -16,7 +15,7 @@ use Tests\TestCase;
  */
 class ContactControllerTest extends TestCase
 {
-    use AdditionalAssertions, RefreshDatabase, WithFaker;
+    use RefreshDatabase, WithFaker;
 
     protected $user;
 
@@ -77,18 +76,6 @@ class ContactControllerTest extends TestCase
         $this->assertEquals($this->user->id, $userIds->first());
     }
 
-
-    /**
-     * @test
-     */
-    public function store_uses_form_request_validation()
-    {
-        $this->assertActionUsesFormRequest(
-            \App\Http\Controllers\Api\ContactController::class,
-            'store',
-            \App\Http\Requests\Api\ContactStoreRequest::class
-        );
-    }
 
     /**
      * @test
@@ -188,18 +175,6 @@ class ContactControllerTest extends TestCase
         $response->assertForbidden();
     }
 
-
-    /**
-     * @test
-     */
-    public function update_uses_form_request_validation()
-    {
-        $this->assertActionUsesFormRequest(
-            \App\Http\Controllers\Api\ContactController::class,
-            'update',
-            \App\Http\Requests\Api\ContactUpdateRequest::class
-        );
-    }
 
     /**
      * @test
