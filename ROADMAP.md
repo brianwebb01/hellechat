@@ -1,33 +1,27 @@
-SMS App
+# Applicaiton Roadmap
 
-==========
-@@ TODO @@
-==========
+## Software Features
 
-[ MUST HAVE ]
+### MUST HAVE
 --------------
-- bundle all js
-- user gotify endpoint setting on user w/ new message, new voicemail requests.
-  - OR webhook capability & docker-compose included gotify server (config'd to use existing mysql)
-  - OR api integraiton with docker-compose included gotify server (config'd to use existing mysql)
+ - create a sweeper cron to delete gotify messages older than X age.
+ - voicemail gotify notification
 
-
-[ SHOULD HAVE ]
+### SHOULD HAVE
 ---------------
+- mysql post-create script to init gotify db & user perms.
 - UI tests
-- wire up pagination on serviceAccounts, numbers?
+- wire up infinite pagination on serviceAccounts, numbers
 - show 'active' thread in messages ui w/ 'currentThread' setter or click, activating
 - post account creation dashboard directions (goes away after some event)
 - Contact Import
 
-
-[ COULD HAVE ]
+### COULD HAVE
 --------------
 - Number could have custom voicemail text or recording
 - Observers / queued jobs to delete records from provider after ingestion. (means we have to store files locally)
 
-
-[ WOULD LIKE TO HAVE]
+### WOULD LIKE TO HAVE
 ---------------------
 - Encrypted database w/ User Key SO... access to DB still can't see everything.
 - Purchase numbers & auto-config sip, number and message endpoints.  All user would do would be enter service-account info.

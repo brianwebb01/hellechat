@@ -51,6 +51,9 @@ class User extends Authenticatable
      */
     protected $casts = [
         'email_verified_at' => 'datetime',
+        'gotify_user_pass' => 'encrypted',
+        'gotify_client_token' => 'encrypted',
+        'gotify_app_token' => 'encrypted'
     ];
 
     /**

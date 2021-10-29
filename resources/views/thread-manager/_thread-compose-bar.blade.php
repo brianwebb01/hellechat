@@ -3,7 +3,7 @@
     <div x-show="sendingFromNumber" class="absolute w-full -top-3 z-40">
         <div class="relative flex justify-center">
             <span class="px-2 bg-white border rounded-full border-gray-300 text-xs text-gray-500">
-                <span x-show="sendingFromName && sendingFromNumber" x-text="`Sending From ${sendingFromName} (${sendingFromNumber})`"></span>
+                <span x-show="sendingFromName && sendingFromNumber" x-html="`Sending From <b>${sendingFromName}</b> (${sendingFromNumber})`"></span>
                 <span x-show="!sendingFromName && sendingFromNumber" x-text="`Sending From ${sendingFromNumber}`"></span>
             </span>
         </div>

@@ -5,6 +5,8 @@ namespace App\Observers;
 use App\Jobs\ProcessOutboundTwilioMessageJob;
 use App\Models\Message;
 use App\Models\ServiceAccount;
+use App\Notifications\InboundMessageCreated;
+use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Log;
 
 class MessageObserver
@@ -23,6 +25,9 @@ class MessageObserver
                     $message->number->serviceAccount, $message
                 );
             }
+        } elseif ($message->direction == Message::DIRECTION_IN){
+            $user = $message->user;
+            $user->notify(new InboundMessageCreated($message));
         }
     }
 

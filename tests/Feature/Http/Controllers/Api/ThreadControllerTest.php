@@ -52,6 +52,7 @@ class ThreadControllerTest extends TestCase
                 ->has('data.0.id')
                 ->has('data.0.unread')
                 ->has('data.0.number_id')
+                ->has('data.0.number_phone_number')
                 ->has('data.0.phone_number')
                 ->has('data.0.last_updated_at')
                 ->has('data.0.preview')

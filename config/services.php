@@ -34,6 +34,15 @@ return [
         'account_sid' => env('TWILIO_ACCOUNT_SID'),
         'auth_token' => env('TWILIO_AUTH_TOKEN'),
         'use_sandbox' => env('TWILIO_SANDBOX')
-    ]
+    ],
+
+    'gotify' => [
+        'app_port' => env('GOTIFY_APP_PORT'),
+        'app_port_ssl' => env('GOTIFY_APP_PORT_SSL'),
+        'user' => env('GOTIFY_USERNAME'),
+        'pass' => env('GOTIFY_PASSWORD'),
+        'url' => env('GOTIFY_URL'),
+        'public_url' => env('GOTIFY_PUBLIC_URL')
+    ],
 
 ];

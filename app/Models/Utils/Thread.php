@@ -167,6 +167,7 @@ class Thread
             $return['id'] = $m['id'];
             $return['unread'] = $m['unread'];
             $return['number_id'] = $m['number_id'];
+            $return['number_phone_number'] = $m['number']['phone_number'];
 
             if ($m['number']['phone_number'] == $m['from'])
                 $return['phone_number'] = $m['to'];

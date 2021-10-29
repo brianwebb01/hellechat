@@ -2672,9 +2672,9 @@ var dayjs = __webpack_require__(/*! dayjs */ "./node_modules/dayjs/dayjs.min.js"
 
 
 
-window.manageMessages = function (newTo) {
+window.manageMessages = function (queryString) {
   return {
-    initWithNewTo: newTo,
+    queryParams: JSON.parse(queryString),
     threadOpen: false,
     currentThread: null,
     messagesPage: 1,
@@ -2694,25 +2694,42 @@ window.manageMessages = function (newTo) {
     unfilteredRecords: [],
     filesForUpload: [],
     initMessageManagement: function initMessageManagement() {
+      var _this = this;
+
       this.initFileUpload();
       this.addRecords();
       this.fetchNumbers();
 
-      if (this.initWithNewTo != '') {
+      if (this.queryParams["new"]) {
         this.newMessageOpen = true;
-        this.newMessageToSearchString = "+".concat(this.initWithNewTo);
+        this.newMessageToSearchString = "+".concat(this.queryParams["new"]);
+      } else if (this.queryParams.numberPhone && this.queryParams["with"]) {
+        setTimeout(function () {
+          _this.jumpToThread(_this.queryParams.numberPhone, _this.queryParams["with"]);
+        }, 500);
       }
     },
     initFileUpload: function initFileUpload() {
-      var _this = this;
+      var _this2 = this;
 
       var input = document.getElementById('messageAttachment');
 
       var onSelectFile = function onSelectFile() {
-        return _this.addFileForUpload(input.files[0]);
+        return _this2.addFileForUpload(input.files[0]);
       };
 
       input.addEventListener('change', onSelectFile, false);
+    },
+    jumpToThread: function jumpToThread(numberPhoneNumber, withNum) {
+      var number = this.newMessageFromNumberOptions.find(function (n) {
+        return n.phone_number == "+".concat(numberPhoneNumber);
+      });
+      if (number == undefined) return;
+      var foundThread = this.records.find(function (t) {
+        return t.number_phone_number = number.phone_number && t.phone_number == "+".concat(withNum);
+      });
+      if (foundThread == undefined) return;
+      this.openThread(foundThread);
     },
     addFileForUpload: function addFileForUpload(file) {
       this.filesForUpload.push(file);
@@ -2753,7 +2770,7 @@ window.manageMessages = function (newTo) {
     },
     searchNewMessageTo: function () {
       var _searchNewMessageTo = _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee() {
-        var _this2 = this;
+        var _this3 = this;
 
         var response, json;
         return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().wrap(function _callee$(_context) {
@@ -2804,7 +2821,7 @@ window.manageMessages = function (newTo) {
                   }
 
                   Object.keys(contact.phone_numbers).forEach(function (numType) {
-                    _this2.newMessageToSearchResults.push({
+                    _this3.newMessageToSearchResults.push({
                       'friendly_name': friendly_name,
                       'number_type': numType,
                       'phone_number': contact.phone_numbers[numType],
@@ -2831,7 +2848,7 @@ window.manageMessages = function (newTo) {
       this.newMessageOpen = true;
     },
     composeNewMessageConfirm: function composeNewMessageConfirm() {
-      var _this3 = this;
+      var _this4 = this;
 
       var e164Regex = /\+[1-9]\d{1,14}/;
 
@@ -2850,10 +2867,10 @@ window.manageMessages = function (newTo) {
       }
 
       var number = this.newMessageFromNumberOptions.find(function (n) {
-        return n.id == Number(_this3.newMessageFromNumber);
+        return n.id == Number(_this4.newMessageFromNumber);
       });
       var foundThread = this.records.find(function (t) {
-        return t.number_id = number.id && t.phone_number == _this3.newMessageToSelection.phone_number;
+        return t.number_id = number.id && t.phone_number == _this4.newMessageToSelection.phone_number;
       });
 
       if (foundThread) {
@@ -2884,7 +2901,7 @@ window.manageMessages = function (newTo) {
       this.newMessageToSelection = null;
     },
     sendMessage: function sendMessage() {
-      var _this4 = this;
+      var _this5 = this;
 
       var message = {};
 
@@ -2929,14 +2946,14 @@ window.manageMessages = function (newTo) {
       }).then(function (response) {
         if (response.status == 201) {
           response.json().then(function (res) {
-            _this4.messages.push(res.data);
+            _this5.messages.push(res.data);
 
-            _this4.currentThread.preview = res.data.body;
-            _this4.currentThread.last_updated_at = res.data.created_at;
+            _this5.currentThread.preview = res.data.body;
+            _this5.currentThread.last_updated_at = res.data.created_at;
 
-            _this4.sortThreads();
+            _this5.sortThreads();
 
-            _this4.scrollMessagesToBottom();
+            _this5.scrollMessagesToBottom();
           });
         } else if (response.status == 422) {
           response.json().then(function (res) {
@@ -2995,7 +3012,7 @@ window.manageMessages = function (newTo) {
     }(),
     addMessages: function () {
       var _addMessages = _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee3() {
-        var _this5 = this;
+        var _this6 = this;
 
         return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().wrap(function _callee3$(_context3) {
           while (1) {
@@ -3010,19 +3027,19 @@ window.manageMessages = function (newTo) {
 
               case 2:
                 this.loadMessages().then(function (json) {
-                  _this5.lastMessagesPage = json.meta.last_page;
+                  _this6.lastMessagesPage = json.meta.last_page;
                   json.data.forEach(function (item) {
-                    return _this5.messages.push(item);
+                    return _this6.messages.push(item);
                   });
 
-                  _this5.afterMessagesAdded();
+                  _this6.afterMessagesAdded();
 
-                  _this5.messagesPage++;
+                  _this6.messagesPage++;
 
-                  if (_this5.messagesPage <= _this5.lastMessagesPage) {
-                    _this5.showMessagesInfiniteScroll = true;
+                  if (_this6.messagesPage <= _this6.lastMessagesPage) {
+                    _this6.showMessagesInfiniteScroll = true;
                   } else {
-                    _this5.showMessagesInfiniteScroll = false;
+                    _this6.showMessagesInfiniteScroll = false;
                   }
                 });
 
@@ -3045,7 +3062,7 @@ window.manageMessages = function (newTo) {
     },
     fetchNumbers: function () {
       var _fetchNumbers = _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee4(numbersPage) {
-        var _this6 = this;
+        var _this7 = this;
 
         var response, json;
         return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().wrap(function _callee4$(_context4) {
@@ -3070,7 +3087,7 @@ window.manageMessages = function (newTo) {
               case 6:
                 json = _context4.sent;
                 json.data.forEach(function (item) {
-                  _this6.newMessageFromNumberOptions.push(item);
+                  _this7.newMessageFromNumberOptions.push(item);
                 });
 
                 if (numbersPage < json.meta.last_page) {
@@ -3127,7 +3144,7 @@ window.manageMessages = function (newTo) {
       this.messages = [];
     },
     setCurrentThread: function setCurrentThread(thread) {
-      var _this7 = this;
+      var _this8 = this;
 
       this.sendingFromName = null;
       this.sendingFromNumber = null;
@@ -3136,7 +3153,7 @@ window.manageMessages = function (newTo) {
       this.messages = [];
       this.addMessages();
       setTimeout(function () {
-        return _this7.setupComposerEnviornment();
+        return _this8.setupComposerEnviornment();
       }, 500);
     },
     sortThreads: function sortThreads() {
@@ -3211,7 +3228,7 @@ window.manageMessages = function (newTo) {
       return letters.join("");
     },
     confirmDelete: function confirmDelete() {
-      var _this8 = this;
+      var _this9 = this;
 
       this.beforeDelete();
       this.deleting = true;
@@ -3224,18 +3241,18 @@ window.manageMessages = function (newTo) {
         }
       }).then(function (response) {
         if (response.status == 204) {
-          _this8.records = _this8.records.filter(function (record) {
+          _this9.records = _this9.records.filter(function (record) {
             return record.id != deleteId;
           });
-          _this8.deleteConfirmOpen = false;
-          _this8.deleting = false;
+          _this9.deleteConfirmOpen = false;
+          _this9.deleting = false;
 
-          _this8.resetCurrentThread();
+          _this9.resetCurrentThread();
 
-          _this8.afterDelete();
+          _this9.afterDelete();
         } else {
-          _this8.deleteConfirmOpen = false;
-          _this8.deleting = false;
+          _this9.deleteConfirmOpen = false;
+          _this9.deleting = false;
           setTimeout(function () {
             return alert('Error, could not delete record');
           }, 500);

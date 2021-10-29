@@ -1,10 +1,10 @@
 const dayjs = require("dayjs");
 import Fuse from 'fuse.js'
 
-window.manageMessages = function(newTo)
+window.manageMessages = function(queryString)
 {
     return {
-        initWithNewTo: newTo,
+        queryParams: JSON.parse(queryString),
         threadOpen: false,
         currentThread: null,
         messagesPage: 1,
@@ -30,9 +30,16 @@ window.manageMessages = function(newTo)
             this.addRecords();
             this.fetchNumbers();
 
-            if (this.initWithNewTo != ''){
+            if (this.queryParams.new){
+
                 this.newMessageOpen = true;
-                this.newMessageToSearchString = `+${this.initWithNewTo}`;
+                this.newMessageToSearchString = `+${this.queryParams.new}`;
+
+            } else if(this.queryParams.numberPhone && this.queryParams.with){
+                setTimeout(() => { this.jumpToThread(
+                    this.queryParams.numberPhone,
+                    this.queryParams.with
+                )}, 500);
             }
         },
 
@@ -40,6 +47,23 @@ window.manageMessages = function(newTo)
             let input = document.getElementById('messageAttachment');
             const onSelectFile = () => this.addFileForUpload(input.files[0]);
             input.addEventListener('change', onSelectFile, false);
+        },
+
+        jumpToThread: function(numberPhoneNumber, withNum) {
+            let number = this.newMessageFromNumberOptions.find(n =>
+                n.phone_number == `+${numberPhoneNumber}`
+            );
+
+            if(number == undefined) return;
+
+            let foundThread = this.records.find(t => {
+                return t.number_phone_number = number.phone_number
+                    && t.phone_number == `+${withNum}`;
+            });
+
+            if(foundThread == undefined) return;
+
+            this.openThread(foundThread);
         },
 
         addFileForUpload: function(file){
