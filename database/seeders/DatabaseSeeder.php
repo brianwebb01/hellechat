@@ -2,6 +2,8 @@
 
 namespace Database\Seeders;
 
+use App\Models\User;
+use App\Observers\UserObserver;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -13,7 +15,9 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-        // \App\Models\User::factory(10)->create();
+        $ed = User::getEventDispatcher();
+        $ed->forget('eloquent.created: '. User::class);
+
         $this->call([
             UserSeeder::class,
             ContactSeeder::class,
@@ -23,5 +27,7 @@ class DatabaseSeeder extends Seeder
             VoicemailSeeder::class,
             ThreadSeeder::class
         ]);
+
+        User::observe(UserObserver::class);
     }
 }

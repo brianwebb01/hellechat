@@ -8,6 +8,7 @@ use App\Models\Number;
 use App\Models\ServiceAccount;
 use App\Models\User;
 use Illuminate\Foundation\Testing\WithFaker;
+use Illuminate\Support\Facades\Log;
 use Mockery;
 use Mockery\MockInterface;
 use Tests\TestCase;

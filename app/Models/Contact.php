@@ -48,4 +48,15 @@ class Contact extends Model
     {
         return $this->belongsTo(\App\Models\User::class);
     }
+
+    public function friendlyName()
+    {
+        if ($this->first_name && $this->last_name) {
+            return $this->first_name . ' ' . $this->last_name;
+        } else if ($this->first_name && !$this->last_name) {
+            return $this->first_name;
+        } else if (!$this->first_name && !$this->last_name) {
+            return $this->company;
+        }
+    }
 }

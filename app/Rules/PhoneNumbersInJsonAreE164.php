@@ -3,9 +3,6 @@
 namespace App\Rules;
 
 use Illuminate\Contracts\Validation\Rule;
-use Illuminate\Support\Facades\Log;
-use NumberFormatter;
-
 class PhoneNumbersInJsonAreE164 implements Rule
 {
     public $badIndexes = [];
@@ -45,7 +42,7 @@ class PhoneNumbersInJsonAreE164 implements Rule
      */
     public function message()
     {
-        $numberFormatter = new NumberFormatter('en_US', NumberFormatter::ORDINAL);
+        $numberFormatter = new \NumberFormatter('en_US', \NumberFormatter::ORDINAL);
         $array = array_map(fn($item) => $numberFormatter->format(($item+1)), $this->badIndexes);
         $last  = array_slice($array, -1);
         $first = join(', ', array_slice($array, 0, -1));

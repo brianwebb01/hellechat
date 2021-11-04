@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Jobs\CreateGotifyUserRecordsJob;
 use App\Models\Contact;
 use App\Models\Number;
 use App\Models\ServiceAccount;
@@ -23,7 +24,12 @@ class UserSeeder extends Seeder
     {
         $this->setUpFaker();
 
-        $user = User::factory()->create(['email' => 'test@test.com']);
+        $gotify = new CreateGotifyUserRecordsJob(new User);
+        $user = User::factory()->create([
+            'email' => 'test@test.com',
+            'gotify_user_name' => $gotify->generateUserName(),
+            'gotify_user_pass' => $gotify->generateUserPass(),
+        ]);
         $serviceAccount = ServiceAccount::factory()->create([
             'user_id' => $user->id,
             'name' => 'testing acct',

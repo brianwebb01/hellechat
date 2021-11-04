@@ -13,7 +13,7 @@
         'csrf_token' => csrf_token()
             ]) }} )" x-init="">
 
-        <div x-data="manageMessages('{{ request()->get('new') }}')"
+        <div x-data="manageMessages('{{ json_encode(request()->all()) }}')"
             x-init="initMessageManagement"
             class="border-t border-gray-200">
 
