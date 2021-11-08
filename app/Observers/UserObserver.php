@@ -38,7 +38,7 @@ class UserObserver
      */
     public function deleted(User $user)
     {
-        DeleteGotifyUserRecordsJob::dispatch($user);
+        DeleteGotifyUserRecordsJob::dispatch($user->gotify_user_id);
     }
 
     /**
@@ -60,6 +60,6 @@ class UserObserver
      */
     public function forceDeleted(User $user)
     {
-        DeleteGotifyUserRecordsJob::dispatch($user);
+        DeleteGotifyUserRecordsJob::dispatch($user->gotify_user_id);
     }
 }

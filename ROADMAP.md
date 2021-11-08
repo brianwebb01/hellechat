@@ -4,8 +4,14 @@
 
 ### MUST HAVE
 --------------
- - create a sweeper cron to delete gotify messages older than X age.
+ - Beta deploy
+    - Configure VM w/ Docker
+    - ensure startup through server reboots
+    - configure domain & letsencrypt cert
+    - configure deployment pipeline
+ - create a sweeper cron to delete gotify messages older than X age (should have been delivered to clients by then, no need to store on gotify server).
  - voicemail gotify notification
+ - ability to select a number in messages and voicemail UI, then filter results to only show related data.
 
 ### SHOULD HAVE
 ---------------
@@ -23,7 +29,7 @@
 
 ### WOULD LIKE TO HAVE
 ---------------------
-- Encrypted database w/ User Key SO... access to DB still can't see everything.
+- Encrypted database w/ User defined key, so with terminal access one still can't see everything.
 - Purchase numbers & auto-config sip, number and message endpoints.  All user would do would be enter service-account info.
 - Self hosted docker-compose setup with: web, app, db, queue-worker, queue-server, gotify
 - Inbound / Outbound message handling with Telnyx

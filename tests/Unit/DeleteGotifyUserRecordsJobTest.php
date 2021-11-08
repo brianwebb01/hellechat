@@ -24,7 +24,7 @@ class DeleteGotifyUserRecordsJobTest extends TestCase
         );
         $this->app->instance(Client::class, $mGotify);
 
-        $job = new DeleteGotifyUserRecordsJob($user);
+        $job = new DeleteGotifyUserRecordsJob($user->gotify_user_id);
         $job->handle();
     }
 }

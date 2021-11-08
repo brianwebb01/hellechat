@@ -1,7 +1,5 @@
 FROM php:8.0.11-fpm
 
-ARG FPMPORT
-
 # Copy composer.lock and composer.json
 COPY composer.lock composer.json /var/www/
 
@@ -23,7 +21,9 @@ RUN apt-get update && apt-get install -y \
     curl \
     libonig-dev \
     zlib1g-dev \
-    libzip-dev
+    libzip-dev \
+    supervisor \
+    cron
 
 # Clear cache
 RUN apt-get clean && rm -rf /var/lib/apt/lists/*
@@ -45,9 +45,6 @@ COPY . /var/www
 # Copy existing application directory permissions
 COPY --chown=www:www . /var/www
 
-# Change current user to www
-USER www
-
-# Expose port and start php-fpm server
-EXPOSE $FPMPORT
-CMD ["php-fpm"]
+# Copy & set permissions for cron
+COPY ./docker/cron/run.sh /run.sh
+RUN chmod 0644 /run.sh

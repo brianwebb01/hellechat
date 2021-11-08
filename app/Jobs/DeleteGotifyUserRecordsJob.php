@@ -16,16 +16,16 @@ class DeleteGotifyUserRecordsJob implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
-    public User $user;
+    public $gotify_user_id;
 
     /**
      * Create a new job instance.
      *
      * @return void
      */
-    public function __construct(User $user)
+    public function __construct(int $gotify_user_id)
     {
-        $this->user = $user;
+        $this->gotify_user_id = $gotify_user_id;
     }
 
     /**
@@ -40,6 +40,6 @@ class DeleteGotifyUserRecordsJob implements ShouldQueue
             config('services.gotify.pass'),
             config('services.gotify.url')
         );
-        $adminGotify->deleteUser($this->user->gotify_user_id);
+        $adminGotify->deleteUser($this->gotify_user_id);
     }
 }

@@ -10,10 +10,12 @@
         "guzzlehttp/guzzle": "^7.3",
         "hashids/hashids": "^4.1",
         "laravel/framework": "^8.54",
+        "laravel/horizon": "^5.7",
         "laravel/jetstream": "^2.3",
         "laravel/sanctum": "^2.6",
         "laravel/tinker": "^2.5",
         "livewire/livewire": "^2.5",
+        "predis/predis": "^1.1",
         "twilio/sdk": "^6.28"
     },
     "require-dev": {
@@ -44,7 +46,8 @@
             "@php artisan package:discover --ansi"
         ],
         "post-update-cmd": [
-            "@php artisan vendor:publish --tag=laravel-assets --ansi"
+            "@php artisan vendor:publish --tag=laravel-assets --ansi",
+            "@php artisan horizon:publish --ansi"
         ],
         "post-root-package-install": [
             "@php -r \"file_exists('.env') || copy('.env.example', '.env');\""
