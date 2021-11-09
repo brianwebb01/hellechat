@@ -88,8 +88,10 @@ services:
   # Create Certificates manually:
   # docker-compose run --rm  certbot certonly --webroot --webroot-path /var/www/certbot/ -d example.org
   #
-  # Renew Certificates manually (run in host crontab):
+  # Renew Certificates manually
   # docker-compose run --rm certbot renew
+  # run in host's crontab with nginx reload using:
+  # 0 */12 * * * cd /var/www && docker-compose run --rm certbot renew && docker exec $(sudo docker ps -f name=nginx -q | head -n1) /usr/sbin/nginx -s reload
   certbot:
     image: certbot/certbot:latest
     depends_on:

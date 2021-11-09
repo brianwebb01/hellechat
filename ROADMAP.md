@@ -5,9 +5,8 @@
 ### MUST HAVE
 --------------
  - Beta deploy
-    - configure domain & letsencrypt cert
-    - configure deployment pipeline
-    - configure container-rotation script
+   - test with demo twilio number for sip, voicemail, sms, mms.  DOCUMENT the setup process
+   - configure container-rotation script & handle ZDT cutover to new code, composer etc.
  - create a sweeper cron to delete gotify messages older than X age (should have been delivered to clients by then, no need to store on gotify server).
  - voicemail gotify notification
  - ability to select a number in messages and voicemail UI, then filter results to only show related data.
