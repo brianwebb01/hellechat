@@ -763,6 +763,39 @@ select {
 [type='file']:focus {
 	outline: 1px auto -webkit-focus-ring-color;
 }
+.container {
+	width: 100%;
+}
+@media (min-width: 640px) {
+
+	.container {
+		max-width: 640px;
+	}
+}
+@media (min-width: 768px) {
+
+	.container {
+		max-width: 768px;
+	}
+}
+@media (min-width: 1024px) {
+
+	.container {
+		max-width: 1024px;
+	}
+}
+@media (min-width: 1280px) {
+
+	.container {
+		max-width: 1280px;
+	}
+}
+@media (min-width: 1536px) {
+
+	.container {
+		max-width: 1536px;
+	}
+}
 .prose {
 	color: #374151;
 	max-width: 65ch;
@@ -1283,6 +1316,12 @@ select {
 }
 .mb-8 {
 	margin-bottom: 2rem;
+}
+.mb-0 {
+	margin-bottom: 0px;
+}
+.ml-auto {
+	margin-left: auto;
 }
 .block {
 	display: block;
@@ -2749,11 +2788,6 @@ select {
 		margin-bottom: 2rem;
 	}
 
-	.sm\:mx-2 {
-		margin-left: 0.5rem;
-		margin-right: 0.5rem;
-	}
-
 	.sm\:ml-3 {
 		margin-left: 0.75rem;
 	}
@@ -2806,10 +2840,6 @@ select {
 		display: inline-block;
 	}
 
-	.sm\:inline {
-		display: inline;
-	}
-
 	.sm\:flex {
 		display: flex;
 	}
@@ -2832,10 +2862,6 @@ select {
 
 	.sm\:h-20 {
 		height: 5rem;
-	}
-
-	.sm\:h-6 {
-		height: 1.5rem;
 	}
 
 	.sm\:w-10 {
