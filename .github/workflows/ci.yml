@@ -61,11 +61,12 @@ jobs:
         uses: appleboy/ssh-action@master
         env:
           ENV_FILE: ${{ secrets.ENV_FILE }}
+          COMPOSE_INTERACTIVE_NO_CLI: 1
         with:
           host: ${{ secrets.SSH_HOST }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           username: ${{ secrets.SSH_USERNAME }}
-          envs: ENV_FILE
+          envs: ENV_FILE,COMPOSE_INTERACTIVE_NO_CLI
           script_stop: true
           script: |
             cd /var/www/
