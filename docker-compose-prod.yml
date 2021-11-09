@@ -75,7 +75,7 @@ services:
       - "443:443"
     volumes:
       - ./:/var/www
-      - ./docker/nginx/conf.d/default.template:/etc/nginx/conf.d/default.template
+      - ./docker/nginx/conf.d/default.template.PROD:/etc/nginx/conf.d/default.template
       - ./certbot/www:/var/www/certbot/:ro
       - ./certbot/conf/:/etc/nginx/ssl/:ro
       - ./docker/nginx/entrypoint.sh:/entrypoint.sh
@@ -83,6 +83,26 @@ services:
       - app-network
     entrypoint: ["/entrypoint.sh"]
     command: ["nginx", "-g", "daemon off;"]
+
+
+  # Create Certificates:
+  # docker-compose run --rm  certbot certonly --webroot --webroot-path /var/www/certbot/ -d example.org
+  #
+  # Renew Certificates:
+  # docker-compose run --rm certbot renew
+  certbot:
+    image: certbot/certbot:latest
+    depends_on:
+      - nginx
+    volumes:
+      - ./certbot/www/:/var/www/certbot/:rw
+      - ./certbot/conf/:/etc/letsencrypt/:rw
+    networks:
+      - app-network
+    environment:
+      APP_DOMAIN: '${APP_DOMAIN}'
+      APP_DOMAIN_EMAIL: '${APP_DOMAIN_EMAIL}'
+    command: certonly --webroot --webroot-path=/var/www/certbot/ --email $APP_DOMAIN_EMAIL --agree-tos --no-eff-email -d $APP_DOMAIN
 
 
   gotify:

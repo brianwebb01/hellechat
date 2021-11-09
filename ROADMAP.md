@@ -5,10 +5,9 @@
 ### MUST HAVE
 --------------
  - Beta deploy
-    - Configure VM w/ Docker
-    - ensure startup through server reboots
     - configure domain & letsencrypt cert
     - configure deployment pipeline
+    - configure container-rotation script
  - create a sweeper cron to delete gotify messages older than X age (should have been delivered to clients by then, no need to store on gotify server).
  - voicemail gotify notification
  - ability to select a number in messages and voicemail UI, then filter results to only show related data.

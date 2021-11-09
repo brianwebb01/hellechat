@@ -1,5 +1,6 @@
 on:
   push:
+    branches: [ master ]
   schedule:
     - cron: '0 0 * * *'
   pull_request:
@@ -46,6 +47,7 @@ jobs:
 
   deploy:
     name: Deploy to production
+    needs: test
     if: github.ref == 'refs/heads/master'
     runs-on: ubuntu-latest
 
@@ -56,17 +58,20 @@ jobs:
           fetch-depth: 1
 
       - name: Deployment
+        uses: appleboy/ssh-action@master
         env:
           ENV_FILE: ${{ secrets.ENV_FILE }}
-        uses: appleboy/ssh-action@main
         with:
           host: ${{ secrets.SSH_HOST }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           username: ${{ secrets.SSH_USERNAME }}
+          envs: ENV_FILE
+          script_stop: true
           script: |
             cd /var/www/
             git checkout -f master
             git pull
+            mv docker-compose-prod.yml docker-compose.yml
             echo "$ENV_FILE" > .env
             appcid=$(sudo docker ps -f name=app -q | head -n1)
             sudo docker exec -it $appcid composer install --no-scripts
