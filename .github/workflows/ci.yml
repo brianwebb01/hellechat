@@ -88,10 +88,10 @@ jobs:
             git pull origin master &&
             mv docker-compose-prod.yml docker-compose.yml &&
             appcid=$(sudo docker ps -f name=app -q | head -n1) &&
-            sudo docker exec -it $appcid composer install --no-scripts &&
-            sudo docker exec -it $appcid npm install &&
-            sudo docker exec -it $appcid npm run production &&
-            sudo docker exec -it $appcid php artisan storage:link &&
-            sudo docker exec -it $appcid php artisan migrate --force &&
-            sudo docker exec -it $(sudo docker ps -f name=qworker -q | head -n1) php /var/www/artisan horizon:terminate
+            sudo docker exec $appcid composer install --no-scripts &&
+            sudo docker exec $appcid npm install &&
+            sudo docker exec $appcid npm run production &&
+            sudo docker exec $appcid php artisan storage:link &&
+            sudo docker exec $appcid php artisan migrate --force &&
+            sudo docker exec $(sudo docker ps -f name=qworker -q | head -n1) php /var/www/artisan horizon:terminate
           '
