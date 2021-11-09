@@ -22,7 +22,6 @@ RUN apt-get update && apt-get install -y \
     libonig-dev \
     zlib1g-dev \
     libzip-dev \
-    supervisor \
     cron
 
 # Clear cache

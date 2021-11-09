@@ -26,7 +26,7 @@ class CreateGotifyUserRecordsJobTest extends TestCase
             Client::class,
             fn (MockInterface $mock) =>
             $mock->shouldReceive('createUser')
-                ->with($user->email, 'password')
+                ->with('fooUser', 'password')
                 ->andReturn([
                     'id' => 1
                 ])
@@ -41,7 +41,7 @@ class CreateGotifyUserRecordsJobTest extends TestCase
                     'token' => 'app-token'
                 ])
                 ->shouldReceive('updateApplicationImage')
-                ->with(3, Storage::path('img/speech-bubble.png'))
+                ->with(3, public_path('images/speech-bubble.png'))
         );
         $this->app->instance(Client::class, $mGotify);
 

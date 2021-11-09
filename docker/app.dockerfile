@@ -24,8 +24,8 @@ RUN apt-get update && apt-get install -y \
     libonig-dev \
     zlib1g-dev \
     libzip-dev \
-    supervisor \
-    cron
+    nodejs \
+    npm
 
 # Clear cache
 RUN apt-get clean && rm -rf /var/lib/apt/lists/*

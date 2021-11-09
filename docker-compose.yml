@@ -7,7 +7,8 @@ services:
       args:
         FPMPORT: 9000
     image: hellechat/php
-    container_name: app
+    ports:
+      - "9000"
     restart: unless-stopped
     tty: true
     working_dir: /var/www

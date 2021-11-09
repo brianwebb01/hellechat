@@ -4,10 +4,10 @@ on:
     - cron: '0 0 * * *'
   pull_request:
     branches: [ master ]
-name: CI
+name: CI/CD
 jobs:
-  build:
-    name: Build dependencies
+  test:
+    name: Run project tests
     runs-on: ubuntu-latest
     container:
       image: kirschbaumdevelopment/laravel-test-runner:8.0
@@ -41,11 +41,37 @@ jobs:
         npm install
         npm run dev
 
-  test:
-    name: Run project tests
-    needs: build
+    - name: Run Testsuite
+      run: vendor/bin/phpunit tests/
+
+  deploy:
+    name: Deploy to production
+    if: github.ref == 'refs/heads/master'
     runs-on: ubuntu-latest
 
     steps:
-    - name: Run Testsuite
-      run: vendor/bin/phpunit tests/
+      - name: Checkout
+        uses: actions/checkout@v1
+        with:
+          fetch-depth: 1
+
+      - name: Deployment
+        env:
+          ENV_FILE: ${{ secrets.ENV_FILE }}
+        uses: appleboy/ssh-action@main
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          username: ${{ secrets.SSH_USERNAME }}
+          script: |
+            cd /var/www/
+            git checkout -f master
+            git pull
+            echo "$ENV_FILE" > .env
+            appcid=$(sudo docker ps -f name=app -q | head -n1)
+            sudo docker exec -it $appcid composer install --no-scripts
+            sudo docker exec -it $appcid npm install
+            sudo docker exec -it $appcid npm run production
+            sudo docker exec -it $appcid php artisan storage:link
+            sudo docker exec -it $appcid php artisan migrate --force
+            sudo docker exec -it $(sudo docker ps -f name=qworker -q | head -n1) php /var/www/artisan horizon:terminate
