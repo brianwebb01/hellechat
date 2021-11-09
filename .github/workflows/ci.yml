@@ -61,7 +61,7 @@ jobs:
         env:
           ENV_FILE: ${{ secrets.ENV_FILE }}
         run: |
-          cho "$ENV_FILE" > .env
+          echo "$ENV_FILE" > .env
 
       - name: Place the env file via SCP
         uses: appleboy/scp-action@master
