@@ -73,16 +73,12 @@ jobs:
           target: "/var/www/"
 
       - name: Deployment
-        shell: 'script -q -e -c "bash {0}"'
-        env:
-          COMPOSE_INTERACTIVE_NO_CLI: 1
-          SSH_HOST: ${{ secrets.SSH_HOST }}
-          SSH_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
-          SSH_USER: ${{ secrets.SSH_USERNAME }}
-        run: |
-          pwd
-          echo "$SSH_KEY" > private_key && chmod 600 private_key
-          ssh -o StrictHostKeyChecking=no -i private_key ${SSH_USER}@${SSH_HOST} '
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USERNAME }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          script: |
             cd /var/www &&
             git checkout master -f &&
             git pull origin master &&
@@ -94,4 +90,3 @@ jobs:
             sudo docker exec $appcid php artisan storage:link &&
             sudo docker exec $appcid php artisan migrate --force &&
             sudo docker exec $(sudo docker ps -f name=qworker -q | head -n1) php /var/www/artisan horizon:terminate
-          '
