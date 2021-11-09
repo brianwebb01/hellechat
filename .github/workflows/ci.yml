@@ -59,6 +59,7 @@ jobs:
 
       - name: Deployment
         uses: appleboy/ssh-action@master
+        shell: 'script -q -e -c "bash {0}"'
         env:
           ENV_FILE: ${{ secrets.ENV_FILE }}
           COMPOSE_INTERACTIVE_NO_CLI: 1
@@ -70,7 +71,7 @@ jobs:
           script_stop: true
           script: |
             cd /var/www/
-            git checkout -f master
+            if [ $(git branch | sed -nr 's/\*\s(.*)/\1/p') != "master" ]; then git checkout -f master; fi
             git pull
             mv docker-compose-prod.yml docker-compose.yml
             echo "$ENV_FILE" > .env
