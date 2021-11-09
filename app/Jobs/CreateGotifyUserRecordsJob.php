@@ -45,10 +45,10 @@ class CreateGotifyUserRecordsJob implements ShouldQueue
             config('services.gotify.pass'),
             config('services.gotify.url')
         );
-        $gUser = $adminGotify->createUser($this->user->email, $userPass);
+        $gUser = $adminGotify->createUser($userName, $userPass);
 
         $userGotify = Client::createWithBasicAuth(
-            $this->user->email,
+            $userName,
             $userPass,
             config('services.gotify.url')
         );
@@ -58,7 +58,7 @@ class CreateGotifyUserRecordsJob implements ShouldQueue
 
         $userGotify->updateApplicationImage(
             $gApplication['id'],
-            Storage::path('img/speech-bubble.png')
+            public_path('images/speech-bubble.png')
         );
 
         $update = [

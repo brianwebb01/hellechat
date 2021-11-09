@@ -65,11 +65,13 @@ jobs:
           username: ${{ secrets.SSH_USERNAME }}
           script: |
             cd /var/www/
-            git checkout -f
+            git checkout -f master
             git pull
             echo "$ENV_FILE" > .env
-            composer install --no-scripts
-            npm install
-            npm run production
-            sudo docker exec -it $(sudo docker ps -f name=app -q | head -n1) php artisan migrate --force
-            sudo docker exec -it $(sudo docker ps -f name=qworker -q | head -n1) php artisan horizon:terminate
+            appcid=$(sudo docker ps -f name=app -q | head -n1)
+            sudo docker exec -it $appcid composer install --no-scripts
+            sudo docker exec -it $appcid npm install
+            sudo docker exec -it $appcid npm run production
+            sudo docker exec -it $appcid php artisan storage:link
+            sudo docker exec -it $appcid php artisan migrate --force
+            sudo docker exec -it $(sudo docker ps -f name=qworker -q | head -n1) php /var/www/artisan horizon:terminate
