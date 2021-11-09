@@ -84,7 +84,7 @@ jobs:
           echo "$SSH_KEY" > private_key && chmod 600 private_key
           ssh -o StrictHostKeyChecking=no -i private_key ${SSH_USER}@${SSH_HOST} '
             cd /var/www &&
-            if [ $(git branch | sed -nr 's/\*\s(.*)/\1/p') != "master" ]; then git checkout -f master; fi &&
+            git checout master -f &&
             git pull origin master &&
             mv docker-compose-prod.yml docker-compose.yml &&
             appcid=$(sudo docker ps -f name=app -q | head -n1) &&
