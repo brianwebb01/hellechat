@@ -57,27 +57,41 @@ jobs:
         with:
           fetch-depth: 1
 
-      - name: Deployment
-        uses: appleboy/ssh-action@master
+      - name: Prep the env file
         env:
           ENV_FILE: ${{ secrets.ENV_FILE }}
-          COMPOSE_INTERACTIVE_NO_CLI: 1
+        run: |
+          cho "$ENV_FILE" > .env
+
+      - name: Place the env file via SCP
+        uses: appleboy/scp-action@master
         with:
           host: ${{ secrets.SSH_HOST }}
-          key: ${{ secrets.SSH_PRIVATE_KEY }}
           username: ${{ secrets.SSH_USERNAME }}
-          envs: ENV_FILE,COMPOSE_INTERACTIVE_NO_CLI
-          script_stop: true
-          script: |
-            cd /var/www/
-            git checkout -f master
-            git pull
-            mv docker-compose-prod.yml docker-compose.yml
-            echo "$ENV_FILE" > .env
-            appcid=$(sudo docker ps -f name=app -q | head -n1)
-            sudo docker exec -it $appcid composer install --no-scripts
-            sudo docker exec -it $appcid npm install
-            sudo docker exec -it $appcid npm run production
-            sudo docker exec -it $appcid php artisan storage:link
-            sudo docker exec -it $appcid php artisan migrate --force
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          source: ".env"
+          target: "/var/www/"
+
+      - name: Deployment
+        shell: 'script -q -e -c "bash {0}"'
+        env:
+          COMPOSE_INTERACTIVE_NO_CLI: 1
+          SSH_HOST: ${{ secrets.SSH_HOST }}
+          SSH_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+          SSH_USER: ${{ secrets.SSH_USERNAME }}
+        run: |
+          pwd
+          echo "$SSH_KEY" > private_key && chmod 600 private_key
+          ssh -o StrictHostKeyChecking=no -i private_key ${SSH_USER}@${SSH_HOST} '
+            cd /var/www &&
+            if [ $(git branch | sed -nr 's/\*\s(.*)/\1/p') != "master" ]; then git checkout -f master; fi &&
+            git pull origin master &&
+            mv docker-compose-prod.yml docker-compose.yml &&
+            appcid=$(sudo docker ps -f name=app -q | head -n1) &&
+            sudo docker exec -it $appcid composer install --no-scripts &&
+            sudo docker exec -it $appcid npm install &&
+            sudo docker exec -it $appcid npm run production &&
+            sudo docker exec -it $appcid php artisan storage:link &&
+            sudo docker exec -it $appcid php artisan migrate --force &&
             sudo docker exec -it $(sudo docker ps -f name=qworker -q | head -n1) php /var/www/artisan horizon:terminate
+          '
