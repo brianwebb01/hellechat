@@ -54,7 +54,8 @@ class ProcessOutboundTwilioMessageJob implements ShouldQueue
             $data['body'] = $this->message->body;
 
         if(! empty($this->message->media))
-            $data['mediaUrl'] = $this->message->media;
+            $data['mediaUrl'] = collect($this->message->media)
+                ->map(fn ($i) => config('app.url') . $i)->all();
 
         if(config('services.twilio.use_sandbox') === true){
             $remoteMessage = \json_decode(\json_encode([
