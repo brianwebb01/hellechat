@@ -29,7 +29,7 @@ class RequestValidator
         $userHashId = $request->route('userHashId');
 
         try {
-            $user = User::findByHTashId($userHashId);
+            $user = User::findByHashId($userHashId);
         } catch (ModelNotFoundException $e) {
             return response('Invalid User', 403);
         }
