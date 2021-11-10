@@ -80,7 +80,8 @@ class ProcessOutboundTwilioMessageJobTest extends TestCase
                                 ['userHashId' => $message->user->getHashId()]
                             ),
                             'body' => $message->body,
-                            'mediaUrl' => $message->media
+                            'mediaUrl' => collect($message->media)
+                                ->map(fn($i) => config('app.url') . $i)->all()
                         ]
                     )
                     ->andReturn(
