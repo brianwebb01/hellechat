@@ -2,7 +2,10 @@
 
 namespace App\Http\Middleware\Services\Twilio;
 
+use App\Models\ServiceAccount;
+use App\Models\User;
 use Closure;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\App;
@@ -23,7 +26,23 @@ class RequestValidator
             return $next($request);
         }
 
-        $requestValidator = new TwilioRequestValidator(config('services.twilio.auth_token'));
+        $userHashId = $request->route('userHashId');
+
+        try {
+            $user = User::findByHTashId($userHashId);
+        } catch (ModelNotFoundException $e) {
+            return response('Invalid User', 403);
+        }
+
+        try {
+            $sa = $user->service_accounts()
+                ->where('provider', ServiceAccount::PROVIDER_TWILIO)
+                ->firstOrFail();
+        } catch(ModelNotFoundException $e) {
+            return response('Invalid Service Account', 403);
+        }
+
+        $requestValidator = new TwilioRequestValidator($sa->api_secret);
 
         $requestData = $request->toArray();
 
@@ -41,7 +60,7 @@ class RequestValidator
         if ($isValid) {
             return $next($request);
         } else {
-            return new Response('You are not Twilio :(', 403);
+            return response('You are not Twilio :(', 403);
         }
     }
 }
