@@ -31,7 +31,15 @@ class NumberUpdateRequest extends FormRequest
             ],
             'phone_number' => ['string', 'max:15'],
             'friendly_label' => ['string', 'max:50'],
-            'external_identity' => ['nullable']
+            'external_identity' => ['nullable'],
+            'sip_registration_url' => ['email']
+        ];
+    }
+
+    public function messages()
+    {
+        return [
+            'sip_registration_url.email' => 'Should be in the format username@sip-registration-domain.com'
         ];
     }
 }

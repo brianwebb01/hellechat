@@ -161,11 +161,13 @@ class NumberControllerTest extends TestCase
         $number = Number::factory()->create(['user_id' => $this->user->id]);
         $phone_number = $this->faker->e164PhoneNumber();
         $friendly_label = $this->faker->word;
+        $sip_registration_url = '555@444.sip.somewhere.com';
 
         $response = $this->actingAs($this->user)->putJson(route('numbers.update', $number), [
             'service_account_id' => $this->serviceAccount->id,
             'phone_number' => $phone_number,
             'friendly_label' => $friendly_label,
+            'sip_registration_url' => $sip_registration_url
         ]);
 
         $number->refresh();
@@ -190,6 +192,7 @@ class NumberControllerTest extends TestCase
         $this->assertEquals($this->serviceAccount->id, $number->service_account_id);
         $this->assertEquals($phone_number, $number->phone_number);
         $this->assertEquals($friendly_label, $number->friendly_label);
+        $this->assertEquals($sip_registration_url, $number->sip_registration_url);
     }
 
     /**
