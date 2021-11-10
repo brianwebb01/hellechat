@@ -75,7 +75,15 @@ class ProcessInboundTwilioMessageJob implements ShouldQueue
 
         if ($this->input['NumMedia'] > 0) {
             foreach (range(0, $this->input['NumMedia'] - 1) as $i) {
-                $media[] = $this->input["MediaUrl{$i}"];
+                $url = $this->input["MediaUrl{$i}"];
+
+                $headers = \get_headers($url, true);
+                $contentTypeStr = \is_array($headers['Content-Type'])
+                    ? implode(';', $headers['Content-Type'])
+                    : $headers['Content-Type'];
+                $url.= (\stripos($url, '?') == false ? '?' : '&') . 'Content-Type=' . $contentTypeStr;
+
+                $media[] = $url;
             }
         }
 
