@@ -567,8 +567,20 @@ window.manageMessages = function(queryString)
             }
 
             if(message.media != null){
+
+                const getQueryParams = (params, url) => {
+                    let href = url;
+                    //this expression is to get the query strings
+                    let reg = new RegExp('[?&]' + params + '=([^&#]*)', 'i');
+                    let queryString = reg.exec(href);
+                    return queryString ? queryString[1] : null;
+                };
+
                 message.media.forEach((url) => {
-                    if (url.match(/\.(jpeg|jpg|gif|png)/) != null) {
+                    if (
+                        (url.match(/\.(jpeg|jpg|gif|png)/) != null)
+                        || (getQueryParams('Content-Type', url) && getQueryParams('Content-Type', url).includes('image/'))
+                    ) {
                         //image
                         result += `<a href="${url}" target="_blank"><img src="${url}" class="h-24 w-24" /></a>`;
                     } else {

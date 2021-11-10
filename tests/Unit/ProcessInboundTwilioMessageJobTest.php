@@ -69,8 +69,8 @@ class ProcessInboundTwilioMessageJobTest extends TestCase
         $this->assertEquals($data['SmsStatus'], $message->status);
         $this->assertEquals($data['NumMedia'], $message->num_media);
         $this->assertEquals(2, count($message->media));
-        $this->assertTrue(\in_array($data['MediaUrl0'], $message->media));
-        $this->assertTrue(\in_array($data['MediaUrl1'], $message->media));
+        $this->assertTrue(\in_array($data['MediaUrl0']. '&Content-Type=image/png', $message->media));
+        $this->assertTrue(\in_array($data['MediaUrl1']. '&Content-Type=image/png', $message->media));
         $this->assertEquals($data['MessageSid'], $message->external_identity);
     }
 }
