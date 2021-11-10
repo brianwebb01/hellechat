@@ -112,8 +112,11 @@ services:
     depends_on:
       - mysql
     expose:
-        - ${GOTIFY_APP_PORT}
-        - ${GOTIFY_APP_PORT_SSL}
+      - ${GOTIFY_APP_PORT}
+      - ${GOTIFY_APP_PORT_SSL}
+    ports:
+      - "${GOTIFY_APP_PORT}:${GOTIFY_APP_PORT}"
+      - "${GOTIFY_APP_PORT_SSL}:${GOTIFY_APP_PORT_SSL}"
     volumes:
         - 'godata:/app/data'
         - ./docker/gotify/config.yml:/etc/gotify/config.yml
