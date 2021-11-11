@@ -50,7 +50,28 @@ class InboundMessageCreated extends Notification
      */
     public function toGotify($notifiable)
     {
-        return $this->message;
+        if (!$this->message->body & count($this->message->media) > 0) {
+            $msg = "Attachment";
+        } else {
+            $msg = $this->message->body;
+        }
+
+        if ($this->message->contact) {
+            $title = "SMS from " . $this->message->contact->friendlyName();
+        } else {
+            $title = "SMS from " . $this->message->from;
+        }
+
+        $url = route('ui.thread.index', [
+            'numberPhone' => $this->message->number->phone_number,
+            'with' => $this->message->from
+        ]);
+
+        return [
+            'title' => $title,
+            'message' => $msg,
+            'url' => $url
+        ];
     }
 
     /**
