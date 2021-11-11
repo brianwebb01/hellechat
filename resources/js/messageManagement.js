@@ -324,6 +324,7 @@ window.manageMessages = function(queryString)
         afterMessagesAdded: function()
         {
             this.scrollMessagesToBottom();
+            this.setupComposerEnviornment();
         },
 
         fetchNumbers: async function(numbersPage)
@@ -368,6 +369,8 @@ window.manageMessages = function(queryString)
                 this.sendingFromName = this.currentThread.send_from_number.friendly_label;
                 this.sendingFromNumber = this.currentThread.send_from_number.phone_number;
             } else {
+                if(this.messages.length == 0) return;
+
                 let last = JSON.parse(JSON.stringify(this.messages[0]));
                 let number = this.newMessageFromNumberOptions.find(n => n.id == last.number_id);
                 if(number){
@@ -468,7 +471,20 @@ window.manageMessages = function(queryString)
 
         renderPreview: function(thread)
         {
-            return thread.preview;
+            return this.isValidHttpUrl(thread.preview)
+                ? 'Attachment' : thread.preview;
+        },
+
+        isValidHttpUrl: function(string) {
+            let url;
+
+            try {
+                url = new URL(string);
+            } catch (_) {
+                return false;
+            }
+
+            return url.protocol === "http:" || url.protocol === "https:";
         },
 
         getAvatarLetters: function(thread)
