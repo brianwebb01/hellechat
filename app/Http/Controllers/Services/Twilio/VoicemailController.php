@@ -27,14 +27,15 @@ class VoicemailController extends Controller
 
         $response = new VoiceResponse();
         $dial = $response->dial(null, [
-            'answerOnBridge' => true,
-            'timeout' => 30,
+            'timeout' => 10,
+            'ringTone' => 'us',
             'action' => route(
                 'webhooks.twilio.voice.greeting',
                 ['userHashId' => $request->route('userHashId')]
             )
         ]);
         $dial->sip($number->sip_registration_url);
+
 
         return response($response)
             ->header('Content-Type', 'text/xml');
@@ -47,13 +48,15 @@ class VoicemailController extends Controller
     public function greeting(Request $request)
     {
         $response = new VoiceResponse();
-        $response->pause(['length' => 3]);
+
+        if(\in_array($request->get('DialCallStatus'), ['completed', 'answered'])){
+            $response->hangup();
+            return response($response)
+                ->header('Content-Type', 'text/xml');
+        }
+
         $response->say(
-            'The party you have called, '.
-            implode(', ', str_split(
-                str_replace('+', '', $request->get('Called'))
-            )).
-            ' is unavailable. Please leave a message after the tone.'
+            'The party you have called is unavailable. Please leave a message after the tone.'
         );
         $response->pause(['length' => 1]);
         $response->record([

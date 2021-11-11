@@ -44,19 +44,17 @@ class VoicemailControllerTest extends TestCase
         $this->assertInstanceOf(\SimpleXMLElement::class, $xml);
         $this->assertEquals('Response', $xml->getName());
         $this->assertObjectHasAttribute('Dial', $xml);
-        $this->assertEquals(true, (boolean)$xml->Dial['answerOnBridge']);
-        $this->assertEquals(30, (int)$xml->Dial['timeout']);
-        $this->assertEquals(
-            route('webhooks.twilio.voice.greeting', [
-                'userHashId' => $this->user->getHashId()
-            ]),
-            $xml->Dial['action']
-        );
+        $this->assertEquals(10, (int)$xml->Dial['timeout']);
+        $this->assertEquals('us', $xml->Dial['ringTone']);
         $this->assertEquals(
             $this->number->sip_registration_url,
             (string)$xml->Dial->Sip
         );
         $this->assertObjectHasAttribute('Sip', $xml->Dial);
+        $this->assertEquals(route('webhooks.twilio.voice.greeting', [
+            'userHashId' => $this->user->getHashId()
+        ]), $xml->Dial['action']);
+        $this->assertEquals('Dial', $xml->children()[0]->getName());
     }
 
 
@@ -78,13 +76,11 @@ class VoicemailControllerTest extends TestCase
         $this->assertNotFalse($xml);
         $this->assertInstanceOf(\SimpleXMLElement::class, $xml);
         $this->assertEquals('Response', $xml->getName());
-        $this->assertObjectHasAttribute('Pause', $xml);
-        $this->assertEquals(3, (int)$xml->Pause[0]['length']);
         $this->assertEquals(
-            "The party you have called, 1, 2, 1, 2, 5, 5, 5, 1, 2, 1, 2 is unavailable. Please leave a message after the tone.",
+            "The party you have called is unavailable. Please leave a message after the tone.",
             (string)$xml->Say
         );
-        $this->assertEquals(1, (int)$xml->Pause[1]['length']);
+        $this->assertEquals(1, (int)$xml->Pause[0]['length']);
         $this->assertObjectHasAttribute('Record', $xml);
         $this->assertEquals(true, (boolean)$xml->Record['playBeep']);
         $this->assertEquals(120, (int)$xml->Record['maxLength']);
