@@ -175,7 +175,7 @@ class GotifyClientTest extends TestCase
                 "appid": 5,
                 "date": "2018-02-27T19:36:10.5045044+01:00",
                 "extras": {
-                    "client:notification": {
+                    "client::notification": {
                         "click": {
                             "url": "http://google.com"
                         }
@@ -193,7 +193,7 @@ class GotifyClientTest extends TestCase
             'message' => "**Backup** was successfully finished.",
             'priority' => 8,
             'extras' => [
-                'client:notification' => [
+                'client::notification' => [
                     'click' => [
                         'url' => "http://google.com"
                     ]
@@ -231,7 +231,7 @@ class GotifyClientTest extends TestCase
                             "title" => "SMS from +15610415878",
                             "priority" => 8,
                             "extras" => [
-                                "client:notification" => [
+                                "client::notification" => [
                                     "click" => [
                                         "url" => "https://application.url.com/messages",
                                     ],
@@ -276,7 +276,7 @@ class GotifyClientTest extends TestCase
                             "title" => "SMS from +15610415878",
                             "priority" => 8,
                             "extras" => [
-                                "client:notification" => [
+                                "client::notification" => [
                                     "click" => [
                                         "url" => "https://application.url.com/messages",
                                     ],

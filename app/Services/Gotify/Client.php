@@ -169,7 +169,7 @@ class Client
             'message' => $message,
             'priority' => $priority,
             'extras' => [
-                'client:notification' => [
+                'client::notification' => [
                     'click' => [
                         'url' => $url
                     ]
