@@ -39,7 +39,10 @@ class VoicemailObserver
     public function deleted(Voicemail $voicemail)
     {
         if($voicemail->number->serviceAccount->provider == ServiceAccount::PROVIDER_TWILIO){
-            DeleteRemoteTwilioVoicemailJob::dispatch($voicemail->number->serviceAccount, $voicemail);
+            DeleteRemoteTwilioVoicemailJob::dispatch(
+                $voicemail->number->serviceAccount,
+                $voicemail->external_identity
+            );
         }
     }
 
