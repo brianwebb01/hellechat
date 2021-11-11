@@ -5,6 +5,7 @@ namespace App\Observers;
 use App\Jobs\DeleteRemoteTwilioVoicemailJob;
 use App\Models\ServiceAccount;
 use App\Models\Voicemail;
+use App\Notifications\VoicemailCreated;
 
 class VoicemailObserver
 {
@@ -16,7 +17,8 @@ class VoicemailObserver
      */
     public function created(Voicemail $voicemail)
     {
-        //
+        $user = $voicemail->user;
+        $user->notify(new VoicemailCreated($voicemail));
     }
 
     /**

@@ -3,27 +3,26 @@
 namespace App\Notifications;
 
 use App\Channels\GotifyChannel;
-use App\Models\Message;
+use App\Models\Voicemail;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
-use Illuminate\Support\Facades\App;
 
-class InboundMessageCreated extends Notification
+class VoicemailCreated extends Notification
 {
     use Queueable;
 
-    public Message $message;
+    public Voicemail $voicemail;
 
     /**
      * Create a new notification instance.
      *
      * @return void
      */
-    public function __construct(Message $message)
+    public function __construct(Voicemail $voicemail)
     {
-        $this->message = $message;
+        $this->voicemail = $voicemail;
     }
 
     /**
@@ -36,7 +35,7 @@ class InboundMessageCreated extends Notification
     {
         $channels = [];
 
-        if($notifiable->gotify_app_token)
+        if ($notifiable->gotify_app_token)
             $channels[] = GotifyChannel::class;
 
         return $channels;
@@ -50,26 +49,20 @@ class InboundMessageCreated extends Notification
      */
     public function toGotify($notifiable)
     {
-        if (!$this->message->body & count($this->message->media) > 0) {
-            $msg = "Attachment";
+        if ($this->voicemail->contact) {
+            $title = "Voicemail from " . $this->voicemail->contact->friendlyName();
         } else {
-            $msg = $this->message->body;
-        }
-
-        if ($this->message->contact) {
-            $title = "SMS from " . $this->message->contact->friendlyName();
-        } else {
-            $title = "SMS from " . $this->message->from;
+            $title = "Voicemail from " . $this->voicemail->from;
         }
 
         $url = route('ui.thread.index', [
-            'numberPhone' => $this->message->number->phone_number,
-            'with' => $this->message->from
+            'numberPhone' => $this->voicemail->number->phone_number,
+            'with' => $this->voicemail->from
         ]);
 
         return [
             'title' => $title,
-            'message' => $msg,
+            'message' => $this->voicemail->transcription,
             'url' => $url
         ];
     }
@@ -83,7 +76,7 @@ class InboundMessageCreated extends Notification
     public function toArray($notifiable)
     {
         return [
-            'message' => $this->message->toArray()
+            'voicemail' => $this->voicemail->toArray()
         ];
     }
 }
