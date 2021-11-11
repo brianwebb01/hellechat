@@ -1,10 +1,11 @@
 on:
   push:
     branches: [ master ]
-  schedule:
-    - cron: '0 0 * * *'
-  pull_request:
-    branches: [ master ]
+## Remove the schedule and PR triggers until the project is beta / GA
+    #  schedule:
+#    - cron: '0 0 * * *'
+#  pull_request:
+#    branches: [ master ]
 name: CI/CD
 jobs:
   test:

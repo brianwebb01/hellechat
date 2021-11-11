@@ -40,7 +40,10 @@ class DeleteRemoteTwilioVoicemailJobTest extends TestCase
                 )
         );
 
-        $job = new DeleteRemoteTwilioVoicemailJob($mServiceAccount, $voicemail);
+        $job = new DeleteRemoteTwilioVoicemailJob(
+            $mServiceAccount,
+            $voicemail->external_identity
+        );
         $job->handle();
     }
 
