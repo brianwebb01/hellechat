@@ -34,8 +34,11 @@ class ConnectContactToMessagesJob implements ShouldQueue
      */
     public function handle()
     {
+
         $numbers = collect(
-            $this->contact->phone_numbers
+            is_array($this->contact->phone_numbers)
+                ? $this->contact->phone_numbers
+                : json_decode($this->contact->phone_numbers, true)
         )->values();
 
         Message::query()
