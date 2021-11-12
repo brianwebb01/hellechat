@@ -3,7 +3,9 @@
 namespace App\Observers;
 
 use App\Jobs\ConnectContactToMessagesJob;
+use App\Jobs\ConnectContactToVoicemailsJob;
 use App\Jobs\DisconnectContactFromMessagesJob;
+use App\Jobs\DisconnectContactFromVoicemailsJob;
 use App\Models\Contact;
 
 class ContactObserver
@@ -17,6 +19,7 @@ class ContactObserver
     public function created(Contact $contact)
     {
         ConnectContactToMessagesJob::dispatch($contact);
+        ConnectContactToVoicemailsJob::dispatch($contact);
     }
 
     /**
@@ -28,6 +31,7 @@ class ContactObserver
     public function updated(Contact $contact)
     {
         ConnectContactToMessagesJob::dispatch($contact);
+        ConnectContactToVoicemailsJob::dispatch($contact);
     }
 
     /**
@@ -39,6 +43,7 @@ class ContactObserver
     public function deleted(Contact $contact)
     {
         DisconnectContactFromMessagesJob::dispatch($contact->id);
+        DisconnectContactFromVoicemailsJob::dispatch($contact->id);
     }
 
     /**
@@ -50,6 +55,7 @@ class ContactObserver
     public function restored(Contact $contact)
     {
         ConnectContactToMessagesJob::dispatch($contact);
+        ConnectContactToVoicemailsJob::dispatch($contact);
     }
 
     /**
@@ -61,5 +67,6 @@ class ContactObserver
     public function forceDeleted(Contact $contact)
     {
         DisconnectContactFromMessagesJob::dispatch($contact->id);
+        DisconnectContactFromVoicemailsJob::dispatch($contact->id);
     }
 }
