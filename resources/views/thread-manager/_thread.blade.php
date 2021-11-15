@@ -11,7 +11,7 @@
 
     <template x-for="(message,index) in messages">
         <div class="chat-message" x-intersect="markAsRead(message.id)">
-            <div x-show="renderMessageTime(message, index) != null"  class="justify-center flex">
+            <div x-show="renderMessageTime(message, index) != null"  class="justify-center flex pb-2">
                 <div x-text="renderMessageTime(message, index)" class="text-white text-xs px-3 py-0.5 bg-gray-400 rounded-xl"></div>
             </div>
             <div :class="(message.direction == 'outbound' ? 'justify-end' : '') + ' flex items-end'">
