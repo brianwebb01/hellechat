@@ -3,12 +3,15 @@
 namespace App\Notifications;
 
 use App\Channels\GotifyChannel;
+use App\Http\Resources\Api\MessageResource;
 use App\Models\Message;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 use Illuminate\Support\Facades\App;
+use Illuminate\Notifications\Messages\BroadcastMessage;
+
 
 class InboundMessageCreated extends Notification
 {
@@ -34,12 +37,25 @@ class InboundMessageCreated extends Notification
      */
     public function via($notifiable)
     {
-        $channels = [];
+        $channels = ['broadcast'];
 
         if($notifiable->gotify_app_token)
             $channels[] = GotifyChannel::class;
 
         return $channels;
+    }
+
+    /**
+     * Get the broadcastable representation of the notification.
+     *
+     * @param  mixed  $notifiable
+     * @return BroadcastMessage
+     */
+    public function toBroadcast($notifiable)
+    {
+        return new BroadcastMessage([
+            'message' => new MessageResource($this->message)
+        ]);
     }
 
     /**

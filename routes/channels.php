@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\Message;
 use Illuminate\Support\Facades\Broadcast;
 
 /*

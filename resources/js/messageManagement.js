@@ -1,9 +1,10 @@
 const dayjs = require("dayjs");
 import Fuse from 'fuse.js'
 
-window.manageMessages = function(queryString)
+window.manageMessages = function(queryString, authUserId)
 {
     return {
+        userId: authUserId,
         queryParams: JSON.parse(queryString),
         threadOpen: false,
         currentThread: null,
@@ -27,6 +28,14 @@ window.manageMessages = function(queryString)
         initMessageManagement: function()
         {
             window.addEventListener('hashchange', () => this.filterByNumberId());
+
+            Echo.private(`App.Models.User.${this.userId}`)
+                .notification((notification) => {
+                    if (notification.type == 'App\\Notifications\\InboundMessageCreated'){
+                        this.addNewInboundMessage(notification.message);
+                    }
+                });
+
             this.initFileUpload();
             this.addRecords();
             this.fetchNumbers();
@@ -175,6 +184,47 @@ window.manageMessages = function(queryString)
         composeNewMessage: function()
         {
             this.newMessageOpen = true;
+        },
+
+        addNewInboundMessage: function(message)
+        {
+            let number = this.newMessageFromNumberOptions.find(n =>
+                n.id == Number(message.number_id)
+            );
+
+            let foundThread = this.records.find(t => {
+                return t.number_id = number.id
+                    && t.phone_number == message.from;
+            });
+
+            let tPreview = (!message.body && message.num_media > 0) ? message.media[0] : message.body;
+
+            if (foundThread) {
+
+                foundThread.preview = tPreview;
+
+                if(this.currentThread.id == foundThread.id){
+                    this.messages.push(message);
+                } else {
+                    foundThread.unread++;
+                }
+
+            } else {
+
+                let newThread = {
+                    'id': message.id,
+                    'unread': 1,
+                    'number_id': message.number_id,
+                    'number_phone_number': number.phone_number,
+                    'phone_number': message.from,
+                    'preview': this.renderPreview(JSON.parse('{"preview": "'+ tPreview +'"}')),
+                    'contact': message.contact,
+                    'last_updated_at': dayjs(),
+                    'send_from_number': number
+                }
+
+                this.records.unshift(newThread);
+            }
         },
 
         composeNewMessageConfirm: function()
