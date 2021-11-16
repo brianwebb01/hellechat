@@ -103,6 +103,33 @@
                 </div>
                 @endif
 
+                <!-- number switcher -->
+                <div class="ml-3 relative">
+                    <x-jet-dropdown align="right" width="48">
+                        <x-slot name="trigger">
+                            <span class="inline-flex rounded-md">
+                                <button type="button" class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-gray-500 bg-white hover:text-gray-700 focus:outline-none transition">
+                                    <span x-text="xNumLabel">All Numbers</span>
+                                    <svg class="ml-2 -mr-0.5 h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                                        <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
+                                    </svg>
+                                </button>
+                            </span>
+                        </x-slot>
+                        <x-slot name="content">
+                            <x-jet-dropdown-link id="dt-numbers-all" href="#numbers-all">
+                                All Numbers
+                            </x-jet-dropdown-link>
+
+                            @foreach(auth()->user()->numbers as $number)
+                            <x-jet-dropdown-link id="dt-numbers-{{ $number->id }}" href="#numbers-{{ $number->id }}">
+                                {{ $number->friendly_label }} ({{ $number->phone_number }})
+                            </x-jet-dropdown-link>
+                        @endforeach
+                        </x-slot>
+                    </x-jet-dropdown>
+                </div>
+
                 <!-- Settings Dropdown -->
                 <div class="ml-3 relative">
                     <x-jet-dropdown align="right" width="48">
@@ -196,7 +223,7 @@
         </div>
     </div>
 
-    <div x-show="true" class="w-full border-t b-gray-400 flex sm:hidden items-center">
+    <div class="w-full border-t b-gray-400 flex sm:hidden items-center">
         <p x-text="xNumLabel" class="m-auto text-sm text-gray-500">My fake Number (+15554441234)</p>
     </div>
 
@@ -204,7 +231,7 @@
     <div :class="{'block': xNumOpen, 'hidden': ! xNumOpen}" class="hidden sm:hidden">
         <div class="pt-2 pb-3 space-y-1">
             <a @click="xNumActive = $el.id; xNumOpen = false;" id="numbers-all" href="#numbers-all" :class="xNumActive == $el.id ? 'block pl-3 pr-4 py-2 border-l-4 border-indigo-400 text-base font-medium text-indigo-700 bg-indigo-50 focus:outline-none focus:text-indigo-800 focus:bg-indigo-100 focus:border-indigo-700 transition' : 'block pl-3 pr-4 py-2 border-l-4 border-transparent text-base font-medium text-gray-600 hover:text-gray-800 hover:bg-gray-50 hover:border-gray-300 focus:outline-none focus:text-gray-800 focus:bg-gray-50 focus:border-gray-300 transition'">
-                Show All Numbers
+                All Numbers
             </a>
 
             @foreach(auth()->user()->numbers as $number)
