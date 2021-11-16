@@ -18,6 +18,9 @@ class DatabaseSeeder extends Seeder
         $ed = User::getEventDispatcher();
         $ed->forget('eloquent.created: '. User::class);
 
+        $broadcastDriver = config('broadcasting.default');
+        config('broadcasting.default', 'null');
+
         $this->call([
             UserSeeder::class,
             ContactSeeder::class,
@@ -29,5 +32,6 @@ class DatabaseSeeder extends Seeder
         ]);
 
         User::observe(UserObserver::class);
+        config('broadcasting.default', $broadcastDriver);
     }
 }
