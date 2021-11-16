@@ -3,6 +3,31 @@ window.voicemailInteraction = function() {
         playing: false,
         elapsed: '0:00',
         audio: null,
+        unfilteredRecords: [],
+
+        initVoicemail: function() {
+            window.addEventListener('hashchange', () => this.filterByNumberId());
+        },
+
+        afterRecordsAdded: function() {
+            if (window.location.hash.substr(0, 9) == '#numbers-') {
+                this.filterByNumberId();
+            }
+        },
+
+        filterByNumberId: function() {
+            const numberId = window.location.hash.substr(1).replace('numbers-', '');
+
+            let toAdd = this.records.filter(r => !this.unfilteredRecords.map(ufr => ufr.id).includes(r.id) )
+            this.unfilteredRecords = [...this.unfilteredRecords, ...toAdd];
+
+            if(numberId == 'all'){
+                this.records = this.unfilteredRecords;
+            } else if(Number(numberId) > 0) {
+                this.records = this.unfilteredRecords.filter(v =>
+                    v.number_id == Number(numberId))
+            }
+        },
 
         afterSetCurrentRecord: function () {
             this.audio = new Audio(this.currentRecord.media_url);

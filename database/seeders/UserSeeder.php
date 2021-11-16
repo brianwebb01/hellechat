@@ -72,6 +72,7 @@ class UserSeeder extends Seeder
                 $from = collect($c->phone_numbers)->values()->random(1)->first();
             }
             Voicemail::factory()->create([
+                'number_id' => rand(0,1) > 0 ? Number::factory() : $number->id,
                 'user_id' => $user->id,
                 'contact_id' => $contact_id,
                 'from' => $from,

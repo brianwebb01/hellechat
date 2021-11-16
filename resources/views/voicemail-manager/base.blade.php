@@ -7,7 +7,7 @@
         'csrf_token' => csrf_token()
             ]) }} )" x-init="">
 
-        <div x-data="voicemailInteraction()" x-init="addRecords">
+        <div x-data="voicemailInteraction()" x-init="initVoicemail(); addRecords();">
             @include('voicemail-manager._heading')
 
             @include('voicemail-manager._list')

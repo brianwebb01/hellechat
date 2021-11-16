@@ -1,4 +1,5 @@
 <div x-cloak x-show="formOpen" class="fixed inset-0 overflow-hidden" aria-labelledby="slide-over-title" role="dialog" aria-modal="true">
+    <div class="fixed inset-0 bg-gray-600 bg-opacity-75 w-screen h-screen" aria-hidden="true" x-cloak x-show="formOpen" x-transition:enter="ease-out duration-300" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100" x-transition:leave="ease-in duration-200" x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0"></div>
     <div class="absolute inset-0 overflow-hidden">
         <!-- Background overlay, show/hide based on slide-over state. -->
         <div class="absolute inset-0" aria-hidden="true">
@@ -10,7 +11,8 @@
                             <div class="py-6 px-4 bg-indigo-700 sm:px-6">
                                 <div class="flex items-center justify-between">
                                     <h2 class="text-lg font-medium text-white" id="slide-over-title">
-                                        New Contact
+                                        <span x-show="!currentRecord.id">New Contact</span>
+                                        <span x-show="currentRecord.id">Edit Contact</span>
                                     </h2>
                                     <div class="ml-3 h-7 flex items-center">
                                         <button @click="cancelForm();" type="button" class="bg-indigo-700 rounded-md text-indigo-200 hover:text-white focus:outline-none focus:ring-2 focus:ring-white">

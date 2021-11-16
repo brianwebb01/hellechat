@@ -15,6 +15,7 @@ window.initCrudForm = function(data) {
         page: 1,
         lastPage: null,
         showInfiniteScroll: false,
+        beforeRecordsAdded: function(){},
         afterRecordsAdded: function(){},
         beforeSetCurrentRecord: function(){},
         afterSetCurrentRecord: function(){},
@@ -54,6 +55,7 @@ window.initCrudForm = function(data) {
         //for additional records, update local variables accordingly
         //and call afterRecordsAdded() for any post-records-received functionality
         addRecords: async function () {
+            this.beforeRecordsAdded();
             this.loadRecords()
                 .then(json => {
                     this.lastPage = json.meta.last_page;
