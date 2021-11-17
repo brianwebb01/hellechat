@@ -1,4 +1,4 @@
-<div class="relative border-t-2 border-gray-200 px-4 py-3 xl:py-0 xl:pt-6">
+<div class="fixed md:relative bottom-0 border-t-2 border-gray-200 px-4 py-3 xl:py-0 xl:pt-6">
 
     <div x-show="sendingFromNumber" class="absolute w-full -top-3 z-40">
         <div class="relative flex justify-center">
@@ -8,6 +8,8 @@
             </span>
         </div>
     </div>
+
+
 
     <div class="relative flex">
 

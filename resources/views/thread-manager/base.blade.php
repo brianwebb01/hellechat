@@ -30,7 +30,8 @@
                             @include('thread-manager._new-message-slider')
 
                             <!-- chat thread secton -->
-                            <div x-cloak x-show="threadOpen || window.innerWidth >= 1280" x-transition:enter="transform transition ease-in-out duration-300" x-transition:enter-start="translate-x-full" x-transition:enter-end="translate-x-0" class="flex-1 p:2 sm:pb-6 justify-between flex-col h-chat-area xl:flex xl:border-r">
+                            <div x-cloak x-show="threadOpen || window.innerWidth >= 1280" x-transition:enter="transform transition ease-in-out duration-300" x-transition:enter-start="translate-x-full" x-transition:enter-end="translate-x-0"
+                                class="flex-1 p:2 sm:pb-6 justify-between flex-col h-chat-area xl:flex xl:border-r">
 
                                 <!-- thread heading -->
                                 @include('thread-manager._thread-heading')
