@@ -8,6 +8,6 @@
   height: calc(100vh - 90px);
 }
 .h-thread-ui-mobile {
-  /*height: calc(100vh - 207px);*/
+  height: calc(100vh - 207px);
 }
 [x-cloak] { display: none !important; }
