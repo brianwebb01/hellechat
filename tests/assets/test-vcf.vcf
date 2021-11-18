@@ -1,0 +1,70 @@
+BEGIN:VCARD
+VERSION:3.0
+FN:Thies-Tillman Jacobsen
+TEL;type=MOBILE;type=VOICE;type=pref:(502) 555-7890
+ORG:Acme Corp
+N:Jacobsen;Thies-Tillman;;;
+BDAY:1908-10-25
+CATEGORIES:Sportverein
+TZ:+0100
+NOTE:Lieblingsfarbe: Violett
+END:VCARD
+
+BEGIN:VCARD
+VERSION:3.0
+FN:Lenn Biernoth
+TEL;type=WORK;type=VOICE;type=pref:(502) 555-5678
+TEL;type=HOME;type=VOICE:(502) 555-6789
+N:Biernoth;Lenn;;;
+X-MAIDENNAME:Iser
+BDAY:1951-11-22
+BIRTHPLACE:Hörstel
+TITLE:Strassenreiniger
+CATEGORIES:Familie
+TZ:+0100
+EMAIL;TYPE=INTERNET;TYPE=HOME;TYPE=PREF:lenn@lbi.net
+NOTE:Interessen: Internet trollen, Kekse backen, Videos schneiden\nLieblingsessen: Chillibrot mit Kartoffelpuffer
+END:VCARD
+
+BEGIN:VCARD
+VERSION:3.0
+FN:Ludwig-Götz Graßl
+TEL;type=WORK;type=VOICE;type=pref:(502) 555-4567
+N:Graßl;Ludwig-Götz;;;
+X-MAIDENNAME:Schoen
+BDAY:1943-02-07
+BIRTHPLACE:Kaltennordheim
+TITLE:Rentner
+CATEGORIES:Piratenpartei
+TZ:+0100
+EMAIL;TYPE=INTERNET;TYPE=HOME;TYPE=PREF:ludwig-goetz@ludwig-goetz-grassl.org
+NOTE:Interessen: Stofftiere, Basketball\nLieblingsessen: Reiberouladen
+END:VCARD
+
+BEGIN:VCARD
+VERSION:3.0
+FN:Marita Kreutzer
+TEL;type=MAIN;type=VOICE;type=pref:(502) 555-3456
+N:Kreutzer;Marita;;;
+NICKNAME:mkr
+X-MAIDENNAME:Sievers
+BDAY:1943-07-26
+TITLE:Rentnerin
+CATEGORIES:CCC
+TZ:+0100
+NOTE:Interessen: Handarbeiten\nLieblingsfarbe: Weiß\nLieblingsessen: Orangen
+END:VCARD
+
+BEGIN:VCARD
+VERSION:3.0
+FN:Kathi Hoelzl
+TEL;type=CELL;type=VOICE;type=pref:(502) 555-1234
+TEL;type=MODEM;type=VOICE:(502) 555-2345
+N:Hoelzl;Kathi;;;
+BDAY:2002-07-11
+BIRTHPLACE:Grevenbroich
+CATEGORIES:Piratenpartei
+TZ:+0100
+EMAIL;TYPE=INTERNET;TYPE=HOME;TYPE=PREF:kathi.hoelzl@alhilal.net
+URL;TYPE=HOME:http://kho.me/
+END:VCARD

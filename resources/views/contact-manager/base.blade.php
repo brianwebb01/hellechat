@@ -4,11 +4,13 @@
             'index' => route('contacts.index'),
             'store' => route('contacts.store'),
             'update' => route('contacts.update', [123]),
-            'delete' => route('contacts.destroy', [123])],
+            'delete' => route('contacts.destroy', [123]),
+            'import_contacts' => route('contacts-import.store')
+        ],
         'csrf_token' => csrf_token()
             ]) }} )" x-init="">
 
-        <div x-data="manageContacts()" x-init="addRecords">
+        <div x-data="manageContacts()" x-init="initContactManagement">
             @include('contact-manager._heading')
 
             @include('contact-manager._list')
@@ -20,6 +22,8 @@
             @include('confirm-delete')
 
             @include('notification')
+
+            @include('contact-manager._import-modal')
         </div>
 
         <script src="{{ mix('js/crudForm.js') }}"></script>
