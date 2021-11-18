@@ -11,6 +11,12 @@ module.exports = {
 
     theme: {
         extend: {
+            colors: {
+                // https://www.themes.dev/tailwindcss-colors/
+                blue: { ...defaultTheme.colors.blue },
+                violet: { ...defaultTheme.colors.violet },
+                purple: { ...defaultTheme.colors.purple }
+            },
             fontFamily: {
                 //sans: ['Nunito', ...defaultTheme.fontFamily.sans],
                 sans: ['Inter var', ...defaultTheme.fontFamily.sans],

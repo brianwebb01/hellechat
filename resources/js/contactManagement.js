@@ -6,6 +6,88 @@ window.manageContacts = function() {
         phoneNumbers: [],
         searchTerm: null,
         unfilteredRecords: [],
+        importFile: null,
+        importConfirmOpen: false,
+        importing: false,
+        importErrors: [],
+        importSuccess: false,
+
+        initContactManagement: function() {
+            this.initFileUpload();
+            this.addRecords();
+        },
+
+        initFileUpload: function () {
+            let input = document.getElementById('import');
+            const onSelectFile = () => this.confirmContactsImport(input.files[0]);
+            input.addEventListener('change', onSelectFile, false);
+        },
+
+        importStateConfirm: function(){
+            return this.importErrors.length == 0 &&
+                this.importSuccess == false;
+        },
+
+        importStateSuccess: function() {
+            return this.importSuccess == true;
+        },
+
+        importStateError: function() {
+            return this.importSuccess == false &&
+                this.importErrors.length > 0;
+        },
+
+        cancelImport: function() {
+            this.importConfirmOpen = false;
+            setTimeout(() => {
+                this.importFile = null;
+                this.importSuccess = false;
+                this.importErrors = [];
+            }, 500);
+        },
+
+        confirmContactsImport: function(file) {
+            this.importFile = file;
+            document.getElementById('import').value = "";
+            this.importConfirmOpen = true;
+        },
+
+        commitContactsImport: function(){
+            this.importing = true;
+
+            const formData = new FormData();
+            formData.append('import', this.importFile);
+
+            fetch(this.urls.import_contacts, {
+                method: 'POST',
+                headers: {
+                    'Accept': 'application/json',
+                    'X-CSRF-TOKEN': this.csrfToken
+                },
+                body: formData
+            })
+                .then(response => {
+                    this.importing = false;
+
+                    if (response.status == 204) {
+
+                        this.importSuccess = true;
+
+                    } else if (response.status == 422) {
+
+                        response.json().then(res => {
+                            this.importErrors = res.errors.import;
+                        });
+                    } else {
+                        alert('Fatal error, could not process import');
+                    }
+                })
+                .catch((err) => console.log(err));
+        },
+
+        browseForContactImportFile: function() {
+            document.getElementById('import').click();
+        },
 
         searchContacts: function() {
             if (this.unfilteredRecords.length == 0){
