@@ -7,6 +7,7 @@
     "require": {
         "php": "^7.3|^8.0",
         "fruitcake/laravel-cors": "^2.0",
+        "giggsey/libphonenumber-for-php": "^8.12",
         "guzzlehttp/guzzle": "^7.3",
         "hashids/hashids": "^4.1",
         "jeroendesloovere/vcard": "^1.7",

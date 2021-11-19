@@ -71,6 +71,19 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | Application Phone Number Country Configuration
+    |--------------------------------------------------------------------------
+    |
+    | The application phone number country determines the default country that will be used
+    | when saving and formatting phone numbers. You are free to set this value
+    | to any ISO 3166-1 two letter country code.
+    |
+    */
+
+    'phone_country' => env('PHONE_DEFAULT_COUNTRY', 'US'),
+
+    /*
+    |--------------------------------------------------------------------------
     | Application Locale Configuration
     |--------------------------------------------------------------------------
     |
