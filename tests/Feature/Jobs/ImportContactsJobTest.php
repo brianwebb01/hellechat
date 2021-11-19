@@ -3,6 +3,7 @@
 namespace Tests\Feature\Jobs;
 
 use App\Jobs\ImportContactsJob;
+use App\Models\Contact;
 use App\Models\User;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Support\Facades\Storage;
@@ -128,12 +129,39 @@ class ImportContactsJobTest extends TestCase
 
 
     /** @test */
-    public function test_clean_strips_semicolons()
+    public function clean_strips_semicolons_as_expected()
     {
         $job = new ImportContactsJob(new User, 'nothing');
 
         $this->assertEquals("Foo", $job->clean("Foo;"));
         $this->assertEquals("Bar", $job->clean("Bar;;"));
         $this->assertEquals("Biz;:", $job->clean("Biz;:;"));
+    }
+
+
+    /** @test */
+    public function duplicate_exists_checks_buffer()
+    {
+        $job = new ImportContactsJob(new User, 'nothing');
+        $exists = Contact::factory()->make();
+        $job->contacts[] = $exists;
+
+        $this->assertTrue($job->duplicateExists($exists));
+
+        $doesNotExist = Contact::factory()->make();
+        $this->assertFalse($job->duplicateExists($doesNotExist));
+    }
+
+
+    /** @test */
+    public function duplicate_exists_checks_database()
+    {
+        $job = new ImportContactsJob(new User, 'nothing');
+
+        $exists = Contact::factory()->create();
+        $this->assertTrue($job->duplicateExists($exists));
+
+        $doesNotExist = Contact::factory()->make();
+        $this->assertFalse($job->duplicateExists($doesNotExist));
     }
 }

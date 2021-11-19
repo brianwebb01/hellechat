@@ -17,14 +17,53 @@ class ImportContactsJob implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
+    /**
+     * The type that should be given
+     * for phone numbers where the
+     * type is unknown and not in the
+     * list of replacements.
+     */
     public const OTHER_TYPE = 'other';
 
+    /**
+     * The user the imported contacts
+     * should be attached to
+     *
+     * @var App\Models\User
+     */
     public $user;
 
+    /**
+     * Path to the file who's contents
+     * should be read in and processed
+     *
+     * @var string
+     */
     public $filepath;
 
+    /**
+     * Batch size of contact records to
+     * make before bulk saving
+     *
+     * @var integer
+     */
     public $batchSize = 25;
 
+    /**
+     * temporary store of contact records to
+     * be saved.  Added to until process is
+     * complete or the batch size is hit
+     *
+     * @var array
+     */
+    public $contacts = [];
+
+    /**
+     * Dictionary of supported phone
+     * types
+     *
+     * @var array
+     */
     public $phoneTypes = [
         "mobile",
         "home",
@@ -37,6 +76,12 @@ class ImportContactsJob implements ShouldQueue
         "other"
     ];
 
+    /**
+     * Dictionary of unsupported phone
+     * types and their replacements
+     *
+     * @var array
+     */
     public $phoneTypeConversions = [
         'pref' => 'main',
         'cell' => 'mobile',
@@ -56,7 +101,9 @@ class ImportContactsJob implements ShouldQueue
     }
 
     /**
-     * Execute the job.
+     * Execute the job by reading the consturctor given
+     * file, then passing the contents to other functions
+     * for processing.  Deletes file after complete
      *
      * @return void
      */
@@ -67,10 +114,15 @@ class ImportContactsJob implements ShouldQueue
         Storage::delete($this->filepath);
     }
 
+    /**
+     * Function to loop over the VCF data and save it to the database
+     *
+     * @param string $content
+     * @return void
+     */
     public function createContactsFromVCardExport($content)
     {
         $parser = app()->makeWith(VCardParser::class, ['content' => $content]);
-        $contacts = [];
 
         foreach($parser as $vcard){
             $contact = app(Contact::class);
@@ -112,20 +164,30 @@ class ImportContactsJob implements ShouldQueue
             }
 
             $contact->phone_numbers = $phone_numbers;
-            $contacts[] = $contact;
 
-            if(count($contacts) >= $this->batchSize){
-                $this->user->contacts()->saveMany($contacts);
-                $contacts = [];
+            if(!$this->duplicateExists($contact))
+                $this->contacts[] = $contact;
+
+            if(count($this->contacts) >= $this->batchSize){
+                $this->user->contacts()->saveMany($this->contacts);
+                $this->contacts = [];
             }
 
         }//end foreach
 
-        if (count($contacts) > 0) {
-            $this->user->contacts()->saveMany($contacts);
+        if (count($this->contacts) > 0) {
+            $this->user->contacts()->saveMany($this->contacts);
         }
     }
 
+
+    /**
+     * Function to clean the VCF string and remove
+     * any erroneous characters etc.
+     *
+     * @param string $input
+     * @return string
+     */
     public function clean($input)
     {
         $output = $input;
@@ -135,5 +197,31 @@ class ImportContactsJob implements ShouldQueue
         } else {
             return $output;
         }
+    }
+
+
+    /**
+     * Function to determine if the given contact
+     * exists either in the database or in the buffer
+     *
+     * @param Contact $contact
+     * @return boolean
+     */
+    public function duplicateExists(Contact $contact)
+    {
+        $isInBuffer = collect($this->contacts)->contains(fn($c) =>
+            $c->first_name == $contact->first_name &&
+            $c->last_name == $contact->last_name &&
+            $c->company == $contact->company &&
+            $c->phone_numbers == $contact->phone_numbers
+        );
+
+        if($isInBuffer) return true;
+
+        return Contact::where('first_name', $contact->first_name)
+            ->where('last_name', $contact->last_name)
+            ->where('company', $contact->company)
+            ->whereJsonContains('phone_numbers', $contact->phone_numbers)
+            ->count() > 0;
     }
 }
