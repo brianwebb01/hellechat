@@ -125,4 +125,15 @@ class ImportContactsJobTest extends TestCase
                 ->phone_numbers['other']
         );
     }
+
+
+    /** @test */
+    public function test_clean_strips_semicolons()
+    {
+        $job = new ImportContactsJob(new User, 'nothing');
+
+        $this->assertEquals("Foo", $job->clean("Foo;"));
+        $this->assertEquals("Bar", $job->clean("Bar;;"));
+        $this->assertEquals("Biz;:", $job->clean("Biz;:;"));
+    }
 }
