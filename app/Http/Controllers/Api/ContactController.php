@@ -25,7 +25,7 @@ class ContactController extends Controller
     public function index(Request $request)
     {
         $contacts = $request->user()->contacts()
-            ->orderBy(DB::raw('COALESCE(last_name, company, first_name)'), 'asc')
+            ->orderBy(DB::raw('COALESCE(last_name, first_name, company)'), 'asc')
             ->paginate();
 
         return new ContactCollection($contacts);
