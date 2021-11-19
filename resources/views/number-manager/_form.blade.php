@@ -104,7 +104,7 @@
                                         <div>
                                             <div class="relative border border-gray-300 rounded-md px-3 py-2 shadow-sm focus-within:ring-1 focus-within:ring-indigo-600 focus-within:border-indigo-600">
                                                 <label for="sip_registration_url" class="block text-xs font-medium text-gray-900">SIP Registration URL</label>
-                                                <input x-model="currentRecord.sip_registration_url" type="text" name="sip_registration_url" id="sip_registration_url" class="block w-full border-0 p-0 text-gray-900 placeholder-gray-500 focus:ring-0 sm:text-sm" placeholder="https://foo.bar.com/abc/123">
+                                                <input x-model="currentRecord.sip_registration_url" type="text" name="sip_registration_url" id="sip_registration_url" class="block w-full border-0 p-0 text-gray-900 placeholder-gray-500 focus:ring-0 sm:text-sm" placeholder="user@sip.domain.com">
                                                 <div x-show="errors.sip_registration_url" class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
                                                     <!-- Heroicon name: solid/exclamation-circle -->
                                                     <svg class="h-5 w-5 text-red-500" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
