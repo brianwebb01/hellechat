@@ -75,31 +75,40 @@ class ImportContactsJob implements ShouldQueue
         foreach($parser as $vcard){
             $contact = app(Contact::class);
 
-            if($vcard->firstname)
+            if(property_exists($vcard, 'firstname'))
                 $contact->first_name = $this->clean($vcard->firstname);
 
-            if($vcard->lastname)
+            if(property_exists($vcard, 'lastname'))
                 $contact->last_name = $this->clean($vcard->lastname);
 
             if(property_exists($vcard, 'organization'))
                 $contact->company = $this->clean($vcard->organization);
 
+            if( !$contact->first_name &&
+                !$contact->last_name &&
+                !$contact->company
+            ){
+                continue;
+            }
+
             $phone_numbers = [];
 
-            foreach($vcard->phone as $vPhoneType => $number){
-                $tempType = \strtolower(explode(';', $vPhoneType)[0]);
-                $e164Phone = '+1' . preg_replace('/[^0-9,.]+/', '', $number)[0];
+            if(property_exists($vcard, 'phone')){
+                foreach($vcard->phone as $vPhoneType => $number){
+                    $tempType = \strtolower(explode(';', $vPhoneType)[0]);
+                    $e164Phone = '+1' . preg_replace('/[^0-9,.]+/', '', $number)[0];
 
-                if(in_array($tempType, $this->phoneTypes)){
-                    $type = $tempType;
-                } else if(\array_key_exists($tempType, $this->phoneTypes)){
-                    $type = $this->phoneTypes[$tempType];
-                } else {
-                    $type = static::OTHER_TYPE;
+                    if(in_array($tempType, $this->phoneTypes)){
+                        $type = $tempType;
+                    } else if(\array_key_exists($tempType, $this->phoneTypes)){
+                        $type = $this->phoneTypes[$tempType];
+                    } else {
+                        $type = static::OTHER_TYPE;
+                    }
+
+                    //@TODO look for existing type in the array already?
+                    $phone_numbers[$type] = $e164Phone;
                 }
-
-                //@TODO look for existing type in the array already?
-                $phone_numbers[$type] = $e164Phone;
             }
 
             $contact->phone_numbers = $phone_numbers;
