@@ -10,6 +10,7 @@ use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use JeroenDesloovere\VCard\VCardParser;
 
@@ -109,6 +110,7 @@ class ImportContactsJob implements ShouldQueue
      */
     public function handle()
     {
+        Log::debug("Import file: {$this->filepath}");
         $content = Storage::get($this->filepath);
         $this->createContactsFromVCardExport($content);
         Storage::delete($this->filepath);
