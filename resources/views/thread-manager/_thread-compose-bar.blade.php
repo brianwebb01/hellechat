@@ -11,11 +11,11 @@
 
 
 
-    <div class="relative flex">
+    <div class="relative pr-4">
 
-        <input @keyup.enter="sendMessage()" x-model="composeBodyText" :disabled="currentThread == null" type="text" placeholder="Write Something" class="focus:ring-indigo-500 focus:border-indigo-500 w-full pr-32 focus:outline-none focus:placeholder-gray-400 text-gray-600 placeholder-gray-300 pl-4 bg-white rounded-full py-3 border-gray-200" />
+        <textarea @keyup.enter="if (!$event.shiftKey) sendMessage();" :disabled="currentThread == null" x-model="composeBodyText" placeholder="Write Something" rows="10" cols="30" name="foo" id="bar" class="block w-full h-12 pr-24 pl-4 py-3 rounded-full resize-none  focus:ring-indigo-500 focus:border-indigo-500 focus:outline-none focus:placeholder-gray-400 text-gray-600 placeholder-gray-300 bg-white border border-gray-200">jazzy</textarea>
+
         <div class="absolute right-0 items-center inset-y-0 flex">
-
             <!-- attachment -->
             <button @click="openFileUpload();" :disabled="currentThread == null" type="button" class="disabled:opacity-70 disabled:pointer-events-none disabled:cursor-auto inline-flex items-center justify-center rounded-full h-10 w-10 transition duration-500 ease-in-out text-gray-500 hover:bg-gray-300 focus:outline-none">
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" class="h-6 w-6 text-gray-600">
@@ -40,12 +40,18 @@
             -->
 
 
+
+
             <!-- send button -->
-            <button @click="sendMessage()" :disabled="currentThread == null" type="button" class="disabled:opacity-70 disabled:pointer-events-none disabled:cursor-auto inline-flex items-center justify-center rounded-full h-12 w-12 transition duration-500 ease-in-out text-white bg-indigo-500 hover:bg-indigo-400 focus:outline-none">
+            <button @click="sendMessage()" :disabled="currentThread == null" type="button" class="z-10 disabled:opacity-70 disabled:pointer-events-none disabled:cursor-auto inline-flex items-center justify-center rounded-full h-12 w-12 transition duration-500 ease-in-out text-white bg-indigo-500 hover:bg-indigo-400 focus:outline-none">
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="h-6 w-6 transform rotate-90">
                     <path d="M10.894 2.553a1 1 0 00-1.788 0l-7 14a1 1 0 001.169 1.409l5-1.429A1 1 0 009 15.571V11a1 1 0 112 0v4.571a1 1 0 00.725.962l5 1.428a1 1 0 001.17-1.408l-7-14z"></path>
                 </svg>
             </button>
+
+            <!-- backer for opacity on send button -->
+            <button type="button" disabled="true" class="absolute z-0 right-0 rounded-full h-12 w-12 text-white bg-gray-50 focus:outline-none"></button>
+
         </div>
     </div>
 

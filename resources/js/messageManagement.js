@@ -291,6 +291,9 @@ window.manageMessages = function(queryString, authUserId)
 
         sendMessage: function()
         {
+            if(!this.composeBodyText && this.filesForUpload.length == 0)
+                return;
+
             let message = {};
 
             if(this.currentThread.is_new){
@@ -650,7 +653,7 @@ window.manageMessages = function(queryString, authUserId)
             let result = '';
 
             if(message.body != null){
-                result = `<p>${message.body}</p>`;
+                result = '<p>' + message.body.replace(/\n/g, "<br />") + '</p>';
             }
 
             if(message.media != null){
