@@ -150,15 +150,21 @@ class ImportContactsJob implements ShouldQueue
             if(property_exists($vcard, 'phone')){
                 foreach($vcard->phone as $vPhoneType => $number){
                     $tempType = \strtolower(explode(';', $vPhoneType)[0]);
-                    $tempNum = preg_replace('/[^0-9,.]+/', '', $number)[0];
+                    $tempNum = preg_replace('/[^0-9,\+]+/', '', $number)[0];
 
-                    $phoneUtil = \libphonenumber\PhoneNumberUtil::getInstance();
-                    try {
-                        $numberProto = $phoneUtil->parse($tempNum, config('app.phone_country'));
-                        $e164Phone = $phoneUtil->format($numberProto, \libphonenumber\PhoneNumberFormat::E164);
-                    } catch (\libphonenumber\NumberParseException $e) {
-                        Log::error("Phone number parse error for {$tempNum} with message: ". $e->getMessage());
-                        continue;
+                    //if the phone given starts with a "+" we'll not parse it at all
+                    //and just assume that it is in a country specific e164 format already
+                    if(\substr($tempNum, 0, 1) == '+'){
+                        $e164Phone = $tempNum;
+                    } else {
+                        $phoneUtil = \libphonenumber\PhoneNumberUtil::getInstance();
+                        try {
+                            $numberProto = $phoneUtil->parse($tempNum, config('app.phone_country'));
+                            $e164Phone = $phoneUtil->format($numberProto, \libphonenumber\PhoneNumberFormat::E164);
+                        } catch (\libphonenumber\NumberParseException $e) {
+                            Log::error("Phone number parse error for {$tempNum} with message: " . $e->getMessage());
+                            continue;
+                        }
                     }
 
 

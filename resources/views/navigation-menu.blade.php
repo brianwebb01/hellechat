@@ -1,12 +1,11 @@
-<nav x-data="navigationMenu()" x-init="initMenu()"
-    class="bg-white border-b border-gray-100">
+<nav x-data="navigationMenu()" x-init="initMenu()" class="bg-white border-b border-gray-100">
 
     <script>
-        function navigationMenu(){
+        function navigationMenu() {
             return {
                 open: false,
                 xNumOpen: false,
-                xNumLabel: null,
+                xNumLabel: 'All Numbers',
                 xNumActive: 'numbers-all',
 
                 initMenu: function() {
@@ -14,11 +13,11 @@
                         this.setActiveNumber();
                     });
 
-                    if(window.location.hash.substr(0,9) == '#numbers-'){
+                    if (window.location.hash.substr(0, 9) == '#numbers-') {
                         this.setActiveNumber();
                     }
                 },
-                setActiveNumber: function () {
+                setActiveNumber: function() {
                     this.xNumLabel = document.getElementById(window.location.hash.substr(1)).innerText.trim();
                 }
             }
@@ -104,6 +103,7 @@
                 @endif
 
                 <!-- number switcher -->
+                @if(request()->routeIs('ui.thread.index') || request()->routeIs('ui.voicemail.index'))
                 <div class="ml-3 relative">
                     <x-jet-dropdown align="right" width="48">
                         <x-slot name="trigger">
@@ -125,10 +125,11 @@
                             <x-jet-dropdown-link id="dt-numbers-{{ $number->id }}" href="#numbers-{{ $number->id }}">
                                 {{ $number->friendly_label }} ({{ $number->phone_number }})
                             </x-jet-dropdown-link>
-                        @endforeach
+                            @endforeach
                         </x-slot>
                     </x-jet-dropdown>
                 </div>
+                @endif
 
                 <!-- Settings Dropdown -->
                 <div class="ml-3 relative">
@@ -223,9 +224,11 @@
         </div>
     </div>
 
+    @if(request()->routeIs('ui.thread.index') || request()->routeIs('ui.voicemail.index'))
     <div class="w-full border-t b-gray-400 flex sm:hidden items-center">
         <p x-text="xNumLabel" class="m-auto text-sm text-gray-500">My fake Number (+15554441234)</p>
     </div>
+    @endif
 
     <!-- Responsive xNumber Menu -->
     <div :class="{'block': xNumOpen, 'hidden': ! xNumOpen}" class="hidden sm:hidden">
@@ -235,9 +238,9 @@
             </a>
 
             @foreach(auth()->user()->numbers as $number)
-                <a @click="xNumActive = $el.id; xNumOpen = false;"  id="numbers-{{$number->id}}" href="#numbers-{{$number->id}}" :class="xNumActive == $el.id ? 'block pl-3 pr-4 py-2 border-l-4 border-indigo-400 text-base font-medium text-indigo-700 bg-indigo-50 focus:outline-none focus:text-indigo-800 focus:bg-indigo-100 focus:border-indigo-700 transition' : 'block pl-3 pr-4 py-2 border-l-4 border-transparent text-base font-medium text-gray-600 hover:text-gray-800 hover:bg-gray-50 hover:border-gray-300 focus:outline-none focus:text-gray-800 focus:bg-gray-50 focus:border-gray-300 transition'">
-                    {{ $number->friendly_label }} ({{ $number->phone_number }})
-                </a>
+            <a @click="xNumActive = $el.id; xNumOpen = false;" id="numbers-{{$number->id}}" href="#numbers-{{$number->id}}" :class="xNumActive == $el.id ? 'block pl-3 pr-4 py-2 border-l-4 border-indigo-400 text-base font-medium text-indigo-700 bg-indigo-50 focus:outline-none focus:text-indigo-800 focus:bg-indigo-100 focus:border-indigo-700 transition' : 'block pl-3 pr-4 py-2 border-l-4 border-transparent text-base font-medium text-gray-600 hover:text-gray-800 hover:bg-gray-50 hover:border-gray-300 focus:outline-none focus:text-gray-800 focus:bg-gray-50 focus:border-gray-300 transition'">
+                {{ $number->friendly_label }} ({{ $number->phone_number }})
+            </a>
             @endforeach
         </div>
     </div>
