@@ -75,13 +75,13 @@ class ImportContactsJob implements ShouldQueue
         foreach($parser as $vcard){
             $contact = app(Contact::class);
 
-            if(property_exists($vcard, 'firstname'))
+            if(property_exists($vcard, 'firstname') && !empty($vcard->firstname))
                 $contact->first_name = $this->clean($vcard->firstname);
 
-            if(property_exists($vcard, 'lastname'))
+            if(property_exists($vcard, 'lastname') && !empty($vcard->lastname))
                 $contact->last_name = $this->clean($vcard->lastname);
 
-            if(property_exists($vcard, 'organization'))
+            if(property_exists($vcard, 'organization') && !empty($vcard->organization))
                 $contact->company = $this->clean($vcard->organization);
 
             if( !$contact->first_name &&
@@ -126,12 +126,14 @@ class ImportContactsJob implements ShouldQueue
         }
     }
 
-    public function clean($string)
+    public function clean($input)
     {
-        if(substr($string, -1) == ';'){
-            return $this->clean(substr($string, 0, \strlen($string) - 1) );
+        $output = $input;
+
+        if(substr($output, -1) == ';'){
+            return $this->clean(substr($output, 0, \strlen($output) - 1) );
         } else {
-            return $string;
+            return $output;
         }
     }
 }
