@@ -40,7 +40,9 @@ Route::group(['middleware' => ['auth:sanctum', 'verified']], function(){
 
 });
 
-Route::group(['middleware' => ['TwilioRequestValidator', 'RequiresUserHashId']], function () {
+//Route::group(['middleware' => ['TwilioRequestValidator', 'RequiresUserHashId']], function () {
+// temp remove TwilioRequestValidator till Issue #86 can be resolved
+Route::group(['middleware' => ['RequiresUserHashId']], function () {
 
     Route::post('webhooks/twilio/messaging/inbound/{userHashId}', [App\Http\Controllers\Services\Twilio\MessagingController::class, 'store'])
         ->name('webhooks.twilio.messaging');
