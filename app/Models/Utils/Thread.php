@@ -61,7 +61,7 @@ class Thread
             messages rdata on
                 rdata.read = 0 AND
                     (
-                        rdata.from IN(message_ids.from, message_ids.to) OR
+                        rdata.from IN(message_ids.from, message_ids.to) AND
                         rdata.to IN(message_ids.from, message_ids.to)
                     )
         group by
