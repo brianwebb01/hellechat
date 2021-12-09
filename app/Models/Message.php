@@ -95,4 +95,13 @@ class Message extends Model
             Storage::disk('public')->delete($del);
         }
     }
+
+    public function shouldNotify()
+    {
+        if($this->number->dnd_messages){
+            return $this->number->dnd_allow_contacts && $this->contact;
+        }
+
+        return true;
+    }
 }

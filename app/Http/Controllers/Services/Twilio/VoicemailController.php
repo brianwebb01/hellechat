@@ -25,16 +25,28 @@ class VoicemailController extends Controller
             return response('Number not found', 404);
         }
 
+        $voicemailGreetingUrl = route(
+            'webhooks.twilio.voice.greeting',
+            ['userHashId' => $request->route('userHashId')]
+        );
+
+        $contact = $number->user->contacts()
+            ->firstWhere('phone_numbers', 'like', '%' . $request->get('From') . '%');
+
         $response = new VoiceResponse();
-        $dial = $response->dial(null, [
-            'timeout' => 10,
-            'ringTone' => 'us',
-            'action' => route(
-                'webhooks.twilio.voice.greeting',
-                ['userHashId' => $request->route('userHashId')]
-            )
-        ]);
-        $dial->sip($number->sip_registration_url);
+
+        if($number->shouldRing($contact)){
+
+            $dial = $response->dial(null, [
+                'timeout' => 10,
+                'ringTone' => 'us',
+                'action' => $voicemailGreetingUrl
+            ]);
+            $dial->sip($number->sip_registration_url);
+
+        } else {
+            $response->redirect($voicemailGreetingUrl);
+        }
 
 
         return response($response)

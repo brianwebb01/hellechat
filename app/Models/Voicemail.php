@@ -50,4 +50,13 @@ class Voicemail extends Model
     {
         return $this->belongsTo(\App\Models\Contact::class);
     }
+
+    public function shouldNotify()
+    {
+        if ($this->number->dnd_voicemail) {
+            return $this->number->dnd_allow_contacts && $this->contact;
+        }
+
+        return true;
+    }
 }
