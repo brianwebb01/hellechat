@@ -17,8 +17,8 @@ class VoicemailObserver
      */
     public function created(Voicemail $voicemail)
     {
-        $user = $voicemail->user;
-        $user->notify(new VoicemailCreated($voicemail));
+        if($voicemail->shouldNotify())
+            $voicemail->user->notify(new VoicemailCreated($voicemail));
     }
 
     /**

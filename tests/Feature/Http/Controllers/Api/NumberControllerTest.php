@@ -54,6 +54,10 @@ class NumberControllerTest extends TestCase
                 ->has('data.0.sip_registration_url')
                 ->has('data.0.messaging_endpoint')
                 ->has('data.0.voice_endpoint')
+                ->has('data.0.dnd_calls')
+                ->has('data.0.dnd_voicemail')
+                ->has('data.0.dnd_messages')
+                ->has('data.0.dnd_allow_contacts')
                 ->has('links')
                 ->has('links.first')
                 ->has('links.last')
@@ -109,6 +113,10 @@ class NumberControllerTest extends TestCase
                 ->has('data.sip_registration_url')
                 ->has('data.messaging_endpoint')
                 ->has('data.voice_endpoint')
+                ->has('data.dnd_calls')
+                ->has('data.dnd_voicemail')
+                ->has('data.dnd_messages')
+                ->has('data.dnd_allow_contacts')
         );
     }
 
@@ -136,6 +144,10 @@ class NumberControllerTest extends TestCase
                 ->has('data.sip_registration_url')
                 ->has('data.messaging_endpoint')
                 ->has('data.voice_endpoint')
+                ->has('data.dnd_calls')
+                ->has('data.dnd_voicemail')
+                ->has('data.dnd_messages')
+                ->has('data.dnd_allow_contacts')
         );
     }
 
@@ -186,6 +198,10 @@ class NumberControllerTest extends TestCase
                 ->has('data.sip_registration_url')
                 ->has('data.messaging_endpoint')
                 ->has('data.voice_endpoint')
+                ->has('data.dnd_calls')
+                ->has('data.dnd_voicemail')
+                ->has('data.dnd_messages')
+                ->has('data.dnd_allow_contacts')
         );
 
         $this->assertEquals($this->user->id, $number->user_id);
