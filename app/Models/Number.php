@@ -22,6 +22,10 @@ class Number extends Model
         'sip_registration_url',
         'friendly_label',
         'external_identity',
+        'dnd_calls',
+        'dnd_voicemail',
+        'dnd_messages',
+        'dnd_allow_contacts'
     ];
 
     /**

@@ -1,18 +1,10 @@
-<div
-    x-cloak
-    x-show="formOpen"
-    x-data="serviceAccountForm({{ json_encode([
+<div x-cloak x-show="formOpen" x-data="serviceAccountForm({{ json_encode([
         'serviceAccountForm' => [
             'urls' => [
                 'index' => route('service-accounts.index')
             ],
         ]
-    ]) }})"
-    x-init="fetchServiceAccounts()"
-    class="fixed inset-0 overflow-hidden"
-    aria-labelledby="slide-over-title"
-    role="dialog"
-    aria-modal="true">
+    ]) }})" x-init="fetchServiceAccounts()" class="fixed inset-0 overflow-hidden" aria-labelledby="slide-over-title" role="dialog" aria-modal="true">
 
     <script src="{{ mix('js/serviceAccountForm.js') }}"></script>
 
@@ -114,6 +106,48 @@
                                             </div>
                                             <p x-show="errors.sip_registration_url" x-text="errors.sip_registration_url ? errors.sip_registration_url.join(', ') : ''" class="text-sm text-red-600"></p>
                                         </div>
+
+
+                                        <div>
+                                            <fieldset class="">
+                                                <legend class="">Do Not Disturb</legend>
+                                                <div class="divide-y divide-gray-200">
+                                                    <div class="relative flex items-start py-4">
+                                                        <div class="min-w-0 flex-1 text-sm">
+                                                            <label for="candidates" class="text-gray-500">Do not ring when a <span class="text-gray-700 font-medium ">call</span> comes in.</label>
+                                                        </div>
+                                                        <div class="ml-3 flex items-center h-5">
+                                                            <input x-model="currentRecord.dnd_calls" x-bind:checked="currentRecord.dnd_calls == 1" id="dnd_calls" name="dnd_calls" type="checkbox" class="focus:ring-indigo-500 h-4 w-4 text-indigo-600 border-gray-300 rounded">
+                                                        </div>
+                                                    </div>
+                                                    <div class="relative flex items-start py-4">
+                                                        <div class="min-w-0 flex-1 text-sm">
+                                                            <label for="candidates" class="text-gray-500">Do not provide <span class="text-gray-700 font-medium ">voicemail</span> notifications.</label>
+                                                        </div>
+                                                        <div class="ml-3 flex items-center h-5">
+                                                            <input x-model="currentRecord.dnd_voicemail" x-bind:checked="currentRecord.dnd_voicemail == 1" id="dnd_voicemail" name="dnd_voicemail" type="checkbox" class="focus:ring-indigo-500 h-4 w-4 text-indigo-600 border-gray-300 rounded">
+                                                        </div>
+                                                    </div>
+                                                    <div class="relative flex items-start py-4">
+                                                        <div class="min-w-0 flex-1 text-sm">
+                                                            <label for="candidates" class="text-gray-500">Do not provide <span class="text-gray-700 font-medium ">message</span> notifications.</label>
+                                                        </div>
+                                                        <div class="ml-3 flex items-center h-5">
+                                                            <input x-model="currentRecord.dnd_messages" x-bind:checked="currentRecord.dnd_messages == 1" id="dnd_messages" name="dnd_messages" type="checkbox" class="focus:ring-indigo-500 h-4 w-4 text-indigo-600 border-gray-300 rounded">
+                                                        </div>
+                                                    </div>
+                                                    <div class="relative flex items-start py-4">
+                                                        <div class="min-w-0 flex-1 text-sm">
+                                                            <label for="candidates" class="text-gray-500">Allow any <span class="text-gray-700 font-medium ">contacts</span> to break through DnD settings.</label>
+                                                        </div>
+                                                        <div class="ml-3 flex items-center h-5">
+                                                            <input x-model="currentRecord.dnd_allow_contacts" x-bind:checked="currentRecord.dnd_allow_contacts == 1" id="dnd_allow_contacts" name="dnd_allow_contacts" type="checkbox" class="focus:ring-indigo-500 h-4 w-4 text-indigo-600 border-gray-300 rounded">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </fieldset>
+                                        </div>
+
 
 
                                     </div>

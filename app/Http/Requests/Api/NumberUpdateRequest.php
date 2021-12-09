@@ -32,7 +32,11 @@ class NumberUpdateRequest extends FormRequest
             'phone_number' => ['string', 'max:15'],
             'friendly_label' => ['string', 'max:50'],
             'external_identity' => ['nullable'],
-            'sip_registration_url' => ['email']
+            'sip_registration_url' => ['email'],
+            'dnd_calls' => ['boolean', 'nullable'],
+            'dnd_voicemail' => ['boolean', 'nullable'],
+            'dnd_messages' => ['boolean', 'nullable'],
+            'dnd_allow_contacts' => ['boolean', 'nullable']
         ];
     }
 
