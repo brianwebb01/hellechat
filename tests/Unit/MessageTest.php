@@ -10,6 +10,7 @@ use App\Models\Number;
 use App\Models\User;
 use App\Notifications\InboundMessageCreated;
 use App\Services\Gotify\Client;
+use Database\Factories\NumberFactory;
 use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\Facades\Queue;
 use Mockery\MockInterface;
@@ -83,5 +84,76 @@ class MessageTest extends TestCase
 
     }
 
+
+    /** @test */
+    public function returns_positive_notification_intent_in_default()
+    {
+        $message = Message::factory()->create();
+        $this->assertFalse($message->number->dnd_messages);
+        $this->assertFalse($message->number->dnd_allow_contacts);
+        $this->assertTrue($message->shouldNotify());
+    }
+
+    /** @test */
+    public function returns_positive_notification_intent_in_default_allow_contact()
+    {
+        $number = Number::factory()->create([
+            'dnd_allow_contacts' => true
+        ]);
+        $message = Message::factory()->create([
+            'number_id' => $number->id
+        ]);
+        $this->assertFalse($message->number->dnd_messages);
+        $this->assertTrue($message->number->dnd_allow_contacts);
+        $this->assertTrue($message->shouldNotify());
+    }
+
+
+    /** @test  */
+    public function returns_positive_notification_intent_with_settings()
+    {
+        $number = Number::factory()->create([
+            'dnd_messages' => true,
+            'dnd_allow_contacts' => true
+        ]);
+        $message = Message::factory()->create([
+            'number_id' => $number->id
+        ]);
+        $this->assertTrue($message->number->dnd_messages);
+        $this->assertTrue($message->number->dnd_allow_contacts);
+        $this->assertTrue($message->shouldNotify());
+    }
+
+    /** @test */
+    public function returns_negative_notification_allowing_contact_but_no_contact()
+    {
+        $number = Number::factory()->create([
+            'dnd_messages' => true,
+            'dnd_allow_contacts' => true
+        ]);
+        $message = Message::factory()->create([
+            'number_id' => $number->id,
+            'contact_id' => null
+        ]);
+        $this->assertTrue($message->number->dnd_messages);
+        $this->assertTrue($message->number->dnd_allow_contacts);
+        $this->assertNull($message->contact);
+        $this->assertFalse($message->shouldNotify());
+    }
+
+    /** @test */
+    public function returns_negative_notification()
+    {
+        $number = Number::factory()->create([
+            'dnd_messages' => true
+        ]);
+        $message = Message::factory()->create([
+            'number_id' => $number->id
+        ]);
+        $this->assertTrue($message->number->dnd_messages);
+        $this->assertFalse($message->number->dnd_allow_contacts);
+        $this->assertNotNull($message->contact);
+        $this->assertFalse($message->shouldNotify());
+    }
 
 }

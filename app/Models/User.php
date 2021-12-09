@@ -87,7 +87,8 @@ class User extends Authenticatable
 
     public function voicemails()
     {
-        return $this->hasMany(Voicemail::class);
+        return $this->hasMany(Voicemail::class)
+            ->orderBy('created_at', 'desc');
     }
 
 }

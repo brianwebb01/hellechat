@@ -26,6 +26,10 @@ class NumberResource extends JsonResource
             'sip_registration_url' => $this->sip_registration_url,
             'messaging_endpoint' => null,
             'voice_endpoint' => null,
+            'dnd_calls' => $this->dnd_calls,
+            'dnd_voicemail' => $this->dnd_voicemail,
+            'dnd_messages' => $this->dnd_messages,
+            'dnd_allow_contacts' => $this->dnd_allow_contacts
         ];
 
         if($this->serviceAccount->provider == ServiceAccount::PROVIDER_TWILIO){

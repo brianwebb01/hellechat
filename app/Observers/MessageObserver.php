@@ -26,8 +26,8 @@ class MessageObserver
                 );
             }
         } elseif ($message->direction == Message::DIRECTION_IN){
-            $user = $message->user;
-            $user->notify(new InboundMessageCreated($message));
+            if($message->shouldNotify())
+                $message->user->notify(new InboundMessageCreated($message));
         }
     }
 

@@ -22,6 +22,10 @@ class Number extends Model
         'sip_registration_url',
         'friendly_label',
         'external_identity',
+        'dnd_calls',
+        'dnd_voicemail',
+        'dnd_messages',
+        'dnd_allow_contacts'
     ];
 
     /**
@@ -33,6 +37,10 @@ class Number extends Model
         'id' => 'integer',
         'user_id' => 'integer',
         'service_account_id' => 'integer',
+        'dnd_calls' => 'boolean',
+        'dnd_voicemail' => 'boolean',
+        'dnd_messages' => 'boolean',
+        'dnd_allow_contacts' => 'boolean'
     ];
 
 
@@ -54,5 +62,14 @@ class Number extends Model
     public function serviceAccount()
     {
         return $this->belongsTo(\App\Models\ServiceAccount::class);
+    }
+
+    public function shouldRing(Contact $contact = null)
+    {
+        if ($this->dnd_calls) {
+            return $this->dnd_allow_contacts && !\is_null($contact);
+        }
+
+        return true;
     }
 }
