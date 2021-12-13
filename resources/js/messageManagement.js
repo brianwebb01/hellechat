@@ -397,7 +397,7 @@ window.manageMessages = function(queryString, authUserId)
 
         afterMessagesAdded: function()
         {
-            if (this.messagesPage <= 1)
+            if (this.messagesPage < 3)
                 this.scrollMessagesToBottom();
             this.setupComposerEnviornment();
         },
