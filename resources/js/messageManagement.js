@@ -384,7 +384,7 @@ window.manageMessages = function(queryString, authUserId)
             this.loadMessages()
                 .then(json => {
                     this.lastMessagesPage = json.meta.last_page;
-                    json.data.forEach(item => this.messages.push(item));
+                    json.data.forEach(item => this.messages.unshift(item));
                     this.afterMessagesAdded();
                     this.messagesPage++;
                     if (this.messagesPage <= this.lastMessagesPage) {
