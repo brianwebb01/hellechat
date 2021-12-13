@@ -44,7 +44,7 @@ class ThreadController extends Controller
         $messages = $request->user()->messages()
             ->where('from', $phoneNumber)
             ->orWhere('to', $phoneNumber)
-            ->orderBy('created_at', 'asc')
+            ->orderBy('created_at', 'desc')
             ->paginate();
 
         return new MessageCollection($messages);
