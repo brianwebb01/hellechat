@@ -59,6 +59,7 @@
         <div class="col-span-6 sm:col-span-4">
             <x-jet-label for="email" value="{{ __('Email') }}" />
             <x-jet-input id="email" type="email" class="mt-1 block w-full" wire:model.defer="state.email" />
+            <span class="text-xs text-gray-400">Optional: Used with &quot;forgot password&quot; feature only.</span>
             <x-jet-input-error for="email" class="mt-2" />
         </div>
 
@@ -95,11 +96,11 @@
             <select name="time_zone" id="time_zone" class="rounded-md border-gray-300 mt-1 block w-full" wire:model.defer="state.time_zone">
                 <option value=""></option>
                 @foreach($timezones as $region => $list)
-                    <optgroup label="{{ $region }}">
-                        @foreach($list as $timezone => $name)
-                            <option value="{{ $timezone }}">{{ $name }}</option>
-                        @endforeach
-                    </optgroup>
+                <optgroup label="{{ $region }}">
+                    @foreach($list as $timezone => $name)
+                    <option value="{{ $timezone }}">{{ $name }}</option>
+                    @endforeach
+                </optgroup>
                 @endforeach
             </select>
             <x-jet-input-error for="time_zone" class="mt-2" />
