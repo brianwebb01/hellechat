@@ -24,11 +24,11 @@ Route::group(['middleware' => ['auth:sanctum']], function(){
 
     Route::get('threads/{phoneNumber}', [App\Http\Controllers\Api\ThreadController::class, 'show'])
         ->name('threads.show')
-        ->where('phoneNumber', '\+[1-9]\d{1,14}');
+        ->where('phoneNumber', '\+?[1-9]\d{1,14}');
 
     Route::delete('threads/{phoneNumber}', [App\Http\Controllers\Api\ThreadController::class, 'destroy'])
         ->name('threads.destroy')
-        ->where('phoneNumber', '\+[1-9]\d{1,14}');
+        ->where('phoneNumber', '\+?[1-9]\d{1,14}');
 
     Route::apiResource('numbers', App\Http\Controllers\Api\NumberController::class);
 
