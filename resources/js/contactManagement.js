@@ -89,7 +89,8 @@ window.manageContacts = function() {
             document.getElementById('import').click();
         },
 
-        searchContacts: function() {
+        searchContacts: async function() {
+
             if (this.unfilteredRecords.length == 0){
                 this.unfilteredRecords = this.records;
             }
@@ -97,20 +98,48 @@ window.manageContacts = function() {
             if(this.searchTerm == "" && this.unfilteredRecords.length > 0){
                 this.records = this.unfilteredRecords;
                 this.unfilteredRecords = [];
+                this.showInfiniteScroll = true;
                 this.regroupRecords();
                 return;
             }
 
-            this.records = this.unfilteredRecords;
+            const response = await fetch(this.urls.search_contacts, {
+                method: 'POST',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': this.csrfToken
+                },
+                body: JSON.stringify({ 'query': this.searchTerm })
 
-            const options = {
-                keys: ['first_name', 'last_name', 'company']
-            }
-            const fuse = new Fuse(this.records, options);
-            const result = fuse.search(this.searchTerm);
+            }).catch((err) => console.log(err));
 
-            this.records = result.map(i => i.item);
+            let json = await response.json();
+            this.showInfiniteScroll = false;
+            this.records = json.data;
             this.regroupRecords();
+
+            // if (this.unfilteredRecords.length == 0){
+            //     this.unfilteredRecords = this.records;
+            // }
+
+            // if(this.searchTerm == "" && this.unfilteredRecords.length > 0){
+            //     this.records = this.unfilteredRecords;
+            //     this.unfilteredRecords = [];
+            //     this.regroupRecords();
+            //     return;
+            // }
+
+            // this.records = this.unfilteredRecords;
+
+            // const options = {
+            //     keys: ['first_name', 'last_name', 'company']
+            // }
+            // const fuse = new Fuse(this.records, options);
+            // const result = fuse.search(this.searchTerm);
+
+            // this.records = result.map(i => i.item);
+            // this.regroupRecords();
         },
 
         regroupRecords: function() {

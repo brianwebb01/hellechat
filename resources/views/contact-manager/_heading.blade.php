@@ -13,7 +13,7 @@
             </div>
             <div class="mt-0 sm:mt-3 flex flex-wrap space-y-0  sm:space-x-3">
                 <div class="flex-1 w-full inline-flex">
-                    <input @search="searchContacts();" @keyup="searchContacts();" x-model="searchTerm" type="search" name="email" id="email" class="mt-0 sm:mt-0 h-10 focus:ring-indigo-500 focus:border-indigo-500 block w-full rounded-md sm:text-sm border-gray-300" placeholder="Search...">
+                    <input @search="searchContacts();" @keyup.debounce.500ms="searchContacts();" x-model="searchTerm" type="search" name="email" id="email" class="mt-0 sm:mt-0 h-10 focus:ring-indigo-500 focus:border-indigo-500 block w-full rounded-md sm:text-sm border-gray-300" placeholder="Search...">
                 </div>
 
                 <button type="button" @click="browseForContactImportFile();" title="Import Contacts" class=" ml-2 h-10 inline-flex items-center p-2 pr-3 pl-3 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-purple-600 hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500">

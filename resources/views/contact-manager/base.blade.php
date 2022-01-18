@@ -5,7 +5,8 @@
             'store' => route('contacts.store'),
             'update' => route('contacts.update', [123]),
             'delete' => route('contacts.destroy', [123]),
-            'import_contacts' => route('contacts-import.store')
+            'import_contacts' => route('contacts-import.store'),
+            'search_contacts' => route('contacts.search')
         ],
         'csrf_token' => csrf_token()
             ]) }} )" x-init="">
