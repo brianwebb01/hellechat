@@ -26,6 +26,7 @@ class UserSeeder extends Seeder
 
         $gotify = new CreateGotifyUserRecordsJob(new User);
         $user = User::factory()->create([
+            'name' => 'tester',
             'email' => 'test@test.com',
             'gotify_user_name' => $gotify->generateUserName(),
             'gotify_user_pass' => $gotify->generateUserPass(),
