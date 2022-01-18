@@ -25,7 +25,7 @@ class UserFactory extends Factory
     public function definition()
     {
         return [
-            'name' => $this->faker->unique()->userName(),
+            'name' => $this->faker->unique()->userName().'-'. Str::random(5),
             'email' => $this->faker->unique()->safeEmail(),
             'email_verified_at' => now(),
             'time_zone' => $this->faker->timezone,
