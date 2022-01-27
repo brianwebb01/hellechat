@@ -229,7 +229,7 @@ window.manageMessages = function(queryString, authUserId)
 
         composeNewMessageConfirm: function()
         {
-            let e164Regex = /\+[1-9]\d{1,14}/;
+            let e164Regex = /\+?[1-9]\d{1,14}/;
             if (
                 this.newMessageToSelection == null &&
                 this.newMessageToSearchString.match(e164Regex) != null
