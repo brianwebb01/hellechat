@@ -25,7 +25,7 @@
     "dependencies": {
         "@alpinejs/intersect": "^3.9.0",
         "dayjs": "^1.10.7",
-        "fuse.js": "^6.4.6",
+        "fuse.js": "^6.5.3",
         "turbolinks": "^5.2.0"
     }
 }
