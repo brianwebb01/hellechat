@@ -14,6 +14,7 @@ class ThreadController extends Controller
     public function index(Request $request)
     {
         session(['responsive-nav-heading' => 'Messages']);
+
         return view('thread-manager.base');
     }
 }

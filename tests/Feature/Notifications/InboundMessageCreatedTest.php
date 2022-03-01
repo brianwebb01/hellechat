@@ -30,7 +30,7 @@ class InboundMessageCreatedTest extends TestCase
             'contact_id' => $contact->id,
             'direction' => Message::DIRECTION_IN,
             'media' => [],
-            'num_media' => 0
+            'num_media' => 0,
         ]);
         $user = $message->user;
         $user->gotify_app_token = 'abc123';
@@ -41,11 +41,11 @@ class InboundMessageCreatedTest extends TestCase
         $this->assertTrue(in_array(GotifyChannel::class, $notification->via($user)));
 
         $data = $notification->toGotify($user);
-        $this->assertEquals("SMS from ". $contact->friendlyName(), $data['title']);
+        $this->assertEquals('SMS from '.$contact->friendlyName(), $data['title']);
         $this->assertEquals($message->body, $data['message']);
         $this->assertEquals(route('ui.thread.index', [
             'numberPhone' => $message->number->phone_number,
-            'with' => $message->from
+            'with' => $message->from,
         ]), $data['url']);
     }
 
@@ -59,7 +59,7 @@ class InboundMessageCreatedTest extends TestCase
             'direction' => Message::DIRECTION_IN,
             'media' => [$this->faker->imageUrl()],
             'num_media' => 1,
-            'body' => null
+            'body' => null,
         ]);
         $user = $message->user;
         $user->gotify_app_token = 'abc123';
@@ -70,11 +70,11 @@ class InboundMessageCreatedTest extends TestCase
         $this->assertTrue(in_array(GotifyChannel::class, $notification->via($user)));
 
         $data = $notification->toGotify($user);
-        $this->assertEquals("SMS from " . $message->from, $data['title']);
-        $this->assertEquals("Attachment", $data['message']);
+        $this->assertEquals('SMS from '.$message->from, $data['title']);
+        $this->assertEquals('Attachment', $data['message']);
         $this->assertEquals(route('ui.thread.index', [
             'numberPhone' => $message->number->phone_number,
-            'with' => $message->from
+            'with' => $message->from,
         ]), $data['url']);
     }
 
@@ -84,7 +84,7 @@ class InboundMessageCreatedTest extends TestCase
     public function gotify_channel_missing_as_expected()
     {
         $message = Message::factory()->create([
-            'direction' => Message::DIRECTION_IN
+            'direction' => Message::DIRECTION_IN,
         ]);
 
         //default user factory has no 'gotify_app_token'

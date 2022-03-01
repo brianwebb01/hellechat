@@ -17,8 +17,7 @@ class DeleteGotifyServerMessageJobTest extends TestCase
     {
         $mGotify = \Mockery::mock(
             Client::class,
-            fn (MockInterface $mock) =>
-            $mock->shouldReceive('deleteMessage')
+            fn (MockInterface $mock) => $mock->shouldReceive('deleteMessage')
             ->with(123)
         );
         $this->app->instance(Client::class, $mGotify);

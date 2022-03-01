@@ -17,8 +17,9 @@ class VoicemailObserver
      */
     public function created(Voicemail $voicemail)
     {
-        if($voicemail->shouldNotify())
+        if ($voicemail->shouldNotify()) {
             $voicemail->user->notify(new VoicemailCreated($voicemail));
+        }
     }
 
     /**
@@ -40,7 +41,7 @@ class VoicemailObserver
      */
     public function deleted(Voicemail $voicemail)
     {
-        if($voicemail->number->serviceAccount->provider == ServiceAccount::PROVIDER_TWILIO){
+        if ($voicemail->number->serviceAccount->provider == ServiceAccount::PROVIDER_TWILIO) {
             DeleteRemoteTwilioVoicemailJob::dispatch(
                 $voicemail->number->serviceAccount,
                 $voicemail->external_identity

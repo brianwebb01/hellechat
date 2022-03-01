@@ -20,14 +20,14 @@ class SweepGotifyServerMessagesTest extends TestCase
     {
         User::where('id', '>', 0)->delete();
         User::factory()->create([
-            'gotify_client_token' => "c_token_123",
-            'gotify_app_id' => 123
+            'gotify_client_token' => 'c_token_123',
+            'gotify_app_id' => 123,
         ]);
 
-        $knownDate = Carbon::parse("2018-02-27T19:36:10.5045044+01:00");
+        $knownDate = Carbon::parse('2018-02-27T19:36:10.5045044+01:00');
         Carbon::setTestNow($knownDate);
 
-        $mGotify = \Mockery::mock(Client::class, function(MockInterface $mock){
+        $mGotify = \Mockery::mock(Client::class, function (MockInterface $mock) {
             $mock->shouldReceive('getApplicationMessages')
                 ->once()
                 ->with(123, 100)
@@ -82,23 +82,22 @@ class SweepGotifyServerMessagesTest extends TestCase
         $cmd->handle();
 
         Queue::assertPushed(DeleteGotifyServerMessageJob::class, 1);
-        Queue::assertPushed(function(DeleteGotifyServerMessageJob $job){
+        Queue::assertPushed(function (DeleteGotifyServerMessageJob $job) {
             return $job->clientToken == 'c_token_123' &&
                 $job->messageId == 25;
         });
     }
-
 
     /** @test */
     public function command_uses_pagination_as_expected()
     {
         User::where('id', '>', 0)->delete();
         User::factory()->create([
-            'gotify_client_token' => "c_token_123",
-            'gotify_app_id' => 123
+            'gotify_client_token' => 'c_token_123',
+            'gotify_app_id' => 123,
         ]);
 
-        $knownDate = Carbon::parse("2018-02-27T19:36:10.5045044+01:00");
+        $knownDate = Carbon::parse('2018-02-27T19:36:10.5045044+01:00');
         Carbon::setTestNow($knownDate);
 
         $mGotify = \Mockery::mock(Client::class, function (MockInterface $mock) {

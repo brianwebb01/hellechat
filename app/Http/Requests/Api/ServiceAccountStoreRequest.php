@@ -7,7 +7,6 @@ use Illuminate\Validation\Rule;
 
 class ServiceAccountStoreRequest extends ServiceAccountUpdateRequest
 {
-
     /**
      * Get the validation rules that apply to the request.
      *

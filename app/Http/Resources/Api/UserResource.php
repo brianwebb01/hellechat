@@ -22,16 +22,14 @@ class UserResource extends JsonResource
             'email' => $user->email,
             'twilio_messaging_endpoint' => route('webhooks.twilio.messaging', ['userHashId' => $user->getHashId()]),
             'twilio_voice_endpoints' => $user->numbers->map(
-                fn ($number) =>
-                [
-                    $number->phone_number =>
-                    route('webhooks.twilio.voice', [
+                fn ($number) => [
+                    $number->phone_number => route('webhooks.twilio.voice', [
                         'userHashId' => $user->getHashId(),
-                        'numberHashId' => $number->getHashId()
-                    ])
+                        'numberHashId' => $number->getHashId(),
+                    ]),
                 ]
             )->flatMap(fn ($a) => $a),
-            'created_at' => $user->created_at->timezone($user->time_zone)->format(\DateTime::ISO8601)
+            'created_at' => $user->created_at->timezone($user->time_zone)->format(\DateTime::ISO8601),
         ];
     }
 }

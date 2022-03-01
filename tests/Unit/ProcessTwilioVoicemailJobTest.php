@@ -2,7 +2,6 @@
 
 namespace Tests\Unit;
 
-use Tests\TestCase;
 use App\Jobs\ProcessTwilioVoicemailJob;
 use App\Models\Contact;
 use App\Models\Number;
@@ -12,9 +11,10 @@ use Illuminate\Foundation\Testing\WithFaker;
 use Mockery;
 use Mockery\Mock;
 use Mockery\MockInterface;
-use Twilio\Rest\Client;
+use Tests\TestCase;
 use Twilio\Rest\Api\V2010\Account\RecordingContext;
 use Twilio\Rest\Api\V2010\Account\RecordingInstance;
+use Twilio\Rest\Client;
 
 class ProcessTwilioVoicemailJobTest extends TestCase
 {
@@ -37,7 +37,7 @@ class ProcessTwilioVoicemailJobTest extends TestCase
         ]);
         $contact = Contact::factory()->create([
             'user_id' => $user->id,
-            'phone_numbers' => ['mobile' => $this->faker->e164PhoneNumber()]
+            'phone_numbers' => ['mobile' => $this->faker->e164PhoneNumber()],
         ]);
         $recordingSid = $this->faker->regexify('[A-Za-z0-9]{15}');
 
@@ -46,16 +46,14 @@ class ProcessTwilioVoicemailJobTest extends TestCase
             'To' => $number->phone_number,
             'TranscriptionText' => 'howdy partner',
             'RecordingUrl' => $this->faker->imageUrl,
-            'RecordingSid' => $recordingSid
+            'RecordingSid' => $recordingSid,
         ];
 
-        $mClient = Mockery::mock(Client::class, fn (MockInterface $mock) =>
-            $mock->shouldReceive('recordings')
+        $mClient = Mockery::mock(Client::class, fn (MockInterface $mock) => $mock->shouldReceive('recordings')
                 ->once()
                 ->with($recordingSid)
                 ->andReturn(
-                    Mockery::mock(RecordingContext::class, fn (MockInterface $mRecordingContext) =>
-                        $mRecordingContext->shouldReceive('fetch')
+                    Mockery::mock(RecordingContext::class, fn (MockInterface $mRecordingContext) => $mRecordingContext->shouldReceive('fetch')
                             ->once()
                             ->andReturn(
                                 Mockery::mock(RecordingInstance::class, function (MockInterface $mRecordingInstance) {
@@ -65,8 +63,7 @@ class ProcessTwilioVoicemailJobTest extends TestCase
                     )
                 )
         );
-        $mServiceAccount = Mockery::mock(ServiceAccount::class, fn(MockInterface $mock) =>
-            $mock->shouldReceive('getProviderClient')
+        $mServiceAccount = Mockery::mock(ServiceAccount::class, fn (MockInterface $mock) => $mock->shouldReceive('getProviderClient')
                 ->andReturn($mClient)
         );
         $number->serviceAccount = $mServiceAccount;

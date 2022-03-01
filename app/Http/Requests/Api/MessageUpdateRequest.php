@@ -24,7 +24,7 @@ class MessageUpdateRequest extends FormRequest
     public function rules()
     {
         return [
-            'read' => ['boolean', 'required']
+            'read' => ['boolean', 'required'],
         ];
     }
 }

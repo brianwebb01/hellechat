@@ -2,10 +2,10 @@
 
 namespace Database\Factories;
 
-use Illuminate\Database\Eloquent\Factories\Factory;
-use Illuminate\Support\Str;
 use App\Models\Contact;
 use App\Models\User;
+use Illuminate\Database\Eloquent\Factories\Factory;
+use Illuminate\Support\Str;
 
 class ContactFactory extends Factory
 {
@@ -23,16 +23,17 @@ class ContactFactory extends Factory
      */
     public function definition()
     {
-        $coRand = rand(0,2);
-        if($coRand == 2){
+        $coRand = rand(0, 2);
+        if ($coRand == 2) {
             $first_name = null;
             $last_name = null;
             $company = $this->faker->company;
         } else {
             $first_name = $this->faker->firstName;
             $last_name = rand(0, 4) == 0 ? null : $this->faker->lastName;
-            $company = rand(0,1) == 0 ? $this->faker->company : null;
+            $company = rand(0, 1) == 0 ? $this->faker->company : null;
         }
+
         return [
             'user_id' => User::factory(),
             'first_name' => $first_name,

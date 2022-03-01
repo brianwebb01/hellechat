@@ -13,8 +13,7 @@ use Illuminate\Support\Facades\Route;
 | is assigned the "api" middleware group. Enjoy building your API!
 |
 */
-Route::group(['middleware' => ['auth:sanctum']], function(){
-
+Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::get('user', [App\Http\Controllers\Api\UserController::class, 'show'])
         ->name('user');
 
@@ -42,5 +41,4 @@ Route::group(['middleware' => ['auth:sanctum']], function(){
     Route::apiResource('voicemails', App\Http\Controllers\Api\VoicemailController::class)->except('store', 'update');
 
     Route::apiResource('messages', App\Http\Controllers\Api\MessageController::class)->only('store', 'update');
-
 });

@@ -19,15 +19,16 @@ class MessageObserver
      */
     public function created(Message $message)
     {
-        if($message->direction == Message::DIRECTION_OUT){
-            if($message->number->serviceAccount->provider == ServiceAccount::PROVIDER_TWILIO){
+        if ($message->direction == Message::DIRECTION_OUT) {
+            if ($message->number->serviceAccount->provider == ServiceAccount::PROVIDER_TWILIO) {
                 ProcessOutboundTwilioMessageJob::dispatch(
                     $message->number->serviceAccount, $message
                 );
             }
-        } elseif ($message->direction == Message::DIRECTION_IN){
-            if($message->shouldNotify())
+        } elseif ($message->direction == Message::DIRECTION_IN) {
+            if ($message->shouldNotify()) {
                 $message->user->notify(new InboundMessageCreated($message));
+            }
         }
     }
 

@@ -27,7 +27,7 @@ class NumberUpdateRequest extends FormRequest
         return [
             'service_account_id' => [
                 'integer',
-                new ServiceAccountOwnershipRequired
+                new ServiceAccountOwnershipRequired,
             ],
             'phone_number' => ['string', 'max:15'],
             'friendly_label' => ['string', 'max:50'],
@@ -36,14 +36,14 @@ class NumberUpdateRequest extends FormRequest
             'dnd_calls' => ['boolean', 'nullable'],
             'dnd_voicemail' => ['boolean', 'nullable'],
             'dnd_messages' => ['boolean', 'nullable'],
-            'dnd_allow_contacts' => ['boolean', 'nullable']
+            'dnd_allow_contacts' => ['boolean', 'nullable'],
         ];
     }
 
     public function messages()
     {
         return [
-            'sip_registration_url.email' => 'Should be in the format username@sip-registration-domain.com'
+            'sip_registration_url.email' => 'Should be in the format username@sip-registration-domain.com',
         ];
     }
 }

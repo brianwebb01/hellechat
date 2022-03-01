@@ -33,7 +33,7 @@ class VoicemailCreatedTest extends TestCase
     {
         $contact = Contact::factory()->create();
         $voicemail = Voicemail::factory()->create([
-            'contact_id' => $contact->id
+            'contact_id' => $contact->id,
         ]);
         $user = $voicemail->user;
         $user->gotify_app_token = 'abc123';
@@ -44,11 +44,11 @@ class VoicemailCreatedTest extends TestCase
         $this->assertTrue(in_array(GotifyChannel::class, $notification->via($user)));
 
         $data = $notification->toGotify($user);
-        $this->assertEquals("Voicemail from " . $contact->friendlyName(), $data['title']);
+        $this->assertEquals('Voicemail from '.$contact->friendlyName(), $data['title']);
         $this->assertEquals($voicemail->transcription, $data['message']);
         $this->assertEquals(route('ui.thread.index', [
             'numberPhone' => $voicemail->number->phone_number,
-            'with' => $voicemail->from
+            'with' => $voicemail->from,
         ]), $data['url']);
     }
 
@@ -58,7 +58,7 @@ class VoicemailCreatedTest extends TestCase
     public function notification_functions_as_expected_w_no_contact()
     {
         $voicemail = Voicemail::factory()->create([
-            'contact_id' => null
+            'contact_id' => null,
         ]);
         $user = $voicemail->user;
         $user->gotify_app_token = 'abc123';
@@ -69,11 +69,11 @@ class VoicemailCreatedTest extends TestCase
         $this->assertTrue(in_array(GotifyChannel::class, $notification->via($user)));
 
         $data = $notification->toGotify($user);
-        $this->assertEquals("Voicemail from " . $voicemail->from, $data['title']);
+        $this->assertEquals('Voicemail from '.$voicemail->from, $data['title']);
         $this->assertEquals($voicemail->transcription, $data['message']);
         $this->assertEquals(route('ui.thread.index', [
             'numberPhone' => $voicemail->number->phone_number,
-            'with' => $voicemail->from
+            'with' => $voicemail->from,
         ]), $data['url']);
     }
 }

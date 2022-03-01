@@ -29,16 +29,16 @@ class NumberResource extends JsonResource
             'dnd_calls' => $this->dnd_calls,
             'dnd_voicemail' => $this->dnd_voicemail,
             'dnd_messages' => $this->dnd_messages,
-            'dnd_allow_contacts' => $this->dnd_allow_contacts
+            'dnd_allow_contacts' => $this->dnd_allow_contacts,
         ];
 
-        if($this->serviceAccount->provider == ServiceAccount::PROVIDER_TWILIO){
+        if ($this->serviceAccount->provider == ServiceAccount::PROVIDER_TWILIO) {
             $data['messaging_endpoint'] = route('webhooks.twilio.messaging', [
-                'userHashId' => $this->user->getHashId()
+                'userHashId' => $this->user->getHashId(),
             ]);
             $data['voice_endpoint'] = route('webhooks.twilio.voice', [
-                    'userHashId' => $this->user->getHashId(),
-                    'numberHashId' => $this->getHashId()
+                'userHashId' => $this->user->getHashId(),
+                'numberHashId' => $this->getHashId(),
             ]);
         }
 

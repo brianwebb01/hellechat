@@ -15,6 +15,7 @@ class DeleteRemoteTwilioVoicemailJob implements ShouldQueue
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
     public $serviceAccount;
+
     public $provider_identity;
 
     /**

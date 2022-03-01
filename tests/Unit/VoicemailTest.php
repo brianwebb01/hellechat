@@ -21,26 +21,25 @@ class VoicemailTest extends TestCase
     public function returns_positive_notification_intent_in_default_allow_contact()
     {
         $number = Number::factory()->create([
-            'dnd_allow_contacts' => true
+            'dnd_allow_contacts' => true,
         ]);
         $voicemail = Voicemail::factory()->create([
-            'number_id' => $number->id
+            'number_id' => $number->id,
         ]);
         $this->assertFalse($voicemail->number->dnd_voicemail);
         $this->assertTrue($voicemail->number->dnd_allow_contacts);
         $this->assertTrue($voicemail->shouldNotify());
     }
 
-
     /** @test  */
     public function returns_positive_notification_intent_with_settings()
     {
         $number = Number::factory()->create([
             'dnd_voicemail' => true,
-            'dnd_allow_contacts' => true
+            'dnd_allow_contacts' => true,
         ]);
         $voicemail = Voicemail::factory()->create([
-            'number_id' => $number->id
+            'number_id' => $number->id,
         ]);
         $this->assertTrue($voicemail->number->dnd_voicemail);
         $this->assertTrue($voicemail->number->dnd_allow_contacts);
@@ -52,11 +51,11 @@ class VoicemailTest extends TestCase
     {
         $number = Number::factory()->create([
             'dnd_voicemail' => true,
-            'dnd_allow_contacts' => true
+            'dnd_allow_contacts' => true,
         ]);
         $voicemail = Voicemail::factory()->create([
             'number_id' => $number->id,
-            'contact_id' => null
+            'contact_id' => null,
         ]);
         $this->assertTrue($voicemail->number->dnd_voicemail);
         $this->assertTrue($voicemail->number->dnd_allow_contacts);
@@ -68,10 +67,10 @@ class VoicemailTest extends TestCase
     public function returns_negative_notification()
     {
         $number = Number::factory()->create([
-            'dnd_voicemail' => true
+            'dnd_voicemail' => true,
         ]);
         $voicemail = Voicemail::factory()->create([
-            'number_id' => $number->id
+            'number_id' => $number->id,
         ]);
         $this->assertTrue($voicemail->number->dnd_voicemail);
         $this->assertFalse($voicemail->number->dnd_allow_contacts);

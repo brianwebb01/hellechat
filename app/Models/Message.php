@@ -12,17 +12,27 @@ class Message extends Model
     use HasFactory;
 
     public const DIRECTION_OUT = 'outbound';
+
     public const DIRECTION_IN = 'inbound';
 
     public const STATUS_LOCAL_CREATED = 'local-created';
+
     public const STATUS_ACCEPTED = 'accepted';
+
     public const STATUS_QUEUED = 'queued';
+
     public const STATUS_SENDING = 'sending';
+
     public const STATUS_SENT = 'sent';
+
     public const STATUS_DELIVERY_UNKNOWN = 'delivery_unknown';
+
     public const STATUS_DELIVERED = 'delivered';
+
     public const STATUS_UNDELIVERED = 'undelivered';
+
     public const STATUS_FAILED = 'failed';
+
     public const STATUS_RECEIVED = 'received';
 
     /**
@@ -43,7 +53,7 @@ class Message extends Model
         'external_identity',
         'external_date_created',
         'external_date_updated',
-        'read'
+        'read',
     ];
 
     /**
@@ -61,9 +71,8 @@ class Message extends Model
         'media' => 'array',
         'external_date_created' => 'datetime',
         'external_date_updated' => 'datetime',
-        'read' => 'boolean'
+        'read' => 'boolean',
     ];
-
 
     public function user()
     {
@@ -90,7 +99,7 @@ class Message extends Model
         //get the prefix that should have been added to the path when
         //saved as a URL
         $prefix = str_replace('foo/bar', '', Storage::url('foo/bar'));
-        foreach($this->media as $file){
+        foreach ($this->media as $file) {
             $del = str_replace($prefix, '', $file);
             Storage::disk('public')->delete($del);
         }
@@ -98,7 +107,7 @@ class Message extends Model
 
     public function shouldNotify()
     {
-        if($this->number->dnd_messages){
+        if ($this->number->dnd_messages) {
             return $this->number->dnd_allow_contacts && $this->contact;
         }
 

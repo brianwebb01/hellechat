@@ -7,7 +7,6 @@ use Illuminate\Support\Facades\DB;
 
 class Thread
 {
-
     /**
      * Function to return an array of message IDs that are
      * the most recent message to / from a particular phone number and
@@ -73,7 +72,6 @@ class Thread
         return json_decode(json_encode(DB::select($sql)), true);
     }
 
-
     /**
      * Function to add the number of unread messages to an already
      * processed request for thread data
@@ -86,15 +84,13 @@ class Thread
     {
         $readData = collect($data);
 
-        for($i=0; $i < count($array['data']); $i++)
-        {
+        for ($i = 0; $i < count($array['data']); $i++) {
             $read = $readData->where('id', $array['data'][$i]['id'])->pluck('unread')->first();
             $array['data'][$i]['unread'] = $read;
         }
 
         return $array;
     }
-
 
     /**
      * Function to take a paginated response that has been
@@ -108,10 +104,9 @@ class Thread
         return [
             'data' => static::formatApiResponseData($array['data']),
             'links' => static::formatApiResponseLinks($array),
-            'meta' => static::formatApiResponseMeta($array)
+            'meta' => static::formatApiResponseMeta($array),
         ];
     }
-
 
     /**
      * Function to take paginated response data and format it similar to
@@ -130,10 +125,9 @@ class Thread
             'path' => $array['path'],
             'per_page' => $array['per_page'],
             'to' => $array['to'],
-            'total' => $array['total']
+            'total' => $array['total'],
         ];
     }
-
 
     /**
      * Function to take paginated response data and format it similar to
@@ -148,10 +142,9 @@ class Thread
             'first' => $array['first_page_url'],
             'last' => $array['last_page_url'],
             'prev' => $array['prev_page_url'],
-            'next' => $array['next_page_url']
+            'next' => $array['next_page_url'],
         ];
     }
-
 
     /**
      * Thread formatting of 'data' for api response
@@ -161,7 +154,7 @@ class Thread
      */
     public static function formatApiResponseData($data)
     {
-        return array_map(function($m){
+        return array_map(function ($m) {
             $return = [];
 
             $return['id'] = $m['id'];
@@ -169,15 +162,17 @@ class Thread
             $return['number_id'] = $m['number_id'];
             $return['number_phone_number'] = $m['number']['phone_number'];
 
-            if ($m['number']['phone_number'] == $m['from'])
+            if ($m['number']['phone_number'] == $m['from']) {
                 $return['phone_number'] = $m['to'];
-            else
+            } else {
                 $return['phone_number'] = $m['from'];
+            }
 
-            if (is_null($m['body']) && $m['num_media'] > 0)
+            if (is_null($m['body']) && $m['num_media'] > 0) {
                 $return['preview'] = $m['media'][0];
-            else
+            } else {
                 $return['preview'] = $m['body'];
+            }
 
             $return['contact'] = $m['contact'];
             $return['last_updated_at'] = \Carbon\Carbon::parse($m['created_at'])

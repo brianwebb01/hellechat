@@ -10,8 +10,8 @@ use App\Models\Thread;
 use App\Models\User;
 use Database\Seeders\ThreadSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Support\Facades\Queue;
 use Illuminate\Foundation\Testing\WithFaker;
+use Illuminate\Support\Facades\Queue;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Testing\Fluent\AssertableJson;
 use Tests\TestCase;
@@ -31,7 +31,6 @@ class ThreadControllerTest extends TestCase
         $this->user = User::factory()->create();
     }
 
-
     /**
      * @test
      */
@@ -41,14 +40,14 @@ class ThreadControllerTest extends TestCase
         with(new ThreadSeeder)->seedThread($this->user, false, 10, 7);
 
         //create 5 contacts, each with 10 message thread
-        foreach (range(0, 4) as $c)
+        foreach (range(0, 4) as $c) {
             with(new ThreadSeeder)->seedThread($this->user, true, 10);
+        }
 
         $response = $this->actingAs($this->user)->getJson(route('threads.index'));
 
         $response->assertOk();
-        $response->assertJson(fn (AssertableJson $json) =>
-            $json->has('data',6)
+        $response->assertJson(fn (AssertableJson $json) => $json->has('data', 6)
                 ->has('data.0.id')
                 ->has('data.0.unread')
                 ->has('data.0.number_id')
@@ -74,7 +73,6 @@ class ThreadControllerTest extends TestCase
         );
     }
 
-
     /**
      * @test
      */
@@ -87,7 +85,7 @@ class ThreadControllerTest extends TestCase
             ->getJson(route('threads.show', ['phoneNumber' => $contactNumber]));
 
         $response->assertOk();
-        $response->assertJson(function(AssertableJson $json){
+        $response->assertJson(function (AssertableJson $json) {
             $json->has('data')
                 ->has('data.0.id')
                 ->has('data.0.number_id')
@@ -124,7 +122,6 @@ class ThreadControllerTest extends TestCase
                 ->has('meta.total');
         });
     }
-
 
     /**
      * @test

@@ -15,6 +15,7 @@ class DeleteGotifyServerMessageJob implements ShouldQueue
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
     public $clientToken;
+
     public $messageId;
 
     /**

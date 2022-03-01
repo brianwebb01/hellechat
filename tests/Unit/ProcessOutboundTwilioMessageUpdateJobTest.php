@@ -15,13 +15,13 @@ class ProcessOutboundTwilioMessageUpdateJobTest extends TestCase
     public function updates_message_status_as_expected()
     {
         $message = Message::factory()->make([
-            'status' => Message::STATUS_LOCAL_CREATED
+            'status' => Message::STATUS_LOCAL_CREATED,
         ]);
         $message->saveQuietly();
 
         $job = new ProcessOutboundTwilioMessageUpdateJob([
             'MessageSid' => $message->external_identity,
-            'MessageStatus' => Message::STATUS_DELIVERED
+            'MessageStatus' => Message::STATUS_DELIVERED,
         ]);
         $job->handle();
 

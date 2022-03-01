@@ -22,7 +22,7 @@ class DisconnectContactFromVoicemailsJobTest extends TestCase
         Voicemail::factory()->count(5)->create(['user_id' => $user->id]);
         Voicemail::factory()->count(5)->create([
             'user_id' => $user->id,
-            'contact_id' => $contact->id
+            'contact_id' => $contact->id,
         ]);
 
         $this->assertEquals(10, $user->voicemails()->count());

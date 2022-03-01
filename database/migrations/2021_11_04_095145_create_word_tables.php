@@ -157,7 +157,7 @@ class CreateWordTables extends Migration
             ['word' => 'Suspicious'],
             ['word' => 'Ungrounded'],
             ['word' => 'Unsure'],
-            ['word' => 'Worried']
+            ['word' => 'Worried'],
         ]);
 
         DB::table('words_animals')->insert([
@@ -518,7 +518,7 @@ class CreateWordTables extends Migration
             ['word' => 'Wren'],
             ['word' => 'Xerinae'],
             ['word' => 'Yak'],
-            ['word' => 'Zebra']
+            ['word' => 'Zebra'],
         ]);
     }
 

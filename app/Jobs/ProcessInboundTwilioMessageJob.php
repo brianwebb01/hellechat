@@ -37,8 +37,9 @@ class ProcessInboundTwilioMessageJob implements ShouldQueue
         $number = Number::wherePhoneNumber($this->input['To'])
             ->first();
 
-        if(is_null($number)){
-            Log::error("No number record found for ". $this->intput['To']);
+        if (is_null($number)) {
+            Log::error('No number record found for '.$this->intput['To']);
+
             return;
         }
 
@@ -54,7 +55,7 @@ class ProcessInboundTwilioMessageJob implements ShouldQueue
         ];
 
         $contact = $number->user->contacts()
-            ->firstWhere('phone_numbers', 'like', '%' . $this->input['From'] . '%');
+            ->firstWhere('phone_numbers', 'like', '%'.$this->input['From'].'%');
 
         $message = new Message($data);
         $message->number_id = $number->id;
@@ -81,7 +82,7 @@ class ProcessInboundTwilioMessageJob implements ShouldQueue
                 $contentTypeStr = \is_array($headers['Content-Type'])
                     ? implode(';', $headers['Content-Type'])
                     : $headers['Content-Type'];
-                $url.= (\stripos($url, '?') == false ? '?' : '&') . 'Content-Type=' . $contentTypeStr;
+                $url .= (\stripos($url, '?') == false ? '?' : '&').'Content-Type='.$contentTypeStr;
 
                 $media[] = $url;
             }

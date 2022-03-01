@@ -2,13 +2,13 @@
 
 namespace Database\Factories;
 
-use Illuminate\Database\Eloquent\Factories\Factory;
-use Illuminate\Support\Str;
 use App\Models\Contact;
 use App\Models\Message;
 use App\Models\Number;
 use App\Models\ServiceAccount;
 use App\Models\User;
+use Illuminate\Database\Eloquent\Factories\Factory;
+use Illuminate\Support\Str;
 
 class MessageFactory extends Factory
 {
@@ -26,7 +26,8 @@ class MessageFactory extends Factory
      */
     public function definition()
     {
-        $mediaArray = collect(rand(0,2))->map(fn($i) => $this->faker->imageUrl())->toArray();
+        $mediaArray = collect(rand(0, 2))->map(fn ($i) => $this->faker->imageUrl())->toArray();
+
         return [
             'user_id' => User::factory(),
             'number_id' => Number::factory(),
@@ -44,7 +45,7 @@ class MessageFactory extends Factory
             'external_identity' => $this->faker->word,
             'external_date_created' => $this->faker->dateTime(),
             'external_date_updated' => $this->faker->dateTime(),
-            'read' => true
+            'read' => true,
         ];
     }
 }

@@ -52,10 +52,10 @@ class Contact extends Model
     public function friendlyName()
     {
         if ($this->first_name && $this->last_name) {
-            return $this->first_name . ' ' . $this->last_name;
-        } else if ($this->first_name && !$this->last_name) {
+            return $this->first_name.' '.$this->last_name;
+        } elseif ($this->first_name && ! $this->last_name) {
             return $this->first_name;
-        } else if (!$this->first_name && !$this->last_name) {
+        } elseif (! $this->first_name && ! $this->last_name) {
             return $this->company;
         }
     }

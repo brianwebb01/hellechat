@@ -17,8 +17,7 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::group(['middleware' => ['auth:sanctum']], function(){
-
+Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::get('/dashboard', function () {
         return view('dashboard');
     })->name('dashboard');
@@ -37,13 +36,11 @@ Route::group(['middleware' => ['auth:sanctum']], function(){
 
     Route::get('numbers', [App\Http\Controllers\NumberController::class, 'index'])
         ->name('ui.numbers.index');
-
 });
 
 //Route::group(['middleware' => ['TwilioRequestValidator', 'RequiresUserHashId']], function () {
 // temp remove TwilioRequestValidator till Issue #86 can be resolved
 Route::group(['middleware' => ['RequiresUserHashId']], function () {
-
     Route::post('webhooks/twilio/messaging/inbound/{userHashId}', [App\Http\Controllers\Services\Twilio\MessagingController::class, 'store'])
         ->name('webhooks.twilio.messaging');
 

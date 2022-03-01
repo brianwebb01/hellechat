@@ -16,7 +16,7 @@ class DatabaseSeeder extends Seeder
     public function run()
     {
         $ed = User::getEventDispatcher();
-        $ed->forget('eloquent.created: '. User::class);
+        $ed->forget('eloquent.created: '.User::class);
 
         $broadcastDriver = config('broadcasting.default');
         config('broadcasting.default', 'null');
@@ -28,7 +28,7 @@ class DatabaseSeeder extends Seeder
             NumberSeeder::class,
             ServiceAccountSeeder::class,
             VoicemailSeeder::class,
-            ThreadSeeder::class
+            ThreadSeeder::class,
         ]);
 
         User::observe(UserObserver::class);

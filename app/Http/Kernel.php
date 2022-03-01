@@ -64,6 +64,6 @@ class Kernel extends HttpKernel
         'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
         'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
         'TwilioRequestValidator' => \App\Http\Middleware\Services\Twilio\RequestValidator::class,
-        'RequiresUserHashId' => \App\Http\Middleware\RequiresUserHashId::class
+        'RequiresUserHashId' => \App\Http\Middleware\RequiresUserHashId::class,
     ];
 }

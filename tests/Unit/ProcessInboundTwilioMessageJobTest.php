@@ -28,15 +28,15 @@ class ProcessInboundTwilioMessageJobTest extends TestCase
     {
         $user = User::factory()->create();
         $serviceAccount = ServiceAccount::factory()->create([
-            'user_id' => $user->id
+            'user_id' => $user->id,
         ]);
         $number = Number::factory()->create([
             'user_id' => $user->id,
-            'service_account_id' => $serviceAccount->id
+            'service_account_id' => $serviceAccount->id,
         ]);
         $contact = Contact::factory()->create([
             'user_id' => $user->id,
-            'phone_numbers' => ['mobile' => $this->faker->e164PhoneNumber()]
+            'phone_numbers' => ['mobile' => $this->faker->e164PhoneNumber()],
         ]);
         $data = [
             'From' => $contact->phone_numbers['mobile'],
@@ -46,7 +46,7 @@ class ProcessInboundTwilioMessageJobTest extends TestCase
             'NumMedia' => 2,
             'MediaUrl0' => $this->faker->imageUrl,
             'MediaUrl1' => $this->faker->imageUrl,
-            'MessageSid' => 'abc123'
+            'MessageSid' => 'abc123',
         ];
 
         $job = new ProcessInboundTwilioMessageJob($data);
@@ -69,8 +69,8 @@ class ProcessInboundTwilioMessageJobTest extends TestCase
         $this->assertEquals($data['SmsStatus'], $message->status);
         $this->assertEquals($data['NumMedia'], $message->num_media);
         $this->assertEquals(2, count($message->media));
-        $this->assertTrue(\in_array($data['MediaUrl0']. '&Content-Type=image/png', $message->media));
-        $this->assertTrue(\in_array($data['MediaUrl1']. '&Content-Type=image/png', $message->media));
+        $this->assertTrue(\in_array($data['MediaUrl0'].'&Content-Type=image/png', $message->media));
+        $this->assertTrue(\in_array($data['MediaUrl1'].'&Content-Type=image/png', $message->media));
         $this->assertEquals($data['MessageSid'], $message->external_identity);
     }
 }
