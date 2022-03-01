@@ -81,7 +81,7 @@ class NumberControllerTest extends TestCase
     public function store_saves()
     {
         $phone_number = $this->faker->e164PhoneNumber();
-        $friendly_label = $this->faker->word;
+        $friendly_label = $this->faker->word();
 
         $response = $this->actingAs($this->user)->postJson(route('numbers.store'), [
             'service_account_id' => $this->serviceAccount->id,
@@ -165,7 +165,7 @@ class NumberControllerTest extends TestCase
     {
         $number = Number::factory()->create(['user_id' => $this->user->id]);
         $phone_number = $this->faker->e164PhoneNumber();
-        $friendly_label = $this->faker->word;
+        $friendly_label = $this->faker->word();
         $sip_registration_url = '555@444.sip.somewhere.com';
 
         $response = $this->actingAs($this->user)->putJson(route('numbers.update', $number), [

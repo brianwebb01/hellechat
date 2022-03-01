@@ -10,13 +10,6 @@ use Illuminate\Support\Str;
 class ServiceAccountFactory extends Factory
 {
     /**
-     * The name of the factory's corresponding model.
-     *
-     * @var string
-     */
-    protected $model = ServiceAccount::class;
-
-    /**
      * Define the model's default state.
      *
      * @return array
@@ -27,8 +20,8 @@ class ServiceAccountFactory extends Factory
             'user_id' => User::factory(),
             'name' => $this->faker->regexify('[A-Za-z0-9]{50}'),
             'provider' => $this->faker->regexify('[A-Za-z0-9]{15}'),
-            'api_key' => $this->faker->word,
-            'api_secret' => $this->faker->word,
+            'api_key' => $this->faker->word(),
+            'api_secret' => $this->faker->word(),
         ];
     }
 }

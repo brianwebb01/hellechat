@@ -81,8 +81,8 @@ class ContactControllerTest extends TestCase
     public function store_validates_phone_numbers()
     {
         $response = $this->actingAs($this->user)->postJson(route('contacts.store'), [
-            'first_name' => $this->faker->firstName,
-            'last_name' => $this->faker->lastName,
+            'first_name' => $this->faker->firstName(),
+            'last_name' => $this->faker->lastName(),
             'phone_numbers' => json_encode(['mobile' => 'foo', 'home' => 'bar']),
         ]);
 
@@ -99,8 +99,8 @@ class ContactControllerTest extends TestCase
      */
     public function store_saves()
     {
-        $fName = $this->faker->firstName;
-        $lName = $this->faker->lastName;
+        $fName = $this->faker->firstName();
+        $lName = $this->faker->lastName();
         $phone_numbers = collect(['mobile', 'home', 'office', 'work', 'main'])
             ->random(rand(0, 3))
             ->map(fn ($i) => [$i => $this->faker->e164PhoneNumber()])
@@ -176,8 +176,8 @@ class ContactControllerTest extends TestCase
     {
         $contact = Contact::factory()->create(['user_id' => $this->user->id]);
         $response = $this->actingAs($this->user)->putJson(route('contacts.update', $contact), [
-            'first_name' => $this->faker->firstName,
-            'last_name' => $this->faker->lastName,
+            'first_name' => $this->faker->firstName(),
+            'last_name' => $this->faker->lastName(),
             'phone_numbers' => json_encode(['mobile' => 'foo', 'home' => 'bar']),
         ]);
 
@@ -195,8 +195,8 @@ class ContactControllerTest extends TestCase
     public function update_behaves_as_expected()
     {
         $contact = Contact::factory()->create(['user_id' => $this->user->id]);
-        $fName = $this->faker->firstName;
-        $lName = $this->faker->lastName;
+        $fName = $this->faker->firstName();
+        $lName = $this->faker->lastName();
         $phone_numbers = collect(['mobile', 'home', 'office', 'work', 'main'])
             ->random(rand(0, 3))
             ->map(fn ($i) => [$i => $this->faker->e164PhoneNumber()])

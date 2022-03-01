@@ -45,7 +45,7 @@ class ProcessTwilioVoicemailJobTest extends TestCase
             'From' => $contact->phone_numbers['mobile'],
             'To' => $number->phone_number,
             'TranscriptionText' => 'howdy partner',
-            'RecordingUrl' => $this->faker->imageUrl,
+            'RecordingUrl' => $this->faker->imageUrl(),
             'RecordingSid' => $recordingSid,
         ];
 

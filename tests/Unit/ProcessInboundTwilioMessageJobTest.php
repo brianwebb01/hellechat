@@ -44,8 +44,8 @@ class ProcessInboundTwilioMessageJobTest extends TestCase
             'Body' => 'Foobar',
             'SmsStatus' => 'received',
             'NumMedia' => 2,
-            'MediaUrl0' => $this->faker->imageUrl,
-            'MediaUrl1' => $this->faker->imageUrl,
+            'MediaUrl0' => $this->faker->imageUrl(),
+            'MediaUrl1' => $this->faker->imageUrl(),
             'MessageSid' => 'abc123',
         ];
 

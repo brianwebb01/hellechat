@@ -10,13 +10,6 @@ use Illuminate\Support\Str;
 class ContactFactory extends Factory
 {
     /**
-     * The name of the factory's corresponding model.
-     *
-     * @var string
-     */
-    protected $model = Contact::class;
-
-    /**
      * Define the model's default state.
      *
      * @return array
@@ -27,11 +20,11 @@ class ContactFactory extends Factory
         if ($coRand == 2) {
             $first_name = null;
             $last_name = null;
-            $company = $this->faker->company;
+            $company = $this->faker->company();
         } else {
-            $first_name = $this->faker->firstName;
-            $last_name = rand(0, 4) == 0 ? null : $this->faker->lastName;
-            $company = rand(0, 1) == 0 ? $this->faker->company : null;
+            $first_name = $this->faker->firstName();
+            $last_name = rand(0, 4) == 0 ? null : $this->faker->lastName();
+            $company = rand(0, 1) == 0 ? $this->faker->company() : null;
         }
 
         return [

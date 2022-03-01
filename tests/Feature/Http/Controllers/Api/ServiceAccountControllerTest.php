@@ -68,10 +68,10 @@ class ServiceAccountControllerTest extends TestCase
      */
     public function store_saves()
     {
-        $name = $this->faker->name;
+        $name = $this->faker->name();
         $provider = ['twilio', 'telnyx'][rand(0, 1)];
-        $api_key = $this->faker->word;
-        $api_secret = $this->faker->word;
+        $api_key = $this->faker->word();
+        $api_secret = $this->faker->word();
 
         $response = $this->actingAs($this->user)->postJson(route('service-accounts.store'), [
             'name' => $name,
@@ -106,10 +106,10 @@ class ServiceAccountControllerTest extends TestCase
             'provider' => 'twilio',
         ]);
 
-        $name = $this->faker->name;
+        $name = $this->faker->name();
         $provider = 'twilio';
-        $api_key = $this->faker->word;
-        $api_secret = $this->faker->word;
+        $api_key = $this->faker->word();
+        $api_secret = $this->faker->word();
 
         $response = $this->actingAs($this->user)->postJson(route('service-accounts.store'), [
             'name' => $name,
@@ -165,8 +165,8 @@ class ServiceAccountControllerTest extends TestCase
         $serviceAccount = ServiceAccount::factory()->create([
             'user_id' => $this->user->id,
         ]);
-        $name = $this->faker->name;
-        $api_key = $this->faker->word;
+        $name = $this->faker->name();
+        $api_key = $this->faker->word();
 
         $response = $this->actingAs($this->user)->putJson(route('service-accounts.update', $serviceAccount), [
             'name' => $name,
