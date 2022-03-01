@@ -34,8 +34,7 @@ class ContactControllerTest extends TestCase
         $response = $this->actingAs($this->user)->getJson(route('contacts.index'));
 
         $response->assertOk();
-        $response->assertJson(fn (AssertableJson $json) =>
-            $json->has('data',5)
+        $response->assertJson(fn (AssertableJson $json) => $json->has('data', 5)
                 ->has('data.0.id')
                 ->has('data.0.user_id')
                 ->has('data.0.first_name')
@@ -71,11 +70,10 @@ class ContactControllerTest extends TestCase
 
         $response->assertOk();
 
-        $userIds = collect($response->json("data"))->pluck('user_id')->unique();
+        $userIds = collect($response->json('data'))->pluck('user_id')->unique();
         $this->assertCount(1, $userIds);
         $this->assertEquals($this->user->id, $userIds->first());
     }
-
 
     /**
      * @test
@@ -83,15 +81,14 @@ class ContactControllerTest extends TestCase
     public function store_validates_phone_numbers()
     {
         $response = $this->actingAs($this->user)->postJson(route('contacts.store'), [
-            'first_name' => $this->faker->firstName,
-            'last_name' => $this->faker->lastName,
+            'first_name' => $this->faker->firstName(),
+            'last_name' => $this->faker->lastName(),
             'phone_numbers' => json_encode(['mobile' => 'foo', 'home' => 'bar']),
         ]);
 
         $response->assertUnprocessable();
         $response->assertJson(
-            fn (AssertableJson $json) =>
-            $json->has('message')
+            fn (AssertableJson $json) => $json->has('message')
             ->has('errors')
                 ->has('errors.phone_numbers', 1)
         );
@@ -102,8 +99,8 @@ class ContactControllerTest extends TestCase
      */
     public function store_saves()
     {
-        $fName = $this->faker->firstName;
-        $lName = $this->faker->lastName;
+        $fName = $this->faker->firstName();
+        $lName = $this->faker->lastName();
         $phone_numbers = collect(['mobile', 'home', 'office', 'work', 'main'])
             ->random(rand(0, 3))
             ->map(fn ($i) => [$i => $this->faker->e164PhoneNumber()])
@@ -126,8 +123,7 @@ class ContactControllerTest extends TestCase
 
         $contact = $contacts->first();
         $this->assertEquals(json_encode($phone_numbers), $contact->phone_numbers);
-        $response->assertJson(fn(AssertableJson $json) =>
-            $json->where('data.first_name', $fName)
+        $response->assertJson(fn (AssertableJson $json) => $json->where('data.first_name', $fName)
                  ->where('data.last_name', $lName)
                  ->where('data.user_id', $this->user->id)
                  ->has('data')
@@ -140,7 +136,6 @@ class ContactControllerTest extends TestCase
         );
     }
 
-
     /**
      * @test
      */
@@ -152,8 +147,7 @@ class ContactControllerTest extends TestCase
 
         $response->assertOk();
         $response->assertJson(
-            fn (AssertableJson $json) =>
-            $json->has('data')
+            fn (AssertableJson $json) => $json->has('data')
                 ->has('data.id')
                 ->has('data.user_id')
                 ->has('data.first_name')
@@ -175,7 +169,6 @@ class ContactControllerTest extends TestCase
         $response->assertForbidden();
     }
 
-
     /**
      * @test
      */
@@ -183,15 +176,14 @@ class ContactControllerTest extends TestCase
     {
         $contact = Contact::factory()->create(['user_id' => $this->user->id]);
         $response = $this->actingAs($this->user)->putJson(route('contacts.update', $contact), [
-            'first_name' => $this->faker->firstName,
-            'last_name' => $this->faker->lastName,
+            'first_name' => $this->faker->firstName(),
+            'last_name' => $this->faker->lastName(),
             'phone_numbers' => json_encode(['mobile' => 'foo', 'home' => 'bar']),
         ]);
 
         $response->assertUnprocessable();
         $response->assertJson(
-            fn (AssertableJson $json) =>
-            $json->has('message')
+            fn (AssertableJson $json) => $json->has('message')
             ->has('errors')
             ->has('errors.phone_numbers', 1)
         );
@@ -203,8 +195,8 @@ class ContactControllerTest extends TestCase
     public function update_behaves_as_expected()
     {
         $contact = Contact::factory()->create(['user_id' => $this->user->id]);
-        $fName = $this->faker->firstName;
-        $lName = $this->faker->lastName;
+        $fName = $this->faker->firstName();
+        $lName = $this->faker->lastName();
         $phone_numbers = collect(['mobile', 'home', 'office', 'work', 'main'])
             ->random(rand(0, 3))
             ->map(fn ($i) => [$i => $this->faker->e164PhoneNumber()])
@@ -225,8 +217,7 @@ class ContactControllerTest extends TestCase
         $this->assertEquals($lName, $contact->last_name);
         $this->assertEquals(json_encode($phone_numbers), $contact->phone_numbers);
         $response->assertJson(
-            fn (AssertableJson $json) =>
-            $json->where('data.first_name', $fName)
+            fn (AssertableJson $json) => $json->where('data.first_name', $fName)
                 ->where('data.last_name', $lName)
                 ->where('data.user_id', $this->user->id)
                 ->has('data')
@@ -253,7 +244,6 @@ class ContactControllerTest extends TestCase
         $response->assertForbidden();
     }
 
-
     /**
      * @test
      */
@@ -265,9 +255,8 @@ class ContactControllerTest extends TestCase
 
         $response->assertNoContent();
 
-        $this->assertDeleted($contact);
+        $this->assertModelMissing($contact);
     }
-
 
     /**
      * @test

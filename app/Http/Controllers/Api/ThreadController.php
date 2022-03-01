@@ -31,6 +31,7 @@ class ThreadController extends Controller
 
         $array = $response->toArray();
         $array = Thread::addReadCountsForRecentThreads($array, $IDsAndReads);
+
         return Thread::formatApiResponse($array);
     }
 

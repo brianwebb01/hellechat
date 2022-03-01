@@ -34,12 +34,12 @@ class MessageController extends Controller
         $message->number_id = $number->id;
         $message->service_account_id = $number->serviceAccount->id;
 
-        if($request->hasFile('media')){
-            $dir = "messages/".$request->user()->id;
-            if(!Storage::exists($dir)){
+        if ($request->hasFile('media')) {
+            $dir = 'messages/'.$request->user()->id;
+            if (! Storage::exists($dir)) {
                 Storage::makeDirectory($dir);
             }
-            foreach($request->file('media') as $file){
+            foreach ($request->file('media') as $file) {
                 $paths[] = Storage::url($file->storePublicly($dir, 'public'));
             }
             $message->media = $paths;
@@ -60,7 +60,7 @@ class MessageController extends Controller
     public function update(MessageUpdateRequest $request, Message $message)
     {
         $message->update([
-            'read' => $request->get('read')
+            'read' => $request->get('read'),
         ]);
 
         return new MessageResource($message);

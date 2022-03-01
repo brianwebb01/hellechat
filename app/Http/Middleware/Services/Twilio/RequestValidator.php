@@ -38,7 +38,7 @@ class RequestValidator
             $sa = $user->service_accounts()
                 ->where('provider', ServiceAccount::PROVIDER_TWILIO)
                 ->firstOrFail();
-        } catch(ModelNotFoundException $e) {
+        } catch (ModelNotFoundException $e) {
             return response('Invalid Service Account', 403);
         }
 

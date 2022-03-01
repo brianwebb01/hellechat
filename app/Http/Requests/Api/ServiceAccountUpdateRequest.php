@@ -30,14 +30,14 @@ class ServiceAccountUpdateRequest extends FormRequest
                 'string',
                 'max:15',
                 Rule::in(['twilio', 'telnyx']),
-                Rule::unique('service_accounts')->where(function($query){
+                Rule::unique('service_accounts')->where(function ($query) {
                     return $query->where('user_id', \auth()->user()->id);
-                })->ignore($this->id)
+                })->ignore($this->id),
             ],
             'api_key' => ['string', 'nullable'],
             'api_secret' => [
                 'string',
-                'nullable'
+                'nullable',
             ],
         ];
     }
@@ -45,7 +45,7 @@ class ServiceAccountUpdateRequest extends FormRequest
     public function messages()
     {
         return [
-            'provider.unique' => 'Only one instance of each provider is allowed per account'
+            'provider.unique' => 'Only one instance of each provider is allowed per account',
         ];
     }
 }

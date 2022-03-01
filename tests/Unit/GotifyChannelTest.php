@@ -7,9 +7,9 @@ use App\Models\Message;
 use App\Models\User;
 use App\Notifications\InboundMessageCreated;
 use App\Services\Gotify\Client;
+use Illuminate\Notifications\Notification;
 use Mockery\MockInterface;
 use Tests\TestCase;
-use Illuminate\Notifications\Notification;
 
 class GotifyChannelTest extends TestCase
 {
@@ -19,25 +19,23 @@ class GotifyChannelTest extends TestCase
         $data = [
             'title' => 'foo',
             'message' => 'bar',
-            'url' => 'biz'
+            'url' => 'biz',
         ];
 
         $user = User::factory()->create([
-            'gotify_app_token' => 'abc123'
+            'gotify_app_token' => 'abc123',
         ]);
 
         $mNotification = \Mockery::mock(
             Notification::class,
-            fn (MockInterface $mock) =>
-            $mock->shouldReceive('toGotify')
+            fn (MockInterface $mock) => $mock->shouldReceive('toGotify')
             ->with($user)
             ->andReturn($data)
         );
 
         $mGotify = \Mockery::mock(
             Client::class,
-            fn (MockInterface $mock) =>
-            $mock->shouldReceive('createMessage')
+            fn (MockInterface $mock) => $mock->shouldReceive('createMessage')
             ->with(
                 $data['title'],
                 $data['message'],
@@ -49,5 +47,4 @@ class GotifyChannelTest extends TestCase
         $channel = new GotifyChannel();
         $channel->send($user, $mNotification);
     }
-
 }

@@ -42,10 +42,9 @@ class ConnectContactToVoicemailsJob implements ShouldQueue
 
         Voicemail::query()
             ->where(
-                fn ($query) =>
-                $query->whereIn('from', $numbers)
+                fn ($query) => $query->whereIn('from', $numbers)
             )->update([
-                'contact_id' => $this->contact->id
+                'contact_id' => $this->contact->id,
             ]);
     }
 }

@@ -28,13 +28,13 @@ class ConnectContactToVoicemailsJobTest extends TestCase
         $user = User::factory()->create();
         Voicemail::factory()->count(3)->create([
             'user_id' => $user->id,
-            'contact_id' => null
+            'contact_id' => null,
         ]);
 
         $phone = $user->voicemails->first()->from;
         $contact = Contact::factory()->make([
             'user_id' => $user->id,
-            'phone_numbers' => ['mobile' => $phone]
+            'phone_numbers' => ['mobile' => $phone],
         ]);
         $contact->saveQuietly();
         $this->assertEquals(0, $contact->voicemails()->count());

@@ -34,18 +34,18 @@ class ProcessOutboundTwilioMessageJobTest extends TestCase
         $user = User::factory()->create();
         $serviceAccount = ServiceAccount::factory()->create([
             'user_id' => $user->id,
-            'provider' => ServiceAccount::PROVIDER_TWILIO
+            'provider' => ServiceAccount::PROVIDER_TWILIO,
         ]);
         $number = Number::factory()->create([
             'user_id' => $user->id,
             'service_account_id' => $serviceAccount->id,
-            'phone_number' => '+15024105645'
+            'phone_number' => '+15024105645',
         ]);
         $to = '+15022987961';
 
         $media = [
             $this->faker->imageUrl(),
-            $this->faker->imageUrl()
+            $this->faker->imageUrl(),
         ];
 
         $message = Message::factory()->make([
@@ -59,7 +59,7 @@ class ProcessOutboundTwilioMessageJobTest extends TestCase
             'num_media' => count($media),
             'direction' => Message::DIRECTION_OUT,
             'status' => Message::STATUS_LOCAL_CREATED,
-            'external_identity' => null
+            'external_identity' => null,
         ]);
 
         $message->saveQuietly();
@@ -68,8 +68,7 @@ class ProcessOutboundTwilioMessageJobTest extends TestCase
         $mClient = Mockery::mock(Client::class, function (MockInterface $mock) use ($message) {
             $mock->messages = Mockery::mock(
                 MessageList::class,
-                fn (MockInterface $mMessageList) =>
-                $mMessageList->shouldReceive('create')
+                fn (MockInterface $mMessageList) => $mMessageList->shouldReceive('create')
                     ->once()
                     ->with(
                         $message->to,
@@ -81,24 +80,25 @@ class ProcessOutboundTwilioMessageJobTest extends TestCase
                             ),
                             'body' => $message->body,
                             'mediaUrl' => collect($message->media)
-                                ->map(fn($i) => config('app.url') . $i)->all()
+                                ->map(fn ($i) => config('app.url').$i)->all(),
                         ]
                     )
                     ->andReturn(
                         Mockery::mock(MessageInstance::class, function (MockInterface $mMessageInstance) {
                             $mMessageInstance->sid = 'abc123sid';
                             $mMessageInstance->status = Message::STATUS_SENT;
+
                             return $mMessageInstance;
                         })
                     )
             );
+
             return $mock;
         });
 
         $mServiceAccount = Mockery::mock(
             ServiceAccount::class,
-            fn (MockInterface $mock) =>
-            $mock->shouldReceive('getProviderClient')
+            fn (MockInterface $mock) => $mock->shouldReceive('getProviderClient')
             ->andReturn($mClient)
         );
 

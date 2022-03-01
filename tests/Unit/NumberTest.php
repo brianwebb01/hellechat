@@ -21,20 +21,19 @@ class NumberTest extends TestCase
     public function returns_positive_notification_intent_in_default_allow_contact()
     {
         $number = Number::factory()->create([
-            'dnd_allow_contacts' => true
+            'dnd_allow_contacts' => true,
         ]);
         $this->assertFalse($number->dnd_calls);
         $this->assertTrue($number->dnd_allow_contacts);
         $this->assertTrue($number->shouldRing());
     }
 
-
     /** @test  */
     public function returns_positive_notification_intent_with_settings()
     {
         $number = Number::factory()->create([
             'dnd_calls' => true,
-            'dnd_allow_contacts' => true
+            'dnd_allow_contacts' => true,
         ]);
         $this->assertTrue($number->dnd_calls);
         $this->assertTrue($number->dnd_allow_contacts);
@@ -46,7 +45,7 @@ class NumberTest extends TestCase
     {
         $number = Number::factory()->create([
             'dnd_calls' => true,
-            'dnd_allow_contacts' => true
+            'dnd_allow_contacts' => true,
         ]);
         $this->assertTrue($number->dnd_calls);
         $this->assertTrue($number->dnd_allow_contacts);
@@ -57,7 +56,7 @@ class NumberTest extends TestCase
     public function returns_negative_notification()
     {
         $number = Number::factory()->create([
-            'dnd_calls' => true
+            'dnd_calls' => true,
         ]);
         $this->assertTrue($number->dnd_calls);
         $this->assertFalse($number->dnd_allow_contacts);

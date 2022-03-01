@@ -65,7 +65,7 @@
 
         <!-- Time zone -->
         <?php
-        $regions = array(
+        $regions = [
             'Africa' => DateTimeZone::AFRICA,
             'America' => DateTimeZone::AMERICA,
             'Antarctica' => DateTimeZone::ANTARCTICA,
@@ -74,9 +74,9 @@
             'Europe' => DateTimeZone::EUROPE,
             'Indian' => DateTimeZone::INDIAN,
             'Pacific' => DateTimeZone::PACIFIC
-        );
+        ];
 
-        $timezones = array();
+        $timezones = [];
         foreach ($regions as $name => $mask) {
             $zones = DateTimeZone::listIdentifiers($mask);
             foreach ($zones as $timezone) {

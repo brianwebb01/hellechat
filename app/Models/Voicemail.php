@@ -19,7 +19,7 @@ class Voicemail extends Model
         'length',
         'transcription',
         'from',
-        'external_identity'
+        'external_identity',
     ];
 
     /**
@@ -34,7 +34,6 @@ class Voicemail extends Model
         'contact_id' => 'integer',
         'length' => 'integer',
     ];
-
 
     public function user()
     {

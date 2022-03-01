@@ -46,7 +46,7 @@ class ImportContactsJob implements ShouldQueue
      * Batch size of contact records to
      * make before bulk saving
      *
-     * @var integer
+     * @var int
      */
     public $batchSize = 25;
 
@@ -66,15 +66,15 @@ class ImportContactsJob implements ShouldQueue
      * @var array
      */
     public $phoneTypes = [
-        "mobile",
-        "home",
-        "work",
-        "office",
-        "school",
-        "main",
-        "fax",
-        "pager",
-        "other"
+        'mobile',
+        'home',
+        'work',
+        'office',
+        'school',
+        'main',
+        'fax',
+        'pager',
+        'other',
     ];
 
     /**
@@ -87,7 +87,7 @@ class ImportContactsJob implements ShouldQueue
         'pref' => 'main',
         'cell' => 'mobile',
         'iphone' => 'mobile',
-        'default' => 'main'
+        'default' => 'main',
     ];
 
     /**
@@ -126,35 +126,38 @@ class ImportContactsJob implements ShouldQueue
     {
         $parser = app()->makeWith(VCardParser::class, ['content' => $content]);
 
-        foreach($parser as $vcard){
+        foreach ($parser as $vcard) {
             $contact = app(Contact::class);
 
-            if(property_exists($vcard, 'firstname') && !empty($vcard->firstname))
+            if (property_exists($vcard, 'firstname') && ! empty($vcard->firstname)) {
                 $contact->first_name = $this->clean($vcard->firstname);
+            }
 
-            if(property_exists($vcard, 'lastname') && !empty($vcard->lastname))
+            if (property_exists($vcard, 'lastname') && ! empty($vcard->lastname)) {
                 $contact->last_name = $this->clean($vcard->lastname);
+            }
 
-            if(property_exists($vcard, 'organization') && !empty($vcard->organization))
+            if (property_exists($vcard, 'organization') && ! empty($vcard->organization)) {
                 $contact->company = $this->clean($vcard->organization);
+            }
 
-            if( !$contact->first_name &&
-                !$contact->last_name &&
-                !$contact->company
-            ){
+            if (! $contact->first_name &&
+                ! $contact->last_name &&
+                ! $contact->company
+            ) {
                 continue;
             }
 
             $phone_numbers = [];
 
-            if(property_exists($vcard, 'phone')){
-                foreach($vcard->phone as $vPhoneType => $number){
+            if (property_exists($vcard, 'phone')) {
+                foreach ($vcard->phone as $vPhoneType => $number) {
                     $tempType = \strtolower(explode(';', $vPhoneType)[0]);
                     $tempNum = preg_replace('/[^0-9,\+]+/', '', $number)[0];
 
                     //if the phone given starts with a "+" we'll not parse it at all
                     //and just assume that it is in a country specific e164 format already
-                    if(\substr($tempNum, 0, 1) == '+'){
+                    if (\substr($tempNum, 0, 1) == '+') {
                         $e164Phone = $tempNum;
                     } else {
                         $phoneUtil = \libphonenumber\PhoneNumberUtil::getInstance();
@@ -162,15 +165,14 @@ class ImportContactsJob implements ShouldQueue
                             $numberProto = $phoneUtil->parse($tempNum, config('app.phone_country'));
                             $e164Phone = $phoneUtil->format($numberProto, \libphonenumber\PhoneNumberFormat::E164);
                         } catch (\libphonenumber\NumberParseException $e) {
-                            Log::error("Phone number parse error for {$tempNum} with message: " . $e->getMessage());
+                            Log::error("Phone number parse error for {$tempNum} with message: ".$e->getMessage());
                             continue;
                         }
                     }
 
-
-                    if(in_array($tempType, $this->phoneTypes)){
+                    if (in_array($tempType, $this->phoneTypes)) {
                         $type = $tempType;
-                    } else if(\array_key_exists($tempType, $this->phoneTypes)){
+                    } elseif (\array_key_exists($tempType, $this->phoneTypes)) {
                         $type = $this->phoneTypes[$tempType];
                     } else {
                         $type = static::OTHER_TYPE;
@@ -183,21 +185,20 @@ class ImportContactsJob implements ShouldQueue
 
             $contact->phone_numbers = $phone_numbers;
 
-            if(!$this->duplicateExists($contact))
+            if (! $this->duplicateExists($contact)) {
                 $this->contacts[] = $contact;
+            }
 
-            if(count($this->contacts) >= $this->batchSize){
+            if (count($this->contacts) >= $this->batchSize) {
                 $this->user->contacts()->saveMany($this->contacts);
                 $this->contacts = [];
             }
-
         }//end foreach
 
         if (count($this->contacts) > 0) {
             $this->user->contacts()->saveMany($this->contacts);
         }
     }
-
 
     /**
      * Function to clean the VCF string and remove
@@ -210,31 +211,31 @@ class ImportContactsJob implements ShouldQueue
     {
         $output = $input;
 
-        if(substr($output, -1) == ';'){
-            return $this->clean(substr($output, 0, \strlen($output) - 1) );
+        if (substr($output, -1) == ';') {
+            return $this->clean(substr($output, 0, \strlen($output) - 1));
         } else {
             return $output;
         }
     }
-
 
     /**
      * Function to determine if the given contact
      * exists either in the database or in the buffer
      *
      * @param Contact $contact
-     * @return boolean
+     * @return bool
      */
     public function duplicateExists(Contact $contact)
     {
-        $isInBuffer = collect($this->contacts)->contains(fn($c) =>
-            $c->first_name == $contact->first_name &&
+        $isInBuffer = collect($this->contacts)->contains(fn ($c) => $c->first_name == $contact->first_name &&
             $c->last_name == $contact->last_name &&
             $c->company == $contact->company &&
             $c->phone_numbers == $contact->phone_numbers
         );
 
-        if($isInBuffer) return true;
+        if ($isInBuffer) {
+            return true;
+        }
 
         return Contact::where('first_name', $contact->first_name)
             ->where('last_name', $contact->last_name)

@@ -6,7 +6,6 @@ use Illuminate\Foundation\Http\FormRequest;
 
 class NumberStoreRequest extends NumberUpdateRequest
 {
-
     /**
      * Get the validation rules that apply to the request.
      *
@@ -26,7 +25,7 @@ class NumberStoreRequest extends NumberUpdateRequest
     public function messages()
     {
         return [
-            'service_account_id.required' => 'A service account selection is required'
+            'service_account_id.required' => 'A service account selection is required',
         ];
     }
 }

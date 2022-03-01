@@ -33,9 +33,8 @@ class ServiceAccount extends Model
         'id' => 'integer',
         'user_id' => 'integer',
         'api_key' => 'encrypted',
-        'api_secret' => 'encrypted'
+        'api_secret' => 'encrypted',
     ];
-
 
     public function numbers()
     {
@@ -49,7 +48,7 @@ class ServiceAccount extends Model
 
     public function getProviderClient()
     {
-        if($this->provider = self::PROVIDER_TWILIO){
+        if ($this->provider = self::PROVIDER_TWILIO) {
             return new Client($this->api_key, $this->api_secret);
         }
     }

@@ -47,12 +47,11 @@ class ImportContactsJobTest extends TestCase
 
         $this->assertEquals(5, $user->contacts()->count());
 
-
         $this->assertDatabaseHas('contacts', [
             'user_id' => $user->id,
             'first_name' => 'Thies-Tillman',
             'last_name' => 'Jacobsen',
-            'company' => 'Acme Corp'
+            'company' => 'Acme Corp',
         ]);
         $this->assertEquals(
             '+15025557890',
@@ -61,7 +60,6 @@ class ImportContactsJobTest extends TestCase
                 ->first()
                 ->phone_numbers['mobile']
         );
-
 
         $this->assertDatabaseHas('contacts', [
             'user_id' => $user->id,
@@ -81,7 +79,6 @@ class ImportContactsJobTest extends TestCase
             $lenn->phone_numbers['work']
         );
 
-
         $this->assertDatabaseHas('contacts', [
             'user_id' => $user->id,
             'first_name' => 'Ludwig-Götz',
@@ -96,7 +93,6 @@ class ImportContactsJobTest extends TestCase
                 ->phone_numbers['work']
         );
 
-
         $this->assertDatabaseHas('contacts', [
             'user_id' => $user->id,
             'first_name' => 'Marita',
@@ -110,7 +106,6 @@ class ImportContactsJobTest extends TestCase
                 ->first()
                 ->phone_numbers['main']
         );
-
 
         $this->assertDatabaseHas('contacts', [
             'user_id' => $user->id,
@@ -127,17 +122,15 @@ class ImportContactsJobTest extends TestCase
         );
     }
 
-
     /** @test */
     public function clean_strips_semicolons_as_expected()
     {
         $job = new ImportContactsJob(new User, 'nothing');
 
-        $this->assertEquals("Foo", $job->clean("Foo;"));
-        $this->assertEquals("Bar", $job->clean("Bar;;"));
-        $this->assertEquals("Biz;:", $job->clean("Biz;:;"));
+        $this->assertEquals('Foo', $job->clean('Foo;'));
+        $this->assertEquals('Bar', $job->clean('Bar;;'));
+        $this->assertEquals('Biz;:', $job->clean('Biz;:;'));
     }
-
 
     /** @test */
     public function duplicate_exists_checks_buffer()
@@ -151,7 +144,6 @@ class ImportContactsJobTest extends TestCase
         $doesNotExist = Contact::factory()->make();
         $this->assertFalse($job->duplicateExists($doesNotExist));
     }
-
 
     /** @test */
     public function duplicate_exists_checks_database()

@@ -7,11 +7,10 @@ use App\Http\Resources\Api\MessageResource;
 use App\Models\Message;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
+use Illuminate\Notifications\Messages\BroadcastMessage;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 use Illuminate\Support\Facades\App;
-use Illuminate\Notifications\Messages\BroadcastMessage;
-
 
 class InboundMessageCreated extends Notification
 {
@@ -39,8 +38,9 @@ class InboundMessageCreated extends Notification
     {
         $channels = ['broadcast'];
 
-        if($notifiable->gotify_app_token)
+        if ($notifiable->gotify_app_token) {
             $channels[] = GotifyChannel::class;
+        }
 
         return $channels;
     }
@@ -54,7 +54,7 @@ class InboundMessageCreated extends Notification
     public function toBroadcast($notifiable)
     {
         return new BroadcastMessage([
-            'message' => new MessageResource($this->message)
+            'message' => new MessageResource($this->message),
         ]);
     }
 
@@ -66,27 +66,27 @@ class InboundMessageCreated extends Notification
      */
     public function toGotify($notifiable)
     {
-        if (!$this->message->body & count($this->message->media) > 0) {
-            $msg = "Attachment";
+        if (! $this->message->body & count($this->message->media) > 0) {
+            $msg = 'Attachment';
         } else {
             $msg = $this->message->body;
         }
 
         if ($this->message->contact) {
-            $title = "SMS from " . $this->message->contact->friendlyName();
+            $title = 'SMS from '.$this->message->contact->friendlyName();
         } else {
-            $title = "SMS from " . $this->message->from;
+            $title = 'SMS from '.$this->message->from;
         }
 
         $url = route('ui.thread.index', [
             'numberPhone' => $this->message->number->phone_number,
-            'with' => $this->message->from
+            'with' => $this->message->from,
         ]);
 
         return [
             'title' => $title,
             'message' => $msg,
-            'url' => $url
+            'url' => $url,
         ];
     }
 
@@ -99,7 +99,7 @@ class InboundMessageCreated extends Notification
     public function toArray($notifiable)
     {
         return [
-            'message' => $this->message->toArray()
+            'message' => $this->message->toArray(),
         ];
     }
 }

@@ -24,21 +24,20 @@ class CreateGotifyUserRecordsJobTest extends TestCase
 
         $mGotify = \Mockery::mock(
             Client::class,
-            fn (MockInterface $mock) =>
-            $mock->shouldReceive('createUser')
+            fn (MockInterface $mock) => $mock->shouldReceive('createUser')
                 ->with('fooUser', 'password')
                 ->andReturn([
-                    'id' => 1
+                    'id' => 1,
                 ])
                 ->shouldReceive('createClient')->with(config('app.name'))
                 ->andReturn([
                     'id' => 2,
-                    'token' => 'client-token'
+                    'token' => 'client-token',
                 ])
                 ->shouldReceive('createApplication')->with(config('app.name'))
                 ->andReturn([
                     'id' => 3,
-                    'token' => 'app-token'
+                    'token' => 'app-token',
                 ])
                 ->shouldReceive('updateApplicationImage')
                 ->with(3, public_path('images/speech-bubble.png'))

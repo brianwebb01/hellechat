@@ -24,7 +24,7 @@ class ContactSearchRequest extends FormRequest
     public function rules()
     {
         return [
-            'query' => ['required', 'string']
+            'query' => ['required', 'string'],
         ];
     }
 }

@@ -53,7 +53,7 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
         'gotify_user_pass' => 'encrypted',
         'gotify_client_token' => 'encrypted',
-        'gotify_app_token' => 'encrypted'
+        'gotify_app_token' => 'encrypted',
     ];
 
     /**
@@ -90,5 +90,4 @@ class User extends Authenticatable
         return $this->hasMany(Voicemail::class)
             ->orderBy('created_at', 'desc');
     }
-
 }

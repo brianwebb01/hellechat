@@ -36,7 +36,7 @@ class MessageStoreRequest extends FormRequest
                 'required',
                 'string',
                 'max:15',
-                Rule::in([Message::DIRECTION_IN, Message::DIRECTION_OUT])
+                Rule::in([Message::DIRECTION_IN, Message::DIRECTION_OUT]),
             ],
             'status' => ['required', 'string', 'max:15'],
             'num_media' => ['integer'],
@@ -44,7 +44,7 @@ class MessageStoreRequest extends FormRequest
             'external_identity' => [''],
             'external_date_created' => [''],
             'external_date_updated' => [''],
-            'read' => ['boolean']
+            'read' => ['boolean'],
         ];
     }
 }

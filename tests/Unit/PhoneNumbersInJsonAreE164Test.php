@@ -13,7 +13,7 @@ class PhoneNumbersInJsonAreE164Test extends TestCase
         $rule = new PhoneNumbersInJsonAreE164;
         $result = $rule->passes('phone_numbers', json_encode([
             'mobile' => '+15510823010',
-            'main' => '+15801719657'
+            'main' => '+15801719657',
         ]));
         $this->assertTrue($result);
     }
@@ -24,13 +24,13 @@ class PhoneNumbersInJsonAreE164Test extends TestCase
         $rule = new PhoneNumbersInJsonAreE164;
         $result = $rule->passes('phone_numbers', json_encode([
             'mobile' => 'foo',
-            'main' => 'bar'
+            'main' => 'bar',
         ]));
         $this->assertFalse($result);
 
         $message = $rule->message();
         $this->assertEquals(
-            "The 1st and 2nd phone numbers are not in E.164 format.",
+            'The 1st and 2nd phone numbers are not in E.164 format.',
             $message
         );
     }
@@ -46,7 +46,7 @@ class PhoneNumbersInJsonAreE164Test extends TestCase
 
         $message = $rule->message();
         $this->assertEquals(
-            "The 1st phone number is not in E.164 format.",
+            'The 1st phone number is not in E.164 format.',
             $message
         );
     }

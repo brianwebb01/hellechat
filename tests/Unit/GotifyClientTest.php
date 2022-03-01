@@ -2,8 +2,8 @@
 
 namespace Tests\Unit;
 
-use GuzzleHttp\Psr7\Response as Psr7Response;
 use App\Services\Gotify\Client;
+use GuzzleHttp\Psr7\Response as Psr7Response;
 use Tests\TestCase;
 
 class GotifyClientTest extends TestCase
@@ -34,10 +34,10 @@ class GotifyClientTest extends TestCase
 
         $this->mock(\GuzzleHttp\Client::class)
             ->shouldReceive('request')->once()
-            ->with($method, $url . $path, [
+            ->with($method, $url.$path, [
                 'auth' => [
                     'foo',
-                    'bar'
+                    'bar',
                 ],
                 'headers' => [
                     'Content-Type' => 'application/json',
@@ -62,11 +62,11 @@ class GotifyClientTest extends TestCase
 
         $this->mock(\GuzzleHttp\Client::class)
             ->shouldReceive('request')->once()
-            ->with($method, $url . $path, [
+            ->with($method, $url.$path, [
                 'headers' => [
                     'Content-Type' => 'application/json',
                     'Accept' => 'application/json',
-                    'X-Gotify-Key' => 'token'
+                    'X-Gotify-Key' => 'token',
                 ],
                 'body' => json_encode(['foo' => 'bar', 'biz' => 'bang']),
             ])
@@ -93,7 +93,7 @@ class GotifyClientTest extends TestCase
         $payload = [
             'admin' => false,
             'name' => 'unicorn',
-            'pass' => 'password'
+            'pass' => 'password',
         ];
 
         $client = \Mockery::mock(Client::class)->makePartial();
@@ -114,18 +114,18 @@ class GotifyClientTest extends TestCase
             200,
             ['Content-Type' => 'application/json'],
             json_encode([
-                "id" => 2,
-                "token" => "somethingspecial",
-                "name" => "ChatApp",
-                "description" => "",
-                "internal" => false,
-                "image" => "static/defaultapp.png",
+                'id' => 2,
+                'token' => 'somethingspecial',
+                'name' => 'ChatApp',
+                'description' => '',
+                'internal' => false,
+                'image' => 'static/defaultapp.png',
             ])
         );
 
         $payload = [
             'name' => 'ChatApp',
-            'description' => null
+            'description' => null,
         ];
 
         $client = \Mockery::mock(Client::class)->makePartial();
@@ -145,14 +145,14 @@ class GotifyClientTest extends TestCase
             200,
             ['Content-Type' => 'application/json'],
             json_encode([
-                "id" => 20,
-                "token" => "somethingspecial",
-                "name" => "ChatClient"
+                'id' => 20,
+                'token' => 'somethingspecial',
+                'name' => 'ChatClient',
             ])
         );
 
         $payload = [
-            'name' => 'ChatClient'
+            'name' => 'ChatClient',
         ];
 
         $client = \Mockery::mock(Client::class)->makePartial();
@@ -189,16 +189,16 @@ class GotifyClientTest extends TestCase
         );
 
         $payload = [
-            'title' => "Backup",
-            'message' => "**Backup** was successfully finished.",
+            'title' => 'Backup',
+            'message' => '**Backup** was successfully finished.',
             'priority' => 8,
             'extras' => [
                 'client::notification' => [
                     'click' => [
-                        'url' => "http://google.com"
-                    ]
-                ]
-            ]
+                        'url' => 'http://google.com',
+                    ],
+                ],
+            ],
         ];
 
         $client = \Mockery::mock(Client::class)->makePartial();
@@ -206,7 +206,7 @@ class GotifyClientTest extends TestCase
             ->with('POST', '/message', $payload)
             ->andReturn($mResponse);
 
-        $response = $client->createMessage("Backup", "**Backup** was successfully finished.", "http://google.com");
+        $response = $client->createMessage('Backup', '**Backup** was successfully finished.', 'http://google.com');
         $this->assertEquals(25, $response['id']);
     }
 
@@ -218,26 +218,26 @@ class GotifyClientTest extends TestCase
             ['Content-Type' => 'application/json'],
             json_encode(
                 [
-                    "paging" => [
-                        "size" => 1,
-                        "since" => 0,
-                        "limit" => 100,
+                    'paging' => [
+                        'size' => 1,
+                        'since' => 0,
+                        'limit' => 100,
                     ],
-                    "messages" => [
+                    'messages' => [
                         [
-                            "id" => 2,
-                            "appid" => 400,
-                            "message" => "fancy some spam?",
-                            "title" => "SMS from +15610415878",
-                            "priority" => 8,
-                            "extras" => [
-                                "client::notification" => [
-                                    "click" => [
-                                        "url" => "https://application.url.com/messages",
+                            'id' => 2,
+                            'appid' => 400,
+                            'message' => 'fancy some spam?',
+                            'title' => 'SMS from +15610415878',
+                            'priority' => 8,
+                            'extras' => [
+                                'client::notification' => [
+                                    'click' => [
+                                        'url' => 'https://application.url.com/messages',
                                     ],
                                 ],
                             ],
-                            "date" => "2021-11-02T09:44:50Z",
+                            'date' => '2021-11-02T09:44:50Z',
                         ],
                     ],
                 ]
@@ -263,26 +263,26 @@ class GotifyClientTest extends TestCase
             ['Content-Type' => 'application/json'],
             json_encode(
                 [
-                    "paging" => [
-                        "size" => 1,
-                        "since" => 0,
-                        "limit" => 100,
+                    'paging' => [
+                        'size' => 1,
+                        'since' => 0,
+                        'limit' => 100,
                     ],
-                    "messages" => [
+                    'messages' => [
                         [
-                            "id" => 2,
-                            "appid" => 400,
-                            "message" => "fancy some spam?",
-                            "title" => "SMS from +15610415878",
-                            "priority" => 8,
-                            "extras" => [
-                                "client::notification" => [
-                                    "click" => [
-                                        "url" => "https://application.url.com/messages",
+                            'id' => 2,
+                            'appid' => 400,
+                            'message' => 'fancy some spam?',
+                            'title' => 'SMS from +15610415878',
+                            'priority' => 8,
+                            'extras' => [
+                                'client::notification' => [
+                                    'click' => [
+                                        'url' => 'https://application.url.com/messages',
                                     ],
                                 ],
                             ],
-                            "date" => "2021-11-02T09:44:50Z",
+                            'date' => '2021-11-02T09:44:50Z',
                         ],
                     ],
                 ]
@@ -336,16 +336,16 @@ class GotifyClientTest extends TestCase
     /** @test */
     public function update_application_image_works_as_expected()
     {
-        $this->markTestSkipped("Skipping b/c fopen() mocking");
+        $this->markTestSkipped('Skipping b/c fopen() mocking');
 
         //sample response from gotify POST /application/ID/image
         $response = [
-            "id" => 2,
-            "token" => "--token--",
-            "name" => "FooBar",
-            "description" => "",
-            "internal" => false,
-            "image" => "image/KlwnqHH98yEwzNme4GXiPl2.N.png",
+            'id' => 2,
+            'token' => '--token--',
+            'name' => 'FooBar',
+            'description' => '',
+            'internal' => false,
+            'image' => 'image/KlwnqHH98yEwzNme4GXiPl2.N.png',
         ];
     }
 }

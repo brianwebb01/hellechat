@@ -16,6 +16,7 @@ class ProcessTwilioVoicemailJob implements ShouldQueue
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
     public $input;
+
     private $number;
 
     /**
@@ -41,7 +42,7 @@ class ProcessTwilioVoicemailJob implements ShouldQueue
             'media_url' => $this->input['RecordingUrl'],
             'length' => $this->getRecordingDuration(),
             'transcription' => $this->input['TranscriptionText'],
-            'external_identity' => $this->input['RecordingSid']
+            'external_identity' => $this->input['RecordingSid'],
         ];
 
         $voicemail = new Voicemail($data);
@@ -55,12 +56,12 @@ class ProcessTwilioVoicemailJob implements ShouldQueue
      * Query the contacts of the user who owns the Number
      * and return the contact's id if any.
      *
-     * @return integer|null
+     * @return int|null
      */
     private function getContactId()
     {
         $contact = $this->number->user->contacts()
-            ->firstWhere('phone_numbers', 'like', '%' . $this->input['From'] . '%');
+            ->firstWhere('phone_numbers', 'like', '%'.$this->input['From'].'%');
 
         return $contact ? $contact->id : null;
     }
@@ -70,17 +71,17 @@ class ProcessTwilioVoicemailJob implements ShouldQueue
      * of the recording using the ID given in the callback
      * input
      *
-     * @return integer
+     * @return int
      */
     private function getRecordingDuration()
     {
         // try {
-            $tw = $this->number->serviceAccount->getProviderClient();
+        $tw = $this->number->serviceAccount->getProviderClient();
 
-            $recording = $tw->recordings($this->input['RecordingSid'])
+        $recording = $tw->recordings($this->input['RecordingSid'])
                 ->fetch();
 
-            return $recording->duration;
+        return $recording->duration;
 
         // } catch(\Twilio\Exceptions\RestException $e){
         //     return 0;

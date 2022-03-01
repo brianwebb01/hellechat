@@ -34,7 +34,6 @@ class ConnectContactToMessagesJob implements ShouldQueue
      */
     public function handle()
     {
-
         $numbers = collect(
             is_array($this->contact->phone_numbers)
                 ? $this->contact->phone_numbers
@@ -42,11 +41,10 @@ class ConnectContactToMessagesJob implements ShouldQueue
         )->values();
 
         Message::query()
-            ->where(fn($query) =>
-                $query->whereIn('from', $numbers)
+            ->where(fn ($query) => $query->whereIn('from', $numbers)
                     ->orWhereIn('to', $numbers)
             )->update([
-                'contact_id' => $this->contact->id
+                'contact_id' => $this->contact->id,
             ]);
     }
 }

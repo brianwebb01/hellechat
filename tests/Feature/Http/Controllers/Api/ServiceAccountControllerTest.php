@@ -30,19 +30,18 @@ class ServiceAccountControllerTest extends TestCase
     public function index_behaves_as_expected()
     {
         $serviceAccounts = ServiceAccount::factory()->count(3)->create([
-            'user_id' => $this->user->id
+            'user_id' => $this->user->id,
         ]);
         ServiceAccount::factory()->count(3)->create();
 
         $response = $this->actingAs($this->user)->getJson(route('service-accounts.index'));
 
         $response->assertOk();
-        $userIds = collect($response->json("data"))->pluck('user_id')->unique();
-        $this->assertEquals(3, count($response->json("data")));
+        $userIds = collect($response->json('data'))->pluck('user_id')->unique();
+        $this->assertEquals(3, count($response->json('data')));
         $this->assertCount(1, $userIds);
         $this->assertEquals($this->user->id, $userIds->first());
-        $response->assertJson(fn (AssertableJson $json) =>
-            $json->has('data', 3)
+        $response->assertJson(fn (AssertableJson $json) => $json->has('data', 3)
             ->has('data.0.id')
             ->has('data.0.user_id')
             ->has('data.0.name')
@@ -64,16 +63,15 @@ class ServiceAccountControllerTest extends TestCase
         );
     }
 
-
     /**
      * @test
      */
     public function store_saves()
     {
-        $name = $this->faker->name;
-        $provider = ['twilio', 'telnyx'][rand(0,1)];
-        $api_key = $this->faker->word;
-        $api_secret = $this->faker->word;
+        $name = $this->faker->name();
+        $provider = ['twilio', 'telnyx'][rand(0, 1)];
+        $api_key = $this->faker->word();
+        $api_secret = $this->faker->word();
 
         $response = $this->actingAs($this->user)->postJson(route('service-accounts.store'), [
             'name' => $name,
@@ -89,8 +87,7 @@ class ServiceAccountControllerTest extends TestCase
         $this->assertCount(1, $serviceAccounts);
 
         $response->assertCreated();
-        $response->assertJson(fn (AssertableJson $json) =>
-            $json->has('data')
+        $response->assertJson(fn (AssertableJson $json) => $json->has('data')
             ->has('data.id')
             ->has('data.user_id')
             ->has('data.name')
@@ -106,13 +103,13 @@ class ServiceAccountControllerTest extends TestCase
         $this->user->service_accounts()->delete();
         $existing = ServiceAccount::factory()->create([
             'user_id' => $this->user->id,
-            'provider' => 'twilio'
+            'provider' => 'twilio',
         ]);
 
-        $name = $this->faker->name;
+        $name = $this->faker->name();
         $provider = 'twilio';
-        $api_key = $this->faker->word;
-        $api_secret = $this->faker->word;
+        $api_key = $this->faker->word();
+        $api_secret = $this->faker->word();
 
         $response = $this->actingAs($this->user)->postJson(route('service-accounts.store'), [
             'name' => $name,
@@ -122,8 +119,7 @@ class ServiceAccountControllerTest extends TestCase
         ]);
 
         $response->assertUnprocessable();
-        $response->assertJson(fn (AssertableJson $json) =>
-            $json->has('message')
+        $response->assertJson(fn (AssertableJson $json) => $json->has('message')
                 ->has('errors')
                 ->has('errors.provider', 1)
         );
@@ -135,14 +131,13 @@ class ServiceAccountControllerTest extends TestCase
     public function show_behaves_as_expected()
     {
         $serviceAccount = ServiceAccount::factory()->create([
-            'user_id' => $this->user->id
+            'user_id' => $this->user->id,
         ]);
 
         $response = $this->actingAs($this->user)->getJson(route('service-accounts.show', $serviceAccount));
 
         $response->assertOk();
-        $response->assertJson(fn (AssertableJson $json) =>
-            $json->has('data')
+        $response->assertJson(fn (AssertableJson $json) => $json->has('data')
                 ->has('data.id')
                 ->has('data.user_id')
                 ->has('data.name')
@@ -162,17 +157,16 @@ class ServiceAccountControllerTest extends TestCase
         $response->assertForbidden();
     }
 
-
     /**
      * @test
      */
     public function update_behaves_as_expected()
     {
         $serviceAccount = ServiceAccount::factory()->create([
-            'user_id' => $this->user->id
+            'user_id' => $this->user->id,
         ]);
-        $name = $this->faker->name;
-        $api_key = $this->faker->word;
+        $name = $this->faker->name();
+        $api_key = $this->faker->word();
 
         $response = $this->actingAs($this->user)->putJson(route('service-accounts.update', $serviceAccount), [
             'name' => $name,
@@ -182,8 +176,7 @@ class ServiceAccountControllerTest extends TestCase
         $serviceAccount->refresh();
 
         $response->assertOk();
-        $response->assertJson(fn (AssertableJson $json) =>
-            $json->has('data')
+        $response->assertJson(fn (AssertableJson $json) => $json->has('data')
                 ->has('data.id')
                 ->has('data.user_id')
                 ->has('data.name')
@@ -203,11 +196,10 @@ class ServiceAccountControllerTest extends TestCase
         $serviceAccount = ServiceAccount::factory()->create();
 
         $response = $this->actingAs($this->user)->putJson(route('service-accounts.update', $serviceAccount), [
-            'name' => 'foo'
+            'name' => 'foo',
         ]);
         $response->assertForbidden();
     }
-
 
     /**
      * @test
@@ -215,14 +207,14 @@ class ServiceAccountControllerTest extends TestCase
     public function destroy_deletes_and_responds_with()
     {
         $serviceAccount = ServiceAccount::factory()->create([
-            'user_id' => $this->user->id
+            'user_id' => $this->user->id,
         ]);
 
         $response = $this->actingAs($this->user)->deleteJson(route('service-accounts.destroy', $serviceAccount));
 
         $response->assertNoContent();
 
-        $this->assertDeleted($serviceAccount);
+        $this->assertModelMissing($serviceAccount);
     }
 
     /**

@@ -19,7 +19,7 @@ trait PasswordValidationRules
             'string',
             (new Password),
             PasswordRule::min(8)->uncompromised(),
-            'confirmed'
+            'confirmed',
         ];
     }
 }

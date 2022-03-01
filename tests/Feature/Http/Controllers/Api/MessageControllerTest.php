@@ -19,7 +19,6 @@ class MessageControllerTest extends TestCase
 {
     use RefreshDatabase, WithFaker;
 
-
     /**
      * @test
      */
@@ -27,16 +26,16 @@ class MessageControllerTest extends TestCase
     {
         $user = User::factory()->create();
         $serviceAccount = ServiceAccount::factory()->create([
-            'user_id' => $user->id
+            'user_id' => $user->id,
         ]);
         $number = Number::factory()->create([
             'user_id' => $user->id,
-            'service_account_id' => $serviceAccount->id
+            'service_account_id' => $serviceAccount->id,
         ]);
         $toPhone = $this->faker->e164PhoneNumber();
         $contact = Contact::factory()->create([
             'user_id' => $user->id,
-            'phone_numbers' => ['mobile' => $toPhone]
+            'phone_numbers' => ['mobile' => $toPhone],
         ]);
         $body = 'foo bar biz bang';
 
@@ -59,8 +58,7 @@ class MessageControllerTest extends TestCase
         $message = $messages->first();
 
         $response->assertCreated();
-        $response->assertJson(fn (AssertableJson $json) =>
-            $json->has('data')
+        $response->assertJson(fn (AssertableJson $json) => $json->has('data')
                 ->has('data.id')
                 ->has('data.number_id')
                 ->has('data.service_account_id')
@@ -83,7 +81,6 @@ class MessageControllerTest extends TestCase
         );
     }
 
-
     /**
      * @test
      */
@@ -91,11 +88,11 @@ class MessageControllerTest extends TestCase
     {
         $user = User::factory()->create();
         $serviceAccount = ServiceAccount::factory()->create([
-            'user_id' => $user->id
+            'user_id' => $user->id,
         ]);
         $number = Number::factory()->create([
             'user_id' => $user->id,
-            'service_account_id' => $serviceAccount->id
+            'service_account_id' => $serviceAccount->id,
         ]);
         $toPhone = $this->faker->e164PhoneNumber();
         $body = 'foo bar biz bang';
@@ -120,13 +117,11 @@ class MessageControllerTest extends TestCase
 
         $response->assertCreated();
         $response->assertJson(
-            fn (AssertableJson $json) =>
-            $json->has('data')
+            fn (AssertableJson $json) => $json->has('data')
             ->where('data.contact', null)
             ->etc()
         );
     }
-
 
     /**
      * @test
@@ -135,11 +130,11 @@ class MessageControllerTest extends TestCase
     {
         $user = User::factory()->create();
         $serviceAccount = ServiceAccount::factory()->create([
-            'user_id' => $user->id
+            'user_id' => $user->id,
         ]);
         $number = Number::factory()->create([
             'user_id' => $user->id,
-            'service_account_id' => $serviceAccount->id
+            'service_account_id' => $serviceAccount->id,
         ]);
         $toPhone = $this->faker->e164PhoneNumber();
         $body = 'foo bar biz bang';
@@ -150,12 +145,12 @@ class MessageControllerTest extends TestCase
             'read' => false,
             'from' => $number->phone_number,
             'to' => $toPhone,
-            'body' => $body
+            'body' => $body,
         ]);
         $this->assertFalse($message->read);
 
         $response = $this->actingAs($user)->putJson(route('messages.update', $message), [
-            'read' => true
+            'read' => true,
         ]);
 
         $response->assertOk();
