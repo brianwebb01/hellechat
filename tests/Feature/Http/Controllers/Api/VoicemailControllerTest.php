@@ -117,7 +117,7 @@ class VoicemailControllerTest extends TestCase
 
         $response->assertNoContent();
 
-        $this->assertDeleted($voicemail);
+        $this->assertModelMissing($voicemail);
     }
 
     /**

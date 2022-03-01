@@ -255,7 +255,7 @@ class ContactControllerTest extends TestCase
 
         $response->assertNoContent();
 
-        $this->assertDeleted($contact);
+        $this->assertModelMissing($contact);
     }
 
     /**

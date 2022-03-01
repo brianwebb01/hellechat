@@ -138,7 +138,7 @@ class ThreadControllerTest extends TestCase
 
         $response->assertNoContent();
 
-        $this->assertDeleted($messages->first());
-        $this->assertDeleted($messages->last());
+        $this->assertModelMissing($messages->first());
+        $this->assertModelMissing($messages->last());
     }
 }

@@ -214,7 +214,7 @@ class ServiceAccountControllerTest extends TestCase
 
         $response->assertNoContent();
 
-        $this->assertDeleted($serviceAccount);
+        $this->assertModelMissing($serviceAccount);
     }
 
     /**

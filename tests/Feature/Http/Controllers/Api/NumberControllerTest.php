@@ -252,7 +252,7 @@ class NumberControllerTest extends TestCase
 
         $response->assertNoContent();
 
-        $this->assertDeleted($number);
+        $this->assertModelMissing($number);
     }
 
     /**
