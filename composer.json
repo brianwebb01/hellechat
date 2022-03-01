@@ -21,7 +21,8 @@
         "livewire/livewire": "^2.5",
         "predis/predis": "^1.1",
         "pusher/pusher-php-server": "^7.0",
-        "twilio/sdk": "^6.28"
+        "twilio/sdk": "^6.28",
+        "league/flysystem-aws-s3-v3": "^3.0"
     },
     "require-dev": {
         "brianium/paratest": "^6.3",
