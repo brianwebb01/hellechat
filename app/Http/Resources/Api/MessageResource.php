@@ -31,7 +31,7 @@ class MessageResource extends JsonResource
             'media' => $this->media,
             'external_identity' => $this->external_identity,
             'created_at' => $this->created_at->timezone($this->user->time_zone)->format(\DateTime::ISO8601),
-            'read' => $this->read
+            'read' => $this->read,
         ];
     }
 }

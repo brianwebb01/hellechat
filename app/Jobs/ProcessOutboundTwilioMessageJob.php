@@ -18,6 +18,7 @@ class ProcessOutboundTwilioMessageJob implements ShouldQueue
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
     public $serviceAccount;
+
     public $message;
 
     /**
@@ -47,20 +48,22 @@ class ProcessOutboundTwilioMessageJob implements ShouldQueue
 
         $data = [
             'from' => $this->message->from,
-            'statusCallback' => $callbackUrl
+            'statusCallback' => $callbackUrl,
         ];
 
-        if($this->message->body)
+        if ($this->message->body) {
             $data['body'] = $this->message->body;
+        }
 
-        if(! empty($this->message->media))
+        if (! empty($this->message->media)) {
             $data['mediaUrl'] = collect($this->message->media)
-                ->map(fn ($i) => config('app.url') . $i)->all();
+                ->map(fn ($i) => config('app.url').$i)->all();
+        }
 
-        if(config('services.twilio.use_sandbox') === true){
+        if (config('services.twilio.use_sandbox') === true) {
             $remoteMessage = \json_decode(\json_encode([
                 'sid' => \base64_encode(\uniqid('', true)),
-                'status' => Message::STATUS_DELIVERED
+                'status' => Message::STATUS_DELIVERED,
             ]));
         } else {
             $remoteMessage = $tw->messages->create(
@@ -71,7 +74,7 @@ class ProcessOutboundTwilioMessageJob implements ShouldQueue
 
         $this->message->update([
             'external_identity' => $remoteMessage->sid,
-            'status' => $remoteMessage->status
+            'status' => $remoteMessage->status,
         ]);
     }
 }

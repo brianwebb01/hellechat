@@ -29,19 +29,18 @@ class VoicemailControllerTest extends TestCase
     public function index_behaves_as_expected()
     {
         Voicemail::factory()->count(3)->create([
-            'user_id' => $this->user->id
+            'user_id' => $this->user->id,
         ]);
         Voicemail::factory()->count(3)->create();
 
         $response = $this->actingAs($this->user)->getJson(route('voicemails.index'));
 
         $response->assertOk();
-        $userIds = collect($response->json("data"))->pluck('user_id')->unique();
-        $this->assertEquals(3, count($response->json("data")));
+        $userIds = collect($response->json('data'))->pluck('user_id')->unique();
+        $this->assertEquals(3, count($response->json('data')));
         $this->assertCount(1, $userIds);
         $this->assertEquals($this->user->id, $userIds->first());
-        $response->assertJson(fn (AssertableJson $json) =>
-            $json->has('data', 3)
+        $response->assertJson(fn (AssertableJson $json) => $json->has('data', 3)
                 ->has('data.0.id')
                 ->has('data.0.user_id')
                 ->has('data.0.number_id')
@@ -68,21 +67,19 @@ class VoicemailControllerTest extends TestCase
         );
     }
 
-
     /**
      * @test
      */
     public function show_behaves_as_expected()
     {
         $voicemail = Voicemail::factory()->create([
-            'user_id' => $this->user->id
+            'user_id' => $this->user->id,
         ]);
 
         $response = $this->actingAs($this->user)->getJson(route('voicemails.show', $voicemail));
 
         $response->assertOk();
-        $response->assertJson(fn (AssertableJson $json) =>
-            $json->has('data')
+        $response->assertJson(fn (AssertableJson $json) => $json->has('data')
                 ->has('data.id')
                 ->has('data.user_id')
                 ->has('data.number_id')
@@ -107,21 +104,20 @@ class VoicemailControllerTest extends TestCase
         $response->assertForbidden();
     }
 
-
     /**
      * @test
      */
     public function destroy_deletes_and_responds_with()
     {
         $voicemail = Voicemail::factory()->create([
-            'user_id' => $this->user->id
+            'user_id' => $this->user->id,
         ]);
 
         $response = $this->actingAs($this->user)->deleteJson(route('voicemails.destroy', $voicemail));
 
         $response->assertNoContent();
 
-        $this->assertDeleted($voicemail);
+        $this->assertModelMissing($voicemail);
     }
 
     /**

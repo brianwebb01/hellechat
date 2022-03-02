@@ -26,7 +26,7 @@ class ContactImportControllerTest extends TestCase
         $file = UploadedFile::fake()->create(
             'contacts.vcf', 100, 'text/vcard'
         );
-        $filepath = 'contact-imports/' . $file->hashName();
+        $filepath = 'contact-imports/'.$file->hashName();
 
         $user = User::factory()->create();
 
@@ -45,7 +45,6 @@ class ContactImportControllerTest extends TestCase
         });
     }
 
-
     /** @test */
     public function store_enforces_filesize_limitation()
     {
@@ -57,7 +56,7 @@ class ContactImportControllerTest extends TestCase
             600,
             'text/vcard'
         );
-        $filepath = 'contact-imports/' . $file->hashName();
+        $filepath = 'contact-imports/'.$file->hashName();
 
         $user = User::factory()->create();
 
@@ -68,8 +67,7 @@ class ContactImportControllerTest extends TestCase
 
         $response->assertUnprocessable();
         $response->assertJson(
-            fn (AssertableJson $json) =>
-            $json->has('message')
+            fn (AssertableJson $json) => $json->has('message')
             ->has('errors')
                 ->has('errors.import', 1)
                 ->where('errors.import.0', 'The import must not be greater than 512 kilobytes.')
@@ -77,7 +75,6 @@ class ContactImportControllerTest extends TestCase
 
         Queue::assertNotPushed(ImportContactsJob::class);
     }
-
 
     /** @test */
     public function validates_file_requirement()
@@ -93,8 +90,7 @@ class ContactImportControllerTest extends TestCase
         );
 
         $response->assertUnprocessable();
-        $response->assertJson(fn (AssertableJson $json) =>
-            $json->has('message')
+        $response->assertJson(fn (AssertableJson $json) => $json->has('message')
                 ->has('errors')
                 ->has('errors.import', 2)
                 ->where('errors.import.0', 'The import must be a file.')

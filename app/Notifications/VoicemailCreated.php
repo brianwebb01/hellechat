@@ -35,8 +35,9 @@ class VoicemailCreated extends Notification
     {
         $channels = [];
 
-        if ($notifiable->gotify_app_token)
+        if ($notifiable->gotify_app_token) {
             $channels[] = GotifyChannel::class;
+        }
 
         return $channels;
     }
@@ -50,20 +51,20 @@ class VoicemailCreated extends Notification
     public function toGotify($notifiable)
     {
         if ($this->voicemail->contact) {
-            $title = "Voicemail from " . $this->voicemail->contact->friendlyName();
+            $title = 'Voicemail from '.$this->voicemail->contact->friendlyName();
         } else {
-            $title = "Voicemail from " . $this->voicemail->from;
+            $title = 'Voicemail from '.$this->voicemail->from;
         }
 
         $url = route('ui.thread.index', [
             'numberPhone' => $this->voicemail->number->phone_number,
-            'with' => $this->voicemail->from
+            'with' => $this->voicemail->from,
         ]);
 
         return [
             'title' => $title,
             'message' => $this->voicemail->transcription,
-            'url' => $url
+            'url' => $url,
         ];
     }
 
@@ -76,7 +77,7 @@ class VoicemailCreated extends Notification
     public function toArray($notifiable)
     {
         return [
-            'voicemail' => $this->voicemail->toArray()
+            'voicemail' => $this->voicemail->toArray(),
         ];
     }
 }

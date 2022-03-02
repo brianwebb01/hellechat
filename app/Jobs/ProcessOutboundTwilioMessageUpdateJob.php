@@ -37,7 +37,7 @@ class ProcessOutboundTwilioMessageUpdateJob implements ShouldQueue
         Message::query()
             ->where('external_identity', $this->input['MessageSid'])
             ->update([
-                'status' => $this->input['MessageStatus']
+                'status' => $this->input['MessageStatus'],
             ]);
     }
 }

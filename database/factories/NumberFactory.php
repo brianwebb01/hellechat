@@ -2,21 +2,14 @@
 
 namespace Database\Factories;
 
-use Illuminate\Database\Eloquent\Factories\Factory;
-use Illuminate\Support\Str;
 use App\Models\Number;
 use App\Models\ServiceAccount;
 use App\Models\User;
+use Illuminate\Database\Eloquent\Factories\Factory;
+use Illuminate\Support\Str;
 
 class NumberFactory extends Factory
 {
-    /**
-     * The name of the factory's corresponding model.
-     *
-     * @var string
-     */
-    protected $model = Number::class;
-
     /**
      * Define the model's default state.
      *
@@ -25,6 +18,7 @@ class NumberFactory extends Factory
     public function definition()
     {
         $n = $this->faker->e164PhoneNumber();
+
         return [
             'user_id' => User::factory(),
             'service_account_id' => ServiceAccount::factory(),

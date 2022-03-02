@@ -5,8 +5,8 @@ namespace Tests\Unit;
 use App\Channels\GotifyChannel;
 use App\Jobs\ProcessOutboundTwilioMessageJob;
 use App\Models\Message;
-use App\Models\ServiceAccount;
 use App\Models\Number;
+use App\Models\ServiceAccount;
 use App\Models\User;
 use App\Notifications\InboundMessageCreated;
 use App\Services\Gotify\Client;
@@ -26,11 +26,11 @@ class MessageTest extends TestCase
         $user = User::factory()->create();
         $serviceAccount = ServiceAccount::factory()->create([
             'user_id' => $user->id,
-            'provider' => ServiceAccount::PROVIDER_TWILIO
+            'provider' => ServiceAccount::PROVIDER_TWILIO,
         ]);
         $number = Number::factory()->create([
             'user_id' => $user->id,
-            'service_account_id' => $serviceAccount->id
+            'service_account_id' => $serviceAccount->id,
         ]);
         $message = Message::factory()->make([
             'user_id' => $user->id,
@@ -45,14 +45,11 @@ class MessageTest extends TestCase
         Queue::assertPushed(ProcessOutboundTwilioMessageJob::class);
     }
 
-
-
     /** @test */
     public function notifies_user_of_new_inbound_message_as_expected()
     {
-
         $user = User::factory()->create([
-            'gotify_app_token' => 'abc123'
+            'gotify_app_token' => 'abc123',
         ]);
         $message = Message::factory()->make([
             'user_id' => $user->id,
@@ -60,30 +57,25 @@ class MessageTest extends TestCase
             'media' => [],
             'num_media' => 0,
             'body' => 'foobar',
-            'contact_id' => null
+            'contact_id' => null,
         ]);
-
 
         $mGotify = \Mockery::mock(
             Client::class,
-            fn (MockInterface $mock) =>
-            $mock->shouldReceive('createMessage')
+            fn (MockInterface $mock) => $mock->shouldReceive('createMessage')
                 ->with(
-                    "SMS from ". $message->from,
+                    'SMS from '.$message->from,
                     $message->body,
                     route('ui.thread.index', [
                         'numberPhone' => $message->number->phone_number,
-                        'with' => $message->from
+                        'with' => $message->from,
                     ])
                 )
         );
         $this->app->instance(Client::class, $mGotify);
 
-
         $message->save();
-
     }
-
 
     /** @test */
     public function returns_positive_notification_intent_in_default()
@@ -98,26 +90,25 @@ class MessageTest extends TestCase
     public function returns_positive_notification_intent_in_default_allow_contact()
     {
         $number = Number::factory()->create([
-            'dnd_allow_contacts' => true
+            'dnd_allow_contacts' => true,
         ]);
         $message = Message::factory()->create([
-            'number_id' => $number->id
+            'number_id' => $number->id,
         ]);
         $this->assertFalse($message->number->dnd_messages);
         $this->assertTrue($message->number->dnd_allow_contacts);
         $this->assertTrue($message->shouldNotify());
     }
 
-
     /** @test  */
     public function returns_positive_notification_intent_with_settings()
     {
         $number = Number::factory()->create([
             'dnd_messages' => true,
-            'dnd_allow_contacts' => true
+            'dnd_allow_contacts' => true,
         ]);
         $message = Message::factory()->create([
-            'number_id' => $number->id
+            'number_id' => $number->id,
         ]);
         $this->assertTrue($message->number->dnd_messages);
         $this->assertTrue($message->number->dnd_allow_contacts);
@@ -129,11 +120,11 @@ class MessageTest extends TestCase
     {
         $number = Number::factory()->create([
             'dnd_messages' => true,
-            'dnd_allow_contacts' => true
+            'dnd_allow_contacts' => true,
         ]);
         $message = Message::factory()->create([
             'number_id' => $number->id,
-            'contact_id' => null
+            'contact_id' => null,
         ]);
         $this->assertTrue($message->number->dnd_messages);
         $this->assertTrue($message->number->dnd_allow_contacts);
@@ -145,15 +136,14 @@ class MessageTest extends TestCase
     public function returns_negative_notification()
     {
         $number = Number::factory()->create([
-            'dnd_messages' => true
+            'dnd_messages' => true,
         ]);
         $message = Message::factory()->create([
-            'number_id' => $number->id
+            'number_id' => $number->id,
         ]);
         $this->assertTrue($message->number->dnd_messages);
         $this->assertFalse($message->number->dnd_allow_contacts);
         $this->assertNotNull($message->contact);
         $this->assertFalse($message->shouldNotify());
     }
-
 }

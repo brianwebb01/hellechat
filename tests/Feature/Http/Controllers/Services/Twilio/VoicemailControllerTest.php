@@ -18,6 +18,7 @@ class VoicemailControllerTest extends TestCase
     use RefreshDatabase;
 
     protected $user;
+
     protected $number;
 
     protected function setUp(): void
@@ -34,7 +35,7 @@ class VoicemailControllerTest extends TestCase
     {
         $response = $this->post(route('webhooks.twilio.voice', [
             'numberHashId' => $this->number->getHashId(),
-            'userHashId' => $this->user->getHashId()
+            'userHashId' => $this->user->getHashId(),
         ]));
 
         $response->assertOk();
@@ -45,19 +46,18 @@ class VoicemailControllerTest extends TestCase
         $this->assertInstanceOf(\SimpleXMLElement::class, $xml);
         $this->assertEquals('Response', $xml->getName());
         $this->assertObjectHasAttribute('Dial', $xml);
-        $this->assertEquals(10, (int)$xml->Dial['timeout']);
+        $this->assertEquals(10, (int) $xml->Dial['timeout']);
         $this->assertEquals('us', $xml->Dial['ringTone']);
         $this->assertEquals(
             $this->number->sip_registration_url,
-            (string)$xml->Dial->Sip
+            (string) $xml->Dial->Sip
         );
         $this->assertObjectHasAttribute('Sip', $xml->Dial);
         $this->assertEquals(route('webhooks.twilio.voice.greeting', [
-            'userHashId' => $this->user->getHashId()
+            'userHashId' => $this->user->getHashId(),
         ]), $xml->Dial['action']);
         $this->assertEquals('Dial', $xml->children()[0]->getName());
     }
-
 
     /**
      * @test
@@ -66,12 +66,12 @@ class VoicemailControllerTest extends TestCase
     {
         $number = Number::factory()->create([
             'user_id' => $this->user->id,
-            'dnd_calls' => true
+            'dnd_calls' => true,
         ]);
 
         $response = $this->post(route('webhooks.twilio.voice', [
             'numberHashId' => $number->getHashId(),
-            'userHashId' => $this->user->getHashId()
+            'userHashId' => $this->user->getHashId(),
         ]));
 
         $response->assertOk();
@@ -83,10 +83,9 @@ class VoicemailControllerTest extends TestCase
         $this->assertEquals('Response', $xml->getName());
         $this->assertObjectHasAttribute('Redirect', $xml);
         $this->assertEquals(route('webhooks.twilio.voice.greeting', [
-            'userHashId' => $this->user->getHashId()
+            'userHashId' => $this->user->getHashId(),
         ]), $xml->Redirect);
     }
-
 
     /**
      * @test
@@ -96,16 +95,16 @@ class VoicemailControllerTest extends TestCase
         $number = Number::factory()->create([
             'user_id' => $this->user->id,
             'dnd_calls' => true,
-            'dnd_allow_contacts' => true
+            'dnd_allow_contacts' => true,
         ]);
         $contact = Contact::factory()->create([
-            'user_id' => $this->user->id
+            'user_id' => $this->user->id,
         ]);
         $from = collect($contact->phone_numbers)->values()->first();
 
         $response = $this->post(route('webhooks.twilio.voice', [
             'numberHashId' => $number->getHashId(),
-            'userHashId' => $this->user->getHashId()
+            'userHashId' => $this->user->getHashId(),
         ]), ['From' => $from]);
 
         $response->assertOk();
@@ -116,19 +115,18 @@ class VoicemailControllerTest extends TestCase
         $this->assertInstanceOf(\SimpleXMLElement::class, $xml);
         $this->assertEquals('Response', $xml->getName());
         $this->assertObjectHasAttribute('Dial', $xml);
-        $this->assertEquals(10, (int)$xml->Dial['timeout']);
+        $this->assertEquals(10, (int) $xml->Dial['timeout']);
         $this->assertEquals('us', $xml->Dial['ringTone']);
         $this->assertEquals(
             $number->sip_registration_url,
-            (string)$xml->Dial->Sip
+            (string) $xml->Dial->Sip
         );
         $this->assertObjectHasAttribute('Sip', $xml->Dial);
         $this->assertEquals(route('webhooks.twilio.voice.greeting', [
-            'userHashId' => $this->user->getHashId()
+            'userHashId' => $this->user->getHashId(),
         ]), $xml->Dial['action']);
         $this->assertEquals('Dial', $xml->children()[0]->getName());
     }
-
 
     /**
      * @test
@@ -136,9 +134,9 @@ class VoicemailControllerTest extends TestCase
     public function greeting_behaves_as_expected()
     {
         $response = $this->post(route('webhooks.twilio.voice.greeting', [
-            'userHashId' => $this->user->getHashId()
+            'userHashId' => $this->user->getHashId(),
         ]), [
-            'Called' => '+12125551212'
+            'Called' => '+12125551212',
         ]);
 
         $response->assertOk();
@@ -149,21 +147,20 @@ class VoicemailControllerTest extends TestCase
         $this->assertInstanceOf(\SimpleXMLElement::class, $xml);
         $this->assertEquals('Response', $xml->getName());
         $this->assertEquals(
-            "The party you have called is unavailable. Please leave a message after the tone.",
-            (string)$xml->Say
+            'The party you have called is unavailable. Please leave a message after the tone.',
+            (string) $xml->Say
         );
-        $this->assertEquals(1, (int)$xml->Pause[0]['length']);
+        $this->assertEquals(1, (int) $xml->Pause[0]['length']);
         $this->assertObjectHasAttribute('Record', $xml);
-        $this->assertEquals(true, (boolean)$xml->Record['playBeep']);
-        $this->assertEquals(120, (int)$xml->Record['maxLength']);
+        $this->assertEquals(true, (bool) $xml->Record['playBeep']);
+        $this->assertEquals(120, (int) $xml->Record['maxLength']);
         $this->assertEquals(
             route('webhooks.twilio.voice.store', [
-                'userHashId' => $this->user->getHashId()
+                'userHashId' => $this->user->getHashId(),
             ]),
-            (string)$xml->Record['transcribeCallback']
+            (string) $xml->Record['transcribeCallback']
         );
     }
-
 
     /**
      * @test
@@ -175,9 +172,9 @@ class VoicemailControllerTest extends TestCase
         $number = Number::factory()->create();
 
         $response = $this->post(route('webhooks.twilio.voice.store', [
-            'userHashId' => $this->user->getHashId()
+            'userHashId' => $this->user->getHashId(),
         ]), [
-            'To' => $number->phone_number
+            'To' => $number->phone_number,
         ]);
         $response->assertHeader('Content-Type', 'text/xml; charset=UTF-8');
 

@@ -14,13 +14,12 @@ class DeleteGotifyUserRecordsJobTest extends TestCase
     public function deletes_gotify_records_as_expected()
     {
         $user = User::factory()->create([
-            'gotify_user_id' => 123
+            'gotify_user_id' => 123,
         ]);
 
         $mGotify = \Mockery::mock(
             Client::class,
-            fn (MockInterface $mock) =>
-            $mock->shouldReceive('deleteUser')->with(123)
+            fn (MockInterface $mock) => $mock->shouldReceive('deleteUser')->with(123)
         );
         $this->app->instance(Client::class, $mGotify);
 

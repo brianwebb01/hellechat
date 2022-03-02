@@ -22,7 +22,6 @@ class MessagingController extends Controller
             ->header('Content-Type', 'text/xml');
     }
 
-
     /**
      * @param \Illuminate\Http\Request $request
      * @return \Illuminate\Http\Response

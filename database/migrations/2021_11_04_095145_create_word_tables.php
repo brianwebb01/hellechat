@@ -5,8 +5,7 @@ use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 
-class CreateWordTables extends Migration
-{
+return new class extends Migration {
     /**
      * Run the migrations.
      *
@@ -157,7 +156,7 @@ class CreateWordTables extends Migration
             ['word' => 'Suspicious'],
             ['word' => 'Ungrounded'],
             ['word' => 'Unsure'],
-            ['word' => 'Worried']
+            ['word' => 'Worried'],
         ]);
 
         DB::table('words_animals')->insert([
@@ -518,7 +517,7 @@ class CreateWordTables extends Migration
             ['word' => 'Wren'],
             ['word' => 'Xerinae'],
             ['word' => 'Yak'],
-            ['word' => 'Zebra']
+            ['word' => 'Zebra'],
         ]);
     }
 
@@ -532,4 +531,4 @@ class CreateWordTables extends Migration
         Schema::dropIfExists('words_adjectives');
         Schema::dropIfExists('words_animals');
     }
-}
+};

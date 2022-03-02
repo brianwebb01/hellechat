@@ -37,7 +37,7 @@ class ConnectContactToMessagesJobTest extends TestCase
             ->from;
         $contact = Contact::factory()->make([
             'user_id' => $user->id,
-            'phone_numbers' => ['mobile' => $phone]
+            'phone_numbers' => ['mobile' => $phone],
         ]);
         $contact->saveQuietly();
         $this->assertEquals(0, $contact->messages()->count());

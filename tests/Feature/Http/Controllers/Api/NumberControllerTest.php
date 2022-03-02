@@ -18,6 +18,7 @@ class NumberControllerTest extends TestCase
     use RefreshDatabase, WithFaker;
 
     protected $user;
+
     protected $serviceAccount;
 
     protected function setUp() : void
@@ -25,7 +26,7 @@ class NumberControllerTest extends TestCase
         parent::setUp();
         $this->user = User::factory()->create();
         $this->serviceAccount = ServiceAccount::factory()->create([
-            'user_id' => $this->user->id
+            'user_id' => $this->user->id,
         ]);
     }
 
@@ -36,14 +37,13 @@ class NumberControllerTest extends TestCase
     {
         Number::factory()->count(5)->create([
             'user_id' => $this->user->id,
-            'service_account_id' => $this->serviceAccount->id
+            'service_account_id' => $this->serviceAccount->id,
         ]);
 
         $response = $this->actingAs($this->user)->getJson(route('numbers.index'));
 
         $response->assertOk();
-        $response->assertJson(fn (AssertableJson $json) =>
-            $json->has('data', 5)
+        $response->assertJson(fn (AssertableJson $json) => $json->has('data', 5)
                 ->has('data.0.id')
                 ->has('data.0.user_id')
                 ->has('data.0.service_account')
@@ -75,15 +75,13 @@ class NumberControllerTest extends TestCase
         );
     }
 
-
-
     /**
      * @test
      */
     public function store_saves()
     {
         $phone_number = $this->faker->e164PhoneNumber();
-        $friendly_label = $this->faker->word;
+        $friendly_label = $this->faker->word();
 
         $response = $this->actingAs($this->user)->postJson(route('numbers.store'), [
             'service_account_id' => $this->serviceAccount->id,
@@ -101,8 +99,7 @@ class NumberControllerTest extends TestCase
         $this->assertCount(1, $numbers);
 
         $response->assertJson(
-            fn (AssertableJson $json) =>
-            $json->has('data')
+            fn (AssertableJson $json) => $json->has('data')
                 ->has('data.id')
                 ->has('data.user_id')
                 ->has('data.service_account')
@@ -120,7 +117,6 @@ class NumberControllerTest extends TestCase
         );
     }
 
-
     /**
      * @test
      */
@@ -132,8 +128,7 @@ class NumberControllerTest extends TestCase
 
         $response->assertOk();
         $response->assertJson(
-            fn (AssertableJson $json) =>
-            $json->has('data')
+            fn (AssertableJson $json) => $json->has('data')
                 ->has('data.id')
                 ->has('data.user_id')
                 ->has('data.service_account')
@@ -163,8 +158,6 @@ class NumberControllerTest extends TestCase
         $response->assertForbidden();
     }
 
-
-
     /**
      * @test
      */
@@ -172,22 +165,21 @@ class NumberControllerTest extends TestCase
     {
         $number = Number::factory()->create(['user_id' => $this->user->id]);
         $phone_number = $this->faker->e164PhoneNumber();
-        $friendly_label = $this->faker->word;
+        $friendly_label = $this->faker->word();
         $sip_registration_url = '555@444.sip.somewhere.com';
 
         $response = $this->actingAs($this->user)->putJson(route('numbers.update', $number), [
             'service_account_id' => $this->serviceAccount->id,
             'phone_number' => $phone_number,
             'friendly_label' => $friendly_label,
-            'sip_registration_url' => $sip_registration_url
+            'sip_registration_url' => $sip_registration_url,
         ]);
 
         $number->refresh();
 
         $response->assertOk();
         $response->assertJson(
-            fn (AssertableJson $json) =>
-            $json->has('data')
+            fn (AssertableJson $json) => $json->has('data')
                 ->has('data.id')
                 ->has('data.user_id')
                 ->has('data.service_account')
@@ -231,7 +223,7 @@ class NumberControllerTest extends TestCase
     {
         $number = Number::factory()->create([
             'user_id' => $this->user->id,
-            'service_account_id' => $this->serviceAccount->id
+            'service_account_id' => $this->serviceAccount->id,
         ]);
         $sa = ServiceAccount::factory()->create();
 
@@ -240,16 +232,14 @@ class NumberControllerTest extends TestCase
         ]);
 
         $response->assertUnprocessable();
-        $response->assertJson(fn (AssertableJson $json) =>
-            $json->has('message')
+        $response->assertJson(fn (AssertableJson $json) => $json->has('message')
                 ->has('errors')
-                ->has('errors.service_account_id',1)
+                ->has('errors.service_account_id', 1)
         );
 
         $number->refresh();
         $this->assertEquals($this->serviceAccount->id, $number->service_account_id);
     }
-
 
     /**
      * @test
@@ -262,7 +252,7 @@ class NumberControllerTest extends TestCase
 
         $response->assertNoContent();
 
-        $this->assertDeleted($number);
+        $this->assertModelMissing($number);
     }
 
     /**

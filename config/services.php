@@ -33,7 +33,7 @@ return [
     'twilio' => [
         'account_sid' => env('TWILIO_ACCOUNT_SID'),
         'auth_token' => env('TWILIO_AUTH_TOKEN'),
-        'use_sandbox' => env('TWILIO_SANDBOX')
+        'use_sandbox' => env('TWILIO_SANDBOX'),
     ],
 
     'gotify' => [
@@ -42,7 +42,7 @@ return [
         'user' => env('GOTIFY_USERNAME'),
         'pass' => env('GOTIFY_PASSWORD'),
         'url' => env('GOTIFY_URL'),
-        'public_url' => env('GOTIFY_PUBLIC_URL')
+        'public_url' => env('GOTIFY_PUBLIC_URL'),
     ],
 
 ];

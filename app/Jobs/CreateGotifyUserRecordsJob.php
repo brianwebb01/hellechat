@@ -35,7 +35,7 @@ class CreateGotifyUserRecordsJob implements ShouldQueue
      *
      * @return void
      */
-    public function handle($gUserName=null, $gUserPass=null)
+    public function handle($gUserName = null, $gUserPass = null)
     {
         $userName = $gUserName ?? $this->generateUserName();
         $userPass = $gUserPass ?? $this->generateUserPass();
@@ -68,7 +68,7 @@ class CreateGotifyUserRecordsJob implements ShouldQueue
             'gotify_client_id' => $gClient['id'],
             'gotify_client_token' => $gClient['token'],
             'gotify_app_id' => $gApplication['id'],
-            'gotify_app_token' => $gApplication['token']
+            'gotify_app_token' => $gApplication['token'],
         ];
 
         foreach ($update as $k => $v) {
@@ -84,12 +84,12 @@ class CreateGotifyUserRecordsJob implements ShouldQueue
 
     public function generateUserName()
     {
-        $parts[] = DB::table('words_adjectives')->orderByRaw("RAND()")->limit(1)->first()->word;
-        $parts[] = DB::table('words_animals')->orderByRaw("RAND()")->limit(1)->first()->word;
-        $parts[] = rand(1,9);
+        $parts[] = DB::table('words_adjectives')->orderByRaw('RAND()')->limit(1)->first()->word;
+        $parts[] = DB::table('words_animals')->orderByRaw('RAND()')->limit(1)->first()->word;
+        $parts[] = rand(1, 9);
         $name = \implode('-', $parts);
 
-        if(User::where('gotify_user_name', $name)->first()){
+        if (User::where('gotify_user_name', $name)->first()) {
             $name = $this->generateUserName();
         }
 

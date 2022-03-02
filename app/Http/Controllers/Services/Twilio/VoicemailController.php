@@ -31,23 +31,20 @@ class VoicemailController extends Controller
         );
 
         $contact = $number->user->contacts()
-            ->firstWhere('phone_numbers', 'like', '%' . $request->get('From') . '%');
+            ->firstWhere('phone_numbers', 'like', '%'.$request->get('From').'%');
 
         $response = new VoiceResponse();
 
-        if($number->shouldRing($contact)){
-
+        if ($number->shouldRing($contact)) {
             $dial = $response->dial(null, [
                 'timeout' => 10,
                 'ringTone' => 'us',
-                'action' => $voicemailGreetingUrl
+                'action' => $voicemailGreetingUrl,
             ]);
             $dial->sip($number->sip_registration_url);
-
         } else {
             $response->redirect($voicemailGreetingUrl);
         }
-
 
         return response($response)
             ->header('Content-Type', 'text/xml');
@@ -61,8 +58,9 @@ class VoicemailController extends Controller
     {
         $response = new VoiceResponse();
 
-        if(\in_array($request->get('DialCallStatus'), ['completed', 'answered'])){
+        if (\in_array($request->get('DialCallStatus'), ['completed', 'answered'])) {
             $response->hangup();
+
             return response($response)
                 ->header('Content-Type', 'text/xml');
         }
@@ -73,11 +71,11 @@ class VoicemailController extends Controller
         $response->pause(['length' => 1]);
         $response->record([
             'transcribeCallback' => route(
-                'webhooks.twilio.voice.store',[
-                    'userHashId' => $request->route('userHashId')
+                'webhooks.twilio.voice.store', [
+                    'userHashId' => $request->route('userHashId'),
                 ]),
             'playBeep' => true,
-            'maxLength' => 120
+            'maxLength' => 120,
         ]);
 
         return response($response)
@@ -95,7 +93,7 @@ class VoicemailController extends Controller
 
         if (is_null($number)) {
             throw new ModelNotFoundException(
-                "No number record found for " . $request->get('To')
+                'No number record found for '.$request->get('To')
             );
         }
 

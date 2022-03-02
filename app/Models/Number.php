@@ -25,7 +25,7 @@ class Number extends Model
         'dnd_calls',
         'dnd_voicemail',
         'dnd_messages',
-        'dnd_allow_contacts'
+        'dnd_allow_contacts',
     ];
 
     /**
@@ -40,9 +40,8 @@ class Number extends Model
         'dnd_calls' => 'boolean',
         'dnd_voicemail' => 'boolean',
         'dnd_messages' => 'boolean',
-        'dnd_allow_contacts' => 'boolean'
+        'dnd_allow_contacts' => 'boolean',
     ];
-
 
     public function messages()
     {
@@ -67,7 +66,7 @@ class Number extends Model
     public function shouldRing(Contact $contact = null)
     {
         if ($this->dnd_calls) {
-            return $this->dnd_allow_contacts && !\is_null($contact);
+            return $this->dnd_allow_contacts && ! \is_null($contact);
         }
 
         return true;

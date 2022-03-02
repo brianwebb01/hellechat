@@ -41,10 +41,8 @@ class SweepGotifyServerMessages extends Command
      */
     public function handle()
     {
-        User::whereNotNull('gotify_client_token')->whereNotNull('gotify_app_id')->chunk(100, function($users) {
-
-            foreach($users as $user) {
-
+        User::whereNotNull('gotify_client_token')->whereNotNull('gotify_app_id')->chunk(100, function ($users) {
+            foreach ($users as $user) {
                 $gotify = Client::createWithTokenAuth(
                     $user->gotify_client_token,
                     config('services.gotify.url')
@@ -53,8 +51,7 @@ class SweepGotifyServerMessages extends Command
                 $result = $gotify->getApplicationMessages($user->gotify_app_id, 100);
                 $this->processMessages($user, $result['messages']);
 
-                while(\array_key_exists('next', $result['paging'])){
-
+                while (\array_key_exists('next', $result['paging'])) {
                     $result = $gotify->getApplicationMessages($user->gotify_app_id, 100, $result['paging']['since']);
                     $this->processMessages($user, $result['messages']);
                 }
@@ -64,13 +61,10 @@ class SweepGotifyServerMessages extends Command
         return Command::SUCCESS;
     }
 
-
-    protected function processMessages(User $user, array $messages) {
-
+    protected function processMessages(User $user, array $messages)
+    {
         foreach ($messages as $message) {
-
             if (now()->diffInDays(Carbon::parse($message['date'])) > 7) {
-
                 DeleteGotifyServerMessageJob::dispatch(
                     $user->gotify_client_token,
                     $message['id']

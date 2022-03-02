@@ -10,7 +10,6 @@ use Tests\TestCase;
  */
 class ServiceAccountControllerTest extends TestCase
 {
-
     protected $user;
 
     protected function setUp(): void

@@ -27,8 +27,8 @@ class ContactImportStoreRequest extends FormRequest
             'import' => [
                 'file',
                 'mimetypes:text/vcard',
-                'max:512' //512 kilobytes
-            ]
+                'max:512', //512 kilobytes
+            ],
         ];
     }
 }

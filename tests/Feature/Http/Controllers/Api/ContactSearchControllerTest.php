@@ -20,22 +20,20 @@ class ContactSearchControllerTest extends TestCase
         $userB = User::factory()->create();
         Contact::factory()->create([
             'user_id' => $userA->id,
-            'first_name' => 'la-foobar'
+            'first_name' => 'la-foobar',
         ]);
         Contact::factory()->create([
             'user_id' => $userB->id,
-            'first_name' => 'el-foobar'
+            'first_name' => 'el-foobar',
         ]);
 
         $response = $this->actingAs($userA)->postJson(route('contacts.search'), [
-            'query' => 'foo'
+            'query' => 'foo',
         ]);
 
         $response->assertOk();
-        $response->assertJson(fn(AssertableJson $json) =>
-            $json->has('data', 1)
-                ->has('data.0', fn($json) =>
-                    $json->where('first_name', 'la-foobar')
+        $response->assertJson(fn (AssertableJson $json) => $json->has('data', 1)
+                ->has('data.0', fn ($json) => $json->where('first_name', 'la-foobar')
                         ->etc()
                 )
         );
@@ -47,32 +45,31 @@ class ContactSearchControllerTest extends TestCase
         $user = User::factory()->create();
         Contact::factory()->create([
             'user_id' => $user->id,
-            'first_name' => 'a-9988-foobar'
+            'first_name' => 'a-9988-foobar',
         ]);
         Contact::factory()->create([
             'user_id' => $user->id,
-            'last_name' => 'b-9988-foobar'
+            'last_name' => 'b-9988-foobar',
         ]);
         Contact::factory()->create([
             'user_id' => $user->id,
-            'company' => 'c-9988-foobar'
+            'company' => 'c-9988-foobar',
         ]);
         Contact::factory()->create([
             'user_id' => $user->id,
-            'phone_numbers' => json_encode(['mobile' => '+15029998888'])
+            'phone_numbers' => json_encode(['mobile' => '+15029998888']),
         ]);
 
         $response = $this->actingAs($user)->postJson(route('contacts.search'), [
-            'query' => '9988'
+            'query' => '9988',
         ]);
 
         $response->assertOk();
-        $response->assertJson(fn (AssertableJson $json) =>
-            $json->has('data', 4)
+        $response->assertJson(fn (AssertableJson $json) => $json->has('data', 4)
         );
         $response->assertJsonFragment(['first_name' => 'a-9988-foobar']);
         $response->assertJsonFragment(['last_name' => 'b-9988-foobar']);
         $response->assertJsonFragment(['company' => 'c-9988-foobar']);
-        $response->assertJsonFragment(['phone_numbers' => "{\"mobile\":\"+15029998888\"}"]);
+        $response->assertJsonFragment(['phone_numbers' => '{"mobile":"+15029998888"}']);
     }
 }

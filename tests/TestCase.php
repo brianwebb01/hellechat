@@ -16,8 +16,8 @@ abstract class TestCase extends BaseTestCase
 
         //remove gotify api calls setup in UserObserver
         $ed = User::getEventDispatcher();
-        $ed->forget('eloquent.created: ' . User::class);
-        $ed->forget('eloquent.deleted: ' . User::class);
+        $ed->forget('eloquent.created: '.User::class);
+        $ed->forget('eloquent.deleted: '.User::class);
 
         //make sure no real calls get out to Twilio in tests
         $this->app->bind(\Twilio\Rest\Client::class, function ($app) {
