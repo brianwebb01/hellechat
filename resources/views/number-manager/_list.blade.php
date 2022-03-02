@@ -32,7 +32,7 @@
                         <div class="flex items-center space-x-3">
                             <h3 x-text="record.friendly_label" class="text-gray-900 text-sm font-medium truncate"></h3>
                             <p x-text="`(${record.phone_number})`" class="text-gray-600 text-sm"></p>
-                            <span x-text="record.service_account.provider" class="flex-shrink-0 inline-block px-2 py-0.5 text-red-800 text-xs font-medium bg-red-100 rounded-full"></span>
+                            <span x-text="record.service_account.provider" class="shrink-0 inline-block px-2 py-0.5 text-red-800 text-xs font-medium bg-red-100 rounded-full"></span>
                         </div>
                         <p class="mt-2 text-gray-500 text-sm">Messaging Endpoint</p>
                         <input x-model="record.messaging_endpoint" @focus="document.getElementById(`msg_endpoint_input_${record.id}`).select();" :id="`msg_endpoint_input_${record.id}`" readonly="readonly" type="text" class="p-0 focus:ring-0 w-full bg-gray-200 border border-gray-300 rounded-md px-1 text-sm text-gray-700">
