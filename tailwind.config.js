@@ -1,5 +1,7 @@
 const defaultTheme = require('tailwindcss/defaultTheme')
 
+let colors = require('tailwindcss/colors')
+
 module.exports = {
     content: [
         './vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php',
@@ -13,6 +15,7 @@ module.exports = {
                 blue: { ...defaultTheme.colors.blue },
                 violet: { ...defaultTheme.colors.violet },
                 purple: { ...defaultTheme.colors.purple },
+                green: colors.emerald,
             },
             fontFamily: { sans: ['Inter var', ...defaultTheme.fontFamily.sans] },
         },
