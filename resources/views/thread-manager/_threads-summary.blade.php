@@ -1,4 +1,4 @@
-<div x-cloak x-show="!threadOpen || window.innerWidth >= 1280" x-transition:enter="transform transition ease-in-out duration-300" x-transition:enter-start="-translate-x-full" x-transition:enter-end="translate-x-0" class="xl:flex-shrink-0 xl:w-64 xl:border-r bg-gray-50">
+<div x-cloak x-show="!threadOpen || window.innerWidth >= 1280" x-transition:enter="transform transition ease-in-out duration-300" x-transition:enter-start="-translate-x-full" x-transition:enter-end="translate-x-0" class="xl:shrink-0 xl:w-64 xl:border-r bg-gray-50">
 
     <div class="h-full pl-4 pr-2 py-3 sm:pl-6 lg:pl-8 xl:pl-0">
         <div class="h-full relative overflow-y-auto h-threads">
@@ -25,7 +25,7 @@
 
             <template x-for="record in records" :key="record.id">
                 <div class="relative rounded-lg px-2 py-2 flex items-center space-x-3 hover:border-gray-400 focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-indigo-300 mb-3 hover:bg-indigo-100">
-                    <div class="flex-shrink-0">
+                    <div class="shrink-0">
                         <!-- <img class="h-10 w-10 rounded-full" src="https://images.unsplash.com/photo-1600486913747-55e5470d6f40?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&amp;ixlib=rb-1.2.1&amp;auto=format&amp;fit=crop&amp;w=80&amp;h=80&amp;q=80" alt="" /> -->
                         <div x-text="getAvatarLetters(record);" class="h-10 w-10 font-bold text-gray-800 rounded-full bg-gray-200 flex items-center justify-center font-mono">AA</div>
                     </div>
