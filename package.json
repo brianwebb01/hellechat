@@ -24,7 +24,7 @@
         "tailwindcss": "^3.0.0"
     },
     "dependencies": {
-        "@alpinejs/intersect": "^3.9.0",
+        "@alpinejs/intersect": "^3.9.1",
         "dayjs": "^1.10.8",
         "fuse.js": "^6.5.3",
         "turbolinks": "^5.2.0"
