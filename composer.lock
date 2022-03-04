@@ -1634,16 +1634,16 @@
         },
         {
             "name": "laravel/framework",
-            "version": "v9.3.0",
+            "version": "v9.3.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/laravel/framework.git",
-                "reference": "d442195be0c1a95324522d733e2369e406db51d1"
+                "reference": "c1c4404511b83fbf90ccbcdf864d4a85537f35e4"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laravel/framework/zipball/d442195be0c1a95324522d733e2369e406db51d1",
-                "reference": "d442195be0c1a95324522d733e2369e406db51d1",
+                "url": "https://api.github.com/repos/laravel/framework/zipball/c1c4404511b83fbf90ccbcdf864d4a85537f35e4",
+                "reference": "c1c4404511b83fbf90ccbcdf864d4a85537f35e4",
                 "shasum": ""
             },
             "require": {
@@ -1729,7 +1729,7 @@
                 "mockery/mockery": "^1.4.4",
                 "orchestra/testbench-core": "^7.1",
                 "pda/pheanstalk": "^4.0",
-                "phpstan/phpstan": "^1.0",
+                "phpstan/phpstan": "^1.4.7",
                 "phpunit/phpunit": "^9.5.8",
                 "predis/predis": "^1.1.9",
                 "symfony/cache": "^6.0"
@@ -1809,20 +1809,20 @@
                 "issues": "https://github.com/laravel/framework/issues",
                 "source": "https://github.com/laravel/framework"
             },
-            "time": "2022-03-02T14:37:13+00:00"
+            "time": "2022-03-03T15:15:10+00:00"
         },
         {
             "name": "laravel/horizon",
-            "version": "v5.9.2",
+            "version": "v5.9.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/laravel/horizon.git",
-                "reference": "69486d5e4fad8b6ee02c97ed0bea39ef241df956"
+                "reference": "2c2c28dff4b0f8632f74ca1945f830fb462c6b56"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laravel/horizon/zipball/69486d5e4fad8b6ee02c97ed0bea39ef241df956",
-                "reference": "69486d5e4fad8b6ee02c97ed0bea39ef241df956",
+                "url": "https://api.github.com/repos/laravel/horizon/zipball/2c2c28dff4b0f8632f74ca1945f830fb462c6b56",
+                "reference": "2c2c28dff4b0f8632f74ca1945f830fb462c6b56",
                 "shasum": ""
             },
             "require": {
@@ -1884,9 +1884,9 @@
             ],
             "support": {
                 "issues": "https://github.com/laravel/horizon/issues",
-                "source": "https://github.com/laravel/horizon/tree/v5.9.2"
+                "source": "https://github.com/laravel/horizon/tree/v5.9.3"
             },
-            "time": "2022-02-21T19:55:13+00:00"
+            "time": "2022-02-22T20:56:51+00:00"
         },
         {
             "name": "laravel/jetstream",
