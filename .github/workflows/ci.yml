@@ -5,7 +5,7 @@ on:
     #  schedule:
 #    - cron: '0 0 * * *'
   pull_request:
-    branches: [ develop ]
+    branches: [ master, develop ]
 name: CI/CD
 jobs:
   test:
