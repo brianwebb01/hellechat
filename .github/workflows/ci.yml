@@ -4,8 +4,8 @@ on:
 ## Remove the schedule and PR triggers until the project is beta / GA
     #  schedule:
 #    - cron: '0 0 * * *'
-#  pull_request:
-#    branches: [ master ]
+  pull_request:
+    branches: [ master, develop ]
 name: CI/CD
 jobs:
   test:
