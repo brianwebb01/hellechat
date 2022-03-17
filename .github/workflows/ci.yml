@@ -1,5 +1,6 @@
 on:
   workflow_dispatch:
+    branches: [ master, develop ]
 
   push:
     branches: [ master ]
