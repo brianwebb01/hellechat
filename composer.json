@@ -19,7 +19,7 @@
         "laravel/sanctum": "^2.14",
         "laravel/tinker": "^2.7",
         "livewire/livewire": "^2.5",
-        "predis/predis": "^1.1",
+        "predis/predis": "^2.0",
         "pusher/pusher-php-server": "^7.0",
         "twilio/sdk": "^6.35",
         "league/flysystem-aws-s3-v3": "^3.0",
