@@ -6618,16 +6618,16 @@
         },
         {
             "name": "twilio/sdk",
-            "version": "6.37.2",
+            "version": "6.37.3",
             "source": {
                 "type": "git",
                 "url": "git@github.com:twilio/twilio-php.git",
-                "reference": "1c30c4407ba0a45a9b4460ee0bf81494dfef5c6b"
+                "reference": "91f1d939596ba8976b4be09ea634a1bab3a4cb7f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/twilio/twilio-php/zipball/1c30c4407ba0a45a9b4460ee0bf81494dfef5c6b",
-                "reference": "1c30c4407ba0a45a9b4460ee0bf81494dfef5c6b",
+                "url": "https://api.github.com/repos/twilio/twilio-php/zipball/91f1d939596ba8976b4be09ea634a1bab3a4cb7f",
+                "reference": "91f1d939596ba8976b4be09ea634a1bab3a4cb7f",
                 "shasum": ""
             },
             "require": {
@@ -6663,7 +6663,7 @@
                 "sms",
                 "twilio"
             ],
-            "time": "2022-06-01T19:08:55+00:00"
+            "time": "2022-06-15T21:41:33+00:00"
         },
         {
             "name": "vlucas/phpdotenv",
