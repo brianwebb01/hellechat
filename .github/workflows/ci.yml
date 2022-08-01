@@ -3,7 +3,7 @@ on:
 
   push:
     branches: [ master ]
-  
+
   pull_request:
     branches: [ master, develop ]
 
@@ -38,6 +38,7 @@ jobs:
       run: |
         cp .env.ci .env
         php artisan key:generate
+        php artisan migrate --force
 
     - name: Install front-end dependencies
       run: |
