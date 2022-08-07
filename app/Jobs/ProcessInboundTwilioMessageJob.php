@@ -86,7 +86,12 @@ class ProcessInboundTwilioMessageJob implements ShouldQueue
                 $url = $this->input["MediaUrl{$i}"];
                 echo $url."\n";
                 if(preg_match("/.*\.([png|jpg|jpeg|gif]*).*/i", $url, $matches)){
-                    $contentTypeStr = $types[$matches[1]];
+                    if($matches[1] != ""){
+                        $contentTypeStr = $types[$matches[1]];
+                    } else {
+                        $headers = get_headers($url, true);
+                        $contentTypeStr = $headers['Content-Type'];
+                    }
                     $url .= (\stripos($url, '?') == false ? '?' : '&').'Content-Type='.$contentTypeStr;
                 }
 
