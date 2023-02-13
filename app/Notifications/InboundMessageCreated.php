@@ -36,13 +36,43 @@ class InboundMessageCreated extends Notification
      */
     public function via($notifiable)
     {
-        $channels = ['broadcast'];
+        $channels = ['broadcast', 'mail'];
 
         if ($notifiable->gotify_app_token) {
             $channels[] = GotifyChannel::class;
         }
 
         return $channels;
+    }
+
+    public function toMail($notifiable)
+    {
+        $msg = $this->message->body;
+
+        if ($this->message->contact) {
+            $title = 'SMS from ' . $this->message->contact->friendlyName();
+        } else {
+            $title = 'SMS from ' . $this->message->from;
+        }
+
+        $url = route('ui.thread.index', [
+            'numberPhone' => $this->message->number->phone_number,
+            'with' => $this->message->from,
+        ]);
+
+        $mail_message = (new MailMessage)
+            ->subject($title)
+            ->greeting($title)
+            ->line($msg);
+
+        if(count($this->message->media) > 0)
+            $mail_message->line("Attachments:");
+        foreach($this->message->media as $media)
+            $mail_message->line($media);
+
+        $mail_message->action('View Message', $url);
+
+        return $mail_message;
     }
 
     /**

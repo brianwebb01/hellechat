@@ -38,7 +38,7 @@ class ProcessInboundTwilioMessageJob implements ShouldQueue
             ->first();
 
         if (is_null($number)) {
-            Log::error('No number record found for '.$this->intput['To']);
+            Log::error('No number record found for '.$this->input['To']);
 
             return;
         }
@@ -91,6 +91,8 @@ class ProcessInboundTwilioMessageJob implements ShouldQueue
                     } else {
                         $headers = get_headers($url, true);
                         $contentTypeStr = $headers['Content-Type'];
+                        if(is_array($contentTypeStr))
+                            $contentTypeStr = implode(',', $contentTypeStr);
                     }
                     $url .= (\stripos($url, '?') == false ? '?' : '&').'Content-Type='.$contentTypeStr;
                 }
