@@ -15,7 +15,7 @@
         "jeroendesloovere/vcard": "^1.7",
         "laravel/framework": "^9.2",
         "laravel/horizon": "^5.9",
-        "laravel/jetstream": "^2.6",
+        "laravel/jetstream": "^3.0",
         "laravel/sanctum": "^3.0",
         "laravel/tinker": "^2.7",
         "livewire/livewire": "^2.5",
